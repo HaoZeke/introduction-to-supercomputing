@@ -47,7 +47,7 @@ The module keeps the original's layout: `README.md` for the hands-on,
 | Default memory per core of the Snellius partitions | `#SBATCH --mem=2G` in `ex1/run.sh`; Magic Castle's default is 256 MB per CPU |
 | `#SBATCH --constraint=scratch-node` | Removed |
 | `ex1/run.sh`: `iend=10`, `nmax=10**10` (up to 80 GB per array) | `iend=9`, `nmax=10**8` (up to 800 MB), sized for small cloud nodes and a shared NFS home |
-| No accounting changes needed in this module; Snellius bills in system billing units (SBU) | No billing units; cost is the cloud allocation for the cluster's VMs |
+| No accounting changes needed in this module; Snellius bills in System Billing Units (SBU), as SURF names them | No billing units; cost is the cloud allocation for the cluster's VMs |
 
 ## Software modules
 
