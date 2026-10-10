@@ -19,6 +19,7 @@ We hope you find the training useful, and we welcome any feedback to help us imp
 ### **Part II — Working with the Snellius environment**
 **Modules:**  
 - Snellius file systems
+  (or, on a Magic Castle cluster with EESSI: `course-module-src-eessi-fs`)
 - QCG PilotJob
 
 ### **Part III — Performance and hybrid jobs**
