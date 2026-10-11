@@ -14,6 +14,9 @@ On the login node, we will identify the different file systems:
 3. `/project`
 4. `/archive`
 
+> [!NOTE]
+> On an SRC cluster with EESSI 2025.06, the manager workspace shares `/home`, `/scratch` and `/project` with the compute nodes over NFS, and each job gets space on the node's own disk under `/localscratch`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`, and no `myquota`; use `df -h` and `du -sh` instead. In job scripts, drop the `-p` line, because the cluster has one default partition, and replace `module load 2025` with `module load EESSI/2025.06`.
+
 ## Home
 The home file system, often denoted as `/home`, is the storage space dedicated to individual user accounts on Snellius. It serves as a personal workspace where users can store their important files, configuration files, scripts, and other data. **Each user on Snellius has their own dedicated home directory** within the `/home` file system, which is found at `/home/<username>`. The home directory is usually private and can only be accessed by the user who owns it. Other users typically don't have access to your home directory. Although you can change its access permissions, you should be very restrictive in using this capability.
 
@@ -90,6 +93,9 @@ Next, confirm that the file in the scratch-local system is absent.
 [scur1448@int5 ~]$ 
 ```
 
+> [!NOTE]
+> An SRC cluster does not set `$TMPDIR` for jobs. Each job gets `/localscratch/$USER.$SLURM_JOB_ID.0`, which the cluster exports as `$LOCALSCRATCH` and deletes when the job ends. Use `$LOCALSCRATCH` wherever a job script in this module uses `$TMPDIR`. The cluster has one login node, so compare the login node's `/tmp` with a job's `$LOCALSCRATCH` instead of comparing `int5` with `int6`.
+
 Next, use the script below to launch a job that lists the contents of `$TMPDIR`, creates a file, and prints the path and real path to `$TMPDIR`.
 
 ```
@@ -146,6 +152,9 @@ The scratch-node behavior is technically similar to scratch-local. For each assi
 Please be aware that when requesting a shared node, you will only receive a portion of the local NVMe disk, such as 25%, 50%, or 75%, depending on the requested job resources.
 
 Scratch-node is available on a subset of Snellius nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
+
+> [!NOTE]
+> Scratch-node and `--constraint=scratch-node` exist only on Snellius. On an SRC cluster, `$LOCALSCRATCH` already sits on the node's own disk, so drop the constraint and write to `$LOCALSCRATCH` in the exercise.
 
 #### Exercise
 Modify the script above to launch a job that creates a file on scratch-node and displays the file's real path.

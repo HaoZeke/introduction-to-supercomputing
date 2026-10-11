@@ -37,6 +37,9 @@ Snellius features a range of node types:
 
 The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/display/WIKI/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
 
+> [!NOTE]
+> On an SRC cluster, the compute nodes are three cloud workspaces with a few cores each, connected by Ethernet instead of InfiniBand. Replace `module load 2025` with `module load EESSI/2025.06`; EESSI 2025.06 has `foss/2025a` under the same name. In the tables, drop the columns with 128 or 256 tasks and pick task counts that fit the workspaces, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.
+
 ### Connecting to Snellius
 
 Since this module is part of the third section in the *Introduction to Supercomputing* course series, we assume that participants already have established connections to Snellius and are familiar with the system, including moving data and interacting with the filesystem. 

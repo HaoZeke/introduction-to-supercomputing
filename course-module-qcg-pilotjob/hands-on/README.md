@@ -30,3 +30,13 @@ modules per run.
    The status of each job can be found in the file named *nl-agent-{hostname}.log*. For more detailed 
    diagnostics and explanation regarding each job and also the available logs please refer to the 
    [documentation](https://qcg-pilotjob.readthedocs.io/en/develop/logs.html).
+
+> [!NOTE]
+> EESSI does not include QCG-PilotJob. On an SRC cluster with EESSI 2025.06, install it once into a virtual environment:
+> ```
+> module load EESSI/2025.06
+> module load Python/3.13.1-GCCcore-14.2.0
+> python -m venv ~/qcg-venv
+> ~/qcg-venv/bin/pip install qcg-pilotjob
+> ```
+> In the job scripts, replace the `module load` lines with the two lines above plus `source ~/qcg-venv/bin/activate`, drop `--partition=rome`, and lower `--ntasks-per-node` to the core count of a workspace. The cluster does not set `$TMPDIR`, so use `$LOCALSCRATCH` in its place. In the QCG Python scripts, change `modules=["2024", "Python/3.12.3-GCCcore-13.3.0"]` to `modules=["Python/3.13.1-GCCcore-14.2.0"]`. SRC does not bill in system billing units, so count core-hours instead.
