@@ -213,15 +213,15 @@ Now, we'll move these files between different file systems (e.g., from **home** 
 2. **Transfer as an archive**:
    - Archive and compress the directory using `tar` and `gzip`:
      ```bash
-     tar -czf file_transfer_test.tar.gz ~/file_transfer_test
+     tar -C ~ -czf ~/file_transfer_test.tar.gz file_transfer_test
      ```
    - Measure the size of the compressed archive:
      ```bash
-     du -sh file_transfer_test.tar.gz
+     du -sh ~/file_transfer_test.tar.gz
      ```
    - Now, transfer the archive to the **scratch** directory:
      ```bash
-     time cp file_transfer_test.tar.gz /path/to/scratch/
+     time cp ~/file_transfer_test.tar.gz /path/to/scratch/
      ```
 
 3. **Extract the archive in the scratch directory**:
@@ -238,11 +238,11 @@ Now, we'll move these files between different file systems (e.g., from **home** 
    - Discuss how much time it took to transfer the files as individual files versus as a compressed archive.
 
 2. **Compare data size**:
-   - Check the total size of the original directory and the compressed archive. Highlight the difference in storage requirements and transfer speeds based on compression.
+   - Check the total size of the original directory and the archive. The files contain random data, which gzip cannot compress, so the archive has about the same size.
 
 3. **Discuss trade-offs**:
    - **When to use individual file transfers**: If you're working with a small number of files or if they will be used directly without further processing.
-   - **When to use archived file transfers**: Compressing many small files reduces both disk space usage and transfer time due to fewer I/O operations.
+   - **When to use archived file transfers**: Packing many small files into one archive reduces transfer time, because the copy needs fewer file operations. Compression saves disk space only for data that compresses, such as text.
 
 4. **Advanced considerations**:
    - Discuss how these operations scale using larger directories or more complex file systems.
