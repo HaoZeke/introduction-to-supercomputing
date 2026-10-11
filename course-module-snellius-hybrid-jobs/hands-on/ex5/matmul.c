@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const size_t n = (size_t)atoi(argv[1]);  // Matrix size from command line input
+    const size_t n = (size_t)strtoull(argv[1], NULL, 10);  // Matrix size from command line input
 
     printf("Matrix size: %ld x %ld\n", n, n);
 

@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
         MPI_Finalize();
         return -1;
     }
-    n = atoi(argv[1]);
+    n = (size_t)strtoull(argv[1], NULL, 10);
 
     // Calculate local sizes based on the rank
     remainder = n % world;

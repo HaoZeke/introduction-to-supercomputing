@@ -231,6 +231,8 @@ Time taken for axpy execution: 0.042496 seconds
 > | 100,000,000   |            |          |           |           |          |           |           |
 > | 1,000,000,000 |            |          |           |           |          |           |           |
 > | 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
 
 ### Scalar product
 
@@ -269,7 +271,7 @@ Time taken for dot product execution: 0.143875 seconds
 
 After understanding the sequential version, we will proceed with executing parallel versions of the dot product using both OpenMP for shared-memory parallelism and MPI for distributed-memory parallelism. Each process or thread will compute a portion of the dot product independently, followed by a reduction step to sum the partial results.
 
-The parallel implementations can be found in the repository: `hands-on/dot-hybrid`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
+The parallel implementations can be found in the repository: `hands-on/ex4`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
 
 To submit the parallel job, run the following command:
 
@@ -294,3 +296,5 @@ Time taken for dot product execution: 0.034125 seconds
 >| 100,000,000   |            |          |           |           |          |           |           |
 >| 1,000,000,000 |            |          |           |           |          |           |           |
 >| 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.

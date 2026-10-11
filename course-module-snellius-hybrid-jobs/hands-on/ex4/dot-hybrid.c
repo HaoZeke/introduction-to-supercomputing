@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
         MPI_Finalize();
         return -1;
     }
-    const size_t n = (size_t)atoi(argv[1]);
+    const size_t n = (size_t)strtoull(argv[1], NULL, 10);
 
     // Calculate local sizes based on the rank
     remainder = n % world;
@@ -104,10 +104,12 @@ int main(int argc, char **argv) {
 
     // Perform the local dot product computation using OpenMP
     for(size_t i = 0; i < REP; i++) {
-        result += dot(local_n, x, y);
+        double local_result = dot(local_n, x, y);
+        double global_result = 0.0;
 
         // Reduce the local dot products to a global sum
-        MPI_Allreduce(MPI_IN_PLACE, &result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        result += global_result;
     }
 
 
