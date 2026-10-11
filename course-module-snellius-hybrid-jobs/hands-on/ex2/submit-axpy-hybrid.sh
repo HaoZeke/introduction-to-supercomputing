@@ -14,8 +14,8 @@ if [ -z "$1" ]; then
 fi
 
 # Load necessary modules
-module load 2023
-module load foss/2023a
+module load 2025
+module load foss/2025a
 
 # Compile the program
 mpicc -fopenmp axpy-hybrid.c -o axpy-hybrid.out
