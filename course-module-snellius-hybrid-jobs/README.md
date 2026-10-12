@@ -38,7 +38,7 @@ Snellius features a range of node types:
 The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
 
 > [!NOTE]
-> On an SRC cluster, the compute nodes are three cloud workspaces with a few cores each, connected by Ethernet instead of InfiniBand. Replace `module load 2025` with `module load EESSI/2025.06`; EESSI 2025.06 has `foss/2025a` under the same name. In the tables, drop the columns with 128 or 256 tasks and pick task counts that fit the workspaces, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.
+> On an SRC cluster, the compute nodes are three cloud workspaces with a few cores each (`sinfo -o '%n %c %m'`), connected by Ethernet instead of InfiniBand. `module load 2025` and `module load foss/2025a` work as on Snellius. Options given to `sbatch` override the `#SBATCH` lines, so shrink a job on the command line instead of editing the script, for example `sbatch --nodes=3 --ntasks=6 submit-dot-hybrid.sh 30000000`. In the tables, drop the columns with 128 or 256 tasks, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.
 
 ### Connecting to Snellius
 
