@@ -32,11 +32,9 @@ modules per run.
    [documentation](https://qcg-pilotjob.readthedocs.io/en/develop/logs.html).
 
 > [!NOTE]
-> EESSI does not include QCG-PilotJob. On an SRC cluster with EESSI 2025.06, install it once into a virtual environment:
+> EESSI 2025.06 does not include QCG-PilotJob, so the SRC cluster carries a site installation on top of it as `QCG-PilotJob/0.14.1-GCCcore-14.2.0`. In the job scripts, replace the two `module load` lines with:
 > ```
-> module load EESSI/2025.06
-> module load Python/3.13.1-GCCcore-14.2.0
-> python -m venv ~/qcg-venv
-> ~/qcg-venv/bin/pip install qcg-pilotjob
+> module load 2025
+> module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
 > ```
-> In the job scripts, replace the `module load` lines with the two lines above plus `source ~/qcg-venv/bin/activate`, drop `--partition=rome`, and lower `--ntasks-per-node` to the core count of a workspace. The cluster does not set `$TMPDIR`, so use `$LOCALSCRATCH` in its place. In the QCG Python scripts, change `modules=["2024", "Python/3.12.3-GCCcore-13.3.0"]` to `modules=["Python/3.13.1-GCCcore-14.2.0"]`. SRC does not bill in system billing units, so count core-hours instead.
+> and lower `--ntasks-per-node` to the core count of a workspace (`sinfo -o '%n %c'`), or override it on the command line, for example `sbatch --nodes=3 --ntasks-per-node=2 qcg_job.sh`. In the QCG Python scripts, change `modules=["2024", "Python/3.12.3-GCCcore-13.3.0"]` to `modules=["2025", "Python/3.13.1-GCCcore-14.2.0"]`. SRC does not bill in system billing units: `sacct` reports `CPUTimeRAW` in core-seconds, so count core-hours instead.
