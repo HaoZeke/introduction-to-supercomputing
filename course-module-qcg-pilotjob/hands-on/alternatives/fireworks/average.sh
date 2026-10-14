@@ -11,6 +11,7 @@ module load 2025
 module load FireWorks/2.1.4-gfbf-2025a
 
 export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json
+echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"   # an empty LaunchPad, as in the FireWorks quickstart
 tar -xf ../../example_04/input.tar.gz
 python workflow.py average
 cd "$TMPDIR"   # rlaunch makes a directory per Firework run
