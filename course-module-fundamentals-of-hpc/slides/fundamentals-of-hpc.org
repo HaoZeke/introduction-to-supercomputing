@@ -915,7 +915,7 @@ hence *heavy tasks must be avoided*.
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-1,258 rome and genoa nodes + 604 GPUs: *37.9 Pflop/s of peak performance*.
+1,256 rome and genoa nodes + 600 GPUs: *37.9 Pflop/s of peak performance*.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
@@ -979,7 +979,7 @@ rome
 #+end_tb
 #+attr_latex: :options [x=149.96,y=160.64,s=12,l=14.4]
 #+begin_tb
-521
+520
 #+end_tb
 #+attr_latex: :options [x=226.16,y=160.64,s=12,l=14.4]
 #+begin_tb
@@ -1091,7 +1091,7 @@ genoa
 #+end_tb
 #+attr_latex: :options [x=149.97,y=285.1,s=12,l=14.4]
 #+begin_tb
-737
+736
 #+end_tb
 #+attr_latex: :options [x=226.17,y=285.1,s=12,l=14.4]
 #+begin_tb
@@ -1147,7 +1147,7 @@ gpu_a100
 #+end_tb
 #+attr_latex: :options [x=153.21,y=352.32,s=12,l=14.4]
 #+begin_tb
-63
+62
 #+end_tb
 #+attr_latex: :options [x=226.17,y=352.32,s=12,l=14.4]
 #+begin_tb
@@ -1827,11 +1827,11 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 1382 CPU nodes (AMD Rome and Genoa)
+- 1380 CPU nodes (AMD Rome and Genoa)
 #+end_tb
 #+attr_latex: :options [x=66.07,y=363.14,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 151 GPU nodes with NVIDIA GPUs
+- 150 GPU nodes with NVIDIA GPUs
 #+end_tb
 #+attr_latex: :options [x=66.07,y=392.42,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
