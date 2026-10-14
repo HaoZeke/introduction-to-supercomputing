@@ -6,6 +6,8 @@
 #SBATCH --output=fw-average.%j.out
 # Example 4 with FireWorks: the workflow goes into a LaunchPad, then workers in this
 # allocation run whatever is ready until nothing is left.
+# 100 files by default: with the file-backed LaunchPad, 1000 files took over 9 minutes on
+# 16 Snellius cores, where Snakemake took 15 s. QCG_MAX_INPUTS=0 runs all of them.
 set -euo pipefail
 module load 2025
 # SRC course cluster: module. Snellius has no FireWorks module: use the venv from the README.
@@ -14,7 +16,7 @@ module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || { module load Python/3.13.
 export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json
 echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"   # an empty LaunchPad, as in the FireWorks quickstart
 tar -xf ../../example_04/input.tar.gz
-python workflow.py average
+QCG_MAX_INPUTS=${QCG_MAX_INPUTS:-100} python workflow.py average
 cd "$TMPDIR"   # rlaunch makes a directory per Firework run
 rlaunch multi "$SLURM_NTASKS"
 lpad get_fws -d count -s COMPLETED
