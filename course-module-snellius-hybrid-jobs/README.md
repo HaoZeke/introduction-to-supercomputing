@@ -199,10 +199,10 @@ sbatch submit-axpy.sh <N>
 Example of output for `N` = 10000000. The kernel runs 100 times, so `y[0]` = 2 + 100 * 2 * 1 = 202. Your times will differ:
 
 ```bash
-$ cat axpy-8061138.out
+$ cat axpy-28085116.out
 Length of the arrays: 10000000
 y[0] = 202.000000
-Time taken for axpy execution: 0.537750 seconds
+Time taken for axpy execution: 0.963870 seconds
 ```
 
 > [!TIP]
@@ -218,11 +218,11 @@ sbatch submit-axpy-hybrid.sh <N>
 Example of output for `N` = 10000000 with the script's 128 tasks:
 
 ```bash
-$ cat axpy-hybrid-8061673.out
+$ cat axpy-hybrid-28085117.out
 Global length of the arrays: 10000000
 Local length of the arrays: 78125
 y[0] = 202.000000
-Time taken for axpy execution: 0.042496 seconds
+Time taken for axpy execution: 0.009485 seconds
 ```
 
 `Hyb-T-C` in the table below means `T` MPI tasks with `C` OpenMP threads each. Options on the `sbatch` command line override the `#SBATCH` lines, so `sbatch --ntasks=1 --cpus-per-task=16 submit-axpy-hybrid.sh <N>` runs `Hyb-1-16`.
@@ -284,10 +284,10 @@ sbatch submit-dot.sh <N>
 The vectors hold `sin(i)` and `0.5 * cos(i)`, and the result sums the dot product over 100 repetitions. Example of output for `N` = 10000000:
 
 ```bash
-$ cat dot-1234567.out
+$ cat dot-28085119.out
 Length of the arrays: 10000000
 Dot product result: 12.3778
-Time taken for dot product execution: 0.143875 seconds
+Time taken for dot product execution: 1.21664 seconds
 ```
 
 > [!TIP]
@@ -308,11 +308,11 @@ sbatch submit-dot-hybrid.sh <N>
 Example of output for `N` = 10000000 with the script's 128 tasks. The result matches the sequential run to the printed digits; the order of the additions differs, so later digits can differ:
 
 ```bash
-$ cat dot-hybrid-654321.out
+$ cat dot-hybrid-28085121.out
 Global length of the arrays: 10000000
 Local length of the arrays: 78125
 Global dot product result: 12.3778
-Time taken for dot product execution: 0.034125 seconds
+Time taken for dot product execution: 0.039711 seconds
 ```
 
 > [!TIP]
