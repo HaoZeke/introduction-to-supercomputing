@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 
     const size_t n = (size_t)strtoull(argv[1], NULL, 10);  // Size of the vectors from command line input
 
-    printf("Lenght of the arrays: %ld\n", n);
+    printf("Length of the arrays: %zu\n", n);
 
     // Allocate memory for the vectors
     double *x = (double*) malloc(n * sizeof(double));
