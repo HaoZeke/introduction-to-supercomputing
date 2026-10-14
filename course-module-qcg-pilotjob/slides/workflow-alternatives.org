@@ -1,0 +1,107 @@
+#+TITLE: Workflow tools compared: QCG-PilotJob, HyperQueue, Snakemake and FireWorks
+#+OPTIONS: H:1 ':t toc:nil num:nil title:nil ^:nil author:nil date:nil
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [t]
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usetheme{default}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \setbeamerfont{frametitle}{series=\bfseries}
+
+# One heading per slide.  Build with:
+#   emacs --batch workflow-alternatives.org -f org-beamer-export-to-latex
+#   latexmk -xelatex workflow-alternatives.tex
+
+* Workflow tools compared: QCG-PilotJob, HyperQueue, Snakemake and FireWorks
+
+Hands-on: =hands-on/alternatives/=
+
+* Why compare tools
+
+- Many small tasks inside one Slurm allocation need a tool that starts a task as soon as a core is free.
+- QCG-PilotJob is one such tool. HyperQueue, Snakemake and FireWorks are three others.
+- Each one expresses "this task waits for those tasks" differently.
+- The comparison: how the dependency is written, and how much of the allocation sits idle.
+
+* The shared exercises
+
+- *Example 4*: one average per CSV file, then an aggregation that must wait for every average.
+- *Example 5*: sleeping tasks of different lengths, to measure idle time from the start and end time of each task.
+- Same input files, same helper scripts, same allocation for every tool.
+- Job scripts: =average.sh= and =profile.sh= in a directory per tool.
+
+* HyperQueue
+
+#+begin_src bash
+hq submit --each-line files.txt --cpus=1 --wait \
+    --stdout "$PWD/averages/%{TASK_ID}.csv" \
+    -- bash -c 'python3 ../../example_04/average.py "$HQ_ENTRY"'
+
+cat averages/*.csv | sort > result.csv
+#+end_src
+
+- A server and a worker run inside the allocation.
+- One task per line of =files.txt=.
+- The dependency: =--wait= returns when every task has finished, and the aggregation is the next line.
+
+* Snakemake
+
+#+begin_src python
+rule aggregate:
+    input:
+        expand("averages/{name}.csv", name=NAMES),
+    output:
+        "result.csv",
+    shell:
+        "cat {input} | sort > {output}"
+#+end_src
+
+- =snakemake --cores $SLURM_NTASKS= runs the rules on the cores of the allocation.
+- The dependency: the input of =aggregate= lists every average file.
+
+* FireWorks
+
+#+begin_src python
+aggregate = Firework(
+    ScriptTask.from_str(f"cat {HERE}/averages/*.csv | sort > {HERE}/result.csv"),
+    name="aggregate", parents=averages)
+lp.add_wf(Workflow(averages + [aggregate], name="average"))
+#+end_src
+
+- The LaunchPad is a file under =$TMPDIR=; no MongoDB server.
+- =rlaunch multi= starts one worker per core.
+- The dependency: =parents=averages= on the =aggregate= Firework.
+
+* Results: idle time
+
+32 tasks of example 5 at their original lengths, 2 slots, 2-core SRC test cluster:
+
+| Tool          | Span  | Idle |
+|---------------+-------+------|
+| bash pipeline | 266 s |  36% |
+| QCG-PilotJob  | 221 s |  23% |
+| HyperQueue    | 172 s |   2% |
+| Snakemake     | 172 s |   2% |
+| FireWorks     | 173 s |   3% |
+
+* Results: averages of 100 files
+
+| Tool         | Time                   |
+|--------------+------------------------|
+| HyperQueue   | 23 s                   |
+| Snakemake    | 46 s                   |
+| FireWorks    | 25 s                   |
+| QCG-PilotJob | 3 min 12 s per version |
+
+* What the idle time comes from
+
+- The bash pipeline runs tasks in blocks of the slot count, so a block waits for its longest task.
+- QCG-PilotJob: most of the 23% is the module load that each task does.
+- HyperQueue, Snakemake and FireWorks start the next task when a slot frees up: 2% to 3% idle.
+- Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping bars can leave white space that is not idle time.
+- The idle figure comes from the task start and end times.
+
+* How to choose
+
+- *QCG-PilotJob* and *HyperQueue*: many tasks inside one allocation. QCG-PilotJob is driven from Python; HyperQueue from the command line, with a Python API as well.
+- *Snakemake*: rules on files; a rerun builds only what changed.
+- *FireWorks*: a database of workflows with states and reruns, here with a file-backed LaunchPad.
