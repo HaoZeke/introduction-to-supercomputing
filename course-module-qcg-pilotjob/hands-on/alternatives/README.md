@@ -68,7 +68,7 @@ Module: `FireWorks/2.1.4-gfbf-2025a`, a site installation on top of EESSI on the
 module load 2025 Python/3.13.1-GCCcore-14.2.0
 python -m venv $HOME/venvs/fireworks
 source $HOME/venvs/fireworks/bin/activate
-pip install fireworks mongomock
+pip install "fireworks[mongomock]"
 ```
 
 `workflow.py` writes one Firework per task into a LaunchPad, which here is a file under `$TMPDIR` (no MongoDB server needed). `rlaunch multi` then starts one worker per core, and each worker runs whichever Firework is ready until none are left.
