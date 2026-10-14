@@ -6,7 +6,8 @@
 #SBATCH --output=snakemake-average.%j.out
 set -euo pipefail
 module load 2025
-module load snakemake/9.22.0-foss-2025b
+# SRC course cluster: module. Snellius has no snakemake module: use the venv from the README.
+module load snakemake/9.22.0-foss-2025b 2>/dev/null || source "$HOME/venvs/snakemake/bin/activate"
 
 tar -xf ../../example_04/input.tar.gz
 # Snakemake runs the rules inside this allocation, on as many cores as Slurm gave the job

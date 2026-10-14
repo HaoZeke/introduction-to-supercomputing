@@ -10,7 +10,7 @@ Each tool has a directory with the job scripts `average.sh` and `profile.sh`. Ru
 > [!NOTE]
 > The scripts ask for 16 cores. On SRC workspaces with 2 cores, scale the runs down:
 > ```
-> MAX_INPUTS=100 sbatch --ntasks=2 average.sh
+> QCG_MAX_INPUTS=100 sbatch --ntasks=2 average.sh
 > TIMES_FILE=../../example_05/times_short.txt sbatch --ntasks=2 profile.sh
 > ```
 > `times_short.txt` keeps the original task lengths of the first 32 of the 160 tasks. SRC does not bill in system billing units: `sacct` reports `CPUTimeRAW` in core-seconds, so count core-hours instead.
@@ -21,7 +21,7 @@ Each tool has a directory with the job scripts `average.sh` and `profile.sh`. Ru
 cd hyperqueue
 ```
 
-Module: `HyperQueue/0.24.0` (with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them). On the SRC course cluster this is a site installation on top of EESSI, not part of EESSI. On Snellius, check that it exists with `module spider HyperQueue`.
+Module: `HyperQueue/0.24.0`, with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them. The same module name exists on Snellius (2025 stack, which also lists 0.19.0 and 0.20.0). On the SRC course cluster it is a site installation on top of EESSI, not part of EESSI.
 
 The script starts a HyperQueue server and one worker inside the Slurm allocation. It lists the CSV files in `files.txt` and submits one task per line with `hq submit --each-line`. The `--wait` flag blocks until every task has finished, and only then does the script build `result.csv`.
 
@@ -38,7 +38,14 @@ The dependency sits in `hq submit --wait`: the aggregation is the line after it.
 cd snakemake
 ```
 
-Module: `snakemake/9.22.0-foss-2025b`, from EESSI on the 2025b toolchain. On Snellius, check that it exists with `module spider snakemake`.
+Module: `snakemake/9.22.0-foss-2025b`, from EESSI on the SRC course cluster. Snellius has no Snakemake module (`module spider snakemake` finds nothing in the 2025 stack). Install it once in a virtual environment; the scripts activate `$HOME/venvs/snakemake` when the module is missing:
+
+```
+module load 2025 Python/3.13.1-GCCcore-14.2.0
+python -m venv $HOME/venvs/snakemake
+source $HOME/venvs/snakemake/bin/activate
+pip install snakemake
+```
 
 The `Snakefile` defines a rule `average` that turns `input/{name}.csv` into `averages/{name}.csv`, and a rule `aggregate` that builds `result.csv`. `snakemake --cores $SLURM_NTASKS` works out which files are missing and runs the rules on the cores of the allocation. `Snakefile.profile` has one rule instance per task length.
 
@@ -55,7 +62,14 @@ The dependency sits in the `input` of the `aggregate` rule: it lists every file 
 cd fireworks
 ```
 
-Module: `FireWorks/2.1.4-gfbf-2025a`. On the SRC course cluster this is a site installation on top of EESSI, not part of EESSI. On Snellius, check that it exists with `module spider FireWorks`.
+Module: `FireWorks/2.1.4-gfbf-2025a`, a site installation on top of EESSI on the SRC course cluster only. Snellius has no FireWorks module (`module spider FireWorks` finds nothing in the 2025 stack). Install it once in a virtual environment; the scripts activate `$HOME/venvs/fireworks` when the module is missing:
+
+```
+module load 2025 Python/3.13.1-GCCcore-14.2.0
+python -m venv $HOME/venvs/fireworks
+source $HOME/venvs/fireworks/bin/activate
+pip install fireworks mongomock
+```
 
 `workflow.py` writes one Firework per task into a LaunchPad, which here is a file under `$TMPDIR` (no MongoDB server needed). `rlaunch multi` then starts one worker per core, and each worker runs whichever Firework is ready until none are left.
 

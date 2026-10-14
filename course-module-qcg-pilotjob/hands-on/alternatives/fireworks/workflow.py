@@ -3,7 +3,7 @@
     python workflow.py average   # one Firework per CSV file, then one that aggregates them
     python workflow.py profile   # one Firework per task length of example 5
 
-The LaunchPad is the file in MONGOMOCK_SERVERSTORE_FILE (no MongoDB server needed). MAX_INPUTS and
+The LaunchPad is the file in MONGOMOCK_SERVERSTORE_FILE (no MongoDB server needed). QCG_MAX_INPUTS (or MAX_INPUTS) and
 TIMES_FILE scale the runs down, as for the QCG examples.
 """
 import glob
@@ -21,7 +21,7 @@ lp.reset("", require_password=False)  # a fresh LaunchPad for every run of the e
 
 if sys.argv[1:] == ["average"]:
     names = sorted(glob.glob(os.path.join(HERE, "input", "*.csv")))
-    limit = int(os.environ.get("MAX_INPUTS", "0"))
+    limit = int(os.environ.get("QCG_MAX_INPUTS") or os.environ.get("MAX_INPUTS", "0"))
     names = names[:limit] if limit else names
     os.makedirs(os.path.join(HERE, "averages"), exist_ok=True)
     averages = []

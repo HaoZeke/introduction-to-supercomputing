@@ -1,9 +1,9 @@
 # Example 4 with Snakemake: one average per CSV file, then result.csv from all of them.
-# MAX_INPUTS limits the number of files (all of them by default).
+# QCG_MAX_INPUTS (or MAX_INPUTS) limits the number of files (all of them by default).
 import glob
 import os
 
-MAX = int(os.environ.get("MAX_INPUTS", "0"))
+MAX = int(os.environ.get("QCG_MAX_INPUTS") or os.environ.get("MAX_INPUTS", "0"))
 NAMES = sorted(os.path.basename(f)[:-len(".csv")] for f in glob.glob("input/*.csv"))
 NAMES = NAMES[:MAX] if MAX else NAMES
 

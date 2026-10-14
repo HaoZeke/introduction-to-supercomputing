@@ -7,7 +7,8 @@
 #SBATCH --error=fw.%j.err
 set -euo pipefail
 module load 2025
-module load FireWorks/2.1.4-gfbf-2025a
+# SRC course cluster: module. Snellius has no FireWorks module: use the venv from the README.
+module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || source "$HOME/venvs/fireworks/bin/activate"
 
 export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json TASK_DIR=$TMPDIR/tasks
 echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"

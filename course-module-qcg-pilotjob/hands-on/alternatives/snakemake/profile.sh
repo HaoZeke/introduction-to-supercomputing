@@ -7,7 +7,8 @@
 #SBATCH --error=snakemake.%j.err
 set -euo pipefail
 module load 2025
-module load snakemake/9.22.0-foss-2025b
+# SRC course cluster: module. Snellius has no snakemake module: use the venv from the README.
+module load snakemake/9.22.0-foss-2025b 2>/dev/null || source "$HOME/venvs/snakemake/bin/activate"
 
 rm -rf profile
 echo START,$(date +%s)
