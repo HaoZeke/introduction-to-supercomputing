@@ -38,3 +38,4 @@ modules per run.
 > module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
 > ```
 > and lower `--ntasks-per-node` to the core count of a workspace (`sinfo -o '%n %c'`), or override it on the command line, for example `sbatch --nodes=3 --ntasks-per-node=2 qcg_job.sh`. In the QCG Python scripts, change `modules=["2024", "Python/3.12.3-GCCcore-13.3.0"]` to `modules=["2025", "Python/3.13.1-GCCcore-14.2.0"]`. SRC does not bill in system billing units: `sacct` reports `CPUTimeRAW` in core-seconds, so count core-hours instead.
+> In example 5, `pipeline.sh` starts 16 tasks per block whatever the allocation, and its tasks only sleep, so on a node with fewer than 16 cores it still runs 16 at once while `qcg_job.sh` uses only the cores it was given; the comparison then comes out the wrong way round. Run both with 16 tasks on a node with at least 16 cores, or replace the 16 in `pipeline.sh` with `$SLURM_NTASKS`.
