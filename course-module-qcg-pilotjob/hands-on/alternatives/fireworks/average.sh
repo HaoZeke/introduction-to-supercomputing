@@ -9,7 +9,7 @@
 set -euo pipefail
 module load 2025
 # SRC course cluster: module. Snellius has no FireWorks module: use the venv from the README.
-module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || source "$HOME/venvs/fireworks/bin/activate"
+module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || { module load Python/3.13.1-GCCcore-14.2.0; source "$HOME/venvs/fireworks/bin/activate"; }
 
 export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json
 echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"   # an empty LaunchPad, as in the FireWorks quickstart
