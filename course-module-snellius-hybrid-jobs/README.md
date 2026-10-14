@@ -30,10 +30,10 @@ We will work with a small subset of the Snellius supercomputer, a powerful syste
 
 Snellius features a range of node types:
 
-- **CPU nodes**: partition `rome` with 521 nodes of 128 AMD Rome cores, and partition `genoa` with 737 nodes of 192 AMD Genoa cores, for a total of 208,192 cores.
+- **CPU nodes**: partition `rome` with 520 nodes of 128 AMD Rome cores, and partition `genoa` with 736 nodes of 192 AMD Genoa cores, for a total of 207,872 cores.
 - **Fat nodes**: partitions `fat_rome` and `fat_genoa`, 120 nodes, each with 1 TiB or 1.5 TiB of RAM, intended for memory-intensive jobs.
 - **High-memory nodes**: partitions `himem_4tb` and `himem_8tb`, 4 nodes with 4 TiB or 8 TiB of RAM, intended for extremely memory-intensive jobs.
-- **GPU nodes**: partition `gpu_a100` with 63 nodes of 4 NVIDIA A100 GPUs, and partition `gpu_h100` with 88 nodes of 4 NVIDIA H100 GPUs, designed for massively parallel computations such as machine learning and molecular dynamics.
+- **GPU nodes**: partition `gpu_a100` with 62 nodes of 4 NVIDIA A100 GPUs (and 4 more A100 nodes split into MIG slices in `gpu_mig`), and partition `gpu_h100` with 88 nodes of 4 NVIDIA H100 GPUs, designed for massively parallel computations such as machine learning and molecular dynamics.
 
 The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
 
