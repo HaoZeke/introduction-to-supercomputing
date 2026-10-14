@@ -8,7 +8,7 @@ jobs = Jobs()
 i = 0
 tmpdir = os.environ.get('TMPDIR', '.')
 
-with open("times.txt", "r") as f:
+with open(os.environ.get("TIMES_FILE", "times.txt"), "r") as f:
     for line in f:
         sleep_time = int(line.rstrip("\n"))
         jobs.add(name=f'job_{i}',
