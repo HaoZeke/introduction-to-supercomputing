@@ -97,9 +97,9 @@ The method above is very verbose. Instead, let’s record a few key ones in the 
 [<username>@int6 ~]$ echo "Home directory: $HOME" >> <username>.dat
 [<username>@int6 ~]$ echo "Login node: $HOSTNAME" >> <username>.dat
 [<username>@int6 ~]$ cat <username>.dat
-Username: <username>.dat
-Current directory: /home/<username>/
-Home directory: /home/<username>/
+Username: <username>
+Current directory: /home/<username>
+Home directory: /home/<username>
 Login node: int6.local.snellius.surf.nl
 ```
 
