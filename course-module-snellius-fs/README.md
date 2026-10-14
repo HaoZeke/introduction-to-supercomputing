@@ -96,7 +96,7 @@ Next, use the script below to launch a job that lists the contents of `$TMPDIR`,
 #!/bin/bash
 #SBATCH -J files
 #SBATCH -t 5
-#SBATCH -p thin_course
+#SBATCH -p rome
 
 ls -l $TMPDIR
 touch "$TMPDIR/testfile.foo"
@@ -145,7 +145,7 @@ The scratch-node behavior is technically similar to scratch-local. For each assi
 
 Please be aware that when requesting a shared node, you will only receive a portion of the local NVMe disk, such as 25%, 50%, or 75%, depending on the requested job resources.
 
-Scratch-node is available on all fat nodes and on a subset of thin and GPU nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
+Scratch-node is available on all fat nodes and on a subset of the `rome`, `genoa` and GPU nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
 
 #### Exercise
 Modify the script above to launch a job that creates a file on scratch-node and displays the file's real path.
@@ -154,7 +154,7 @@ Modify the script above to launch a job that creates a file on scratch-node and 
 #!/bin/bash
 #SBATCH -J scratch-node-test
 #SBATCH -t 5
-#SBATCH -p thin_course
+#SBATCH -p rome
 #SBATCH --constraint=scratch-node
 
 touch "$TMPDIR/testfile-scratch-node.foo"
