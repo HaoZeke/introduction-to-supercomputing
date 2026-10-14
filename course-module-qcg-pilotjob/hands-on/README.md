@@ -31,6 +31,8 @@ modules per run.
    diagnostics and explanation regarding each job and also the available logs please refer to the 
    [documentation](https://qcg-pilotjob.readthedocs.io/en/develop/logs.html).
 
+The directory `alternatives/` repeats examples 4 and 5 with HyperQueue, Snakemake and FireWorks, so you can compare how each tool expresses dependencies and fills the cores. See `alternatives/README.md`.
+
 > [!NOTE]
 > EESSI 2025.06 does not include QCG-PilotJob, so the SRC cluster carries a site installation on top of it as `QCG-PilotJob/0.14.1-GCCcore-14.2.0`. In the job scripts, replace the two `module load` lines with:
 > ```
