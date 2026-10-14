@@ -9,7 +9,8 @@
 # TIMES_FILE picks the task lengths (default: example 5's times.txt).
 set -euo pipefail
 module load 2025
-module load Python/3.13.1-GCCcore-14.2.0
+# HyperQueue/0.24.0 exists on the SRC course cluster and on Snellius (2025)
+module load Python/3.13.1-GCCcore-14.2.0 2>/dev/null || true
 module load HyperQueue/0.24.0
 
 export HQ_SERVER_DIR=$TMPDIR/hq-server
