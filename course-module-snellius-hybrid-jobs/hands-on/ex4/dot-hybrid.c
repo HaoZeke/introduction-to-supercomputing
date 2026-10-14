@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
 
     // Check for successful memory allocation
     if (x == NULL || y == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return 1;
+        fprintf(stderr, "Rank %d: memory allocation failed\n", rank);
+        MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
     // Initialize local vectors

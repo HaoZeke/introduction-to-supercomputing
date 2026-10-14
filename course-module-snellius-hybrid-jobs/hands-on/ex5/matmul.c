@@ -34,16 +34,20 @@ int main(int argc, char **argv) {
     double **B = (double**) malloc(n * sizeof(double*));
     double **C = (double**) malloc(n * sizeof(double*));
 
+    // Check for successful memory allocation before using the row pointers
+    if (A == NULL || B == NULL || C == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        return 1;
+    }
+
     for (size_t i = 0; i < n; i++) {
         A[i] = (double*) malloc(n * sizeof(double));
         B[i] = (double*) malloc(n * sizeof(double));
         C[i] = (double*) malloc(n * sizeof(double));
-    }
-
-    // Check for successful memory allocation
-    if (A == NULL || B == NULL || C == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return 1;
+        if (A[i] == NULL || B[i] == NULL || C[i] == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return 1;
+        }
     }
 
     // Initialize the matrices
