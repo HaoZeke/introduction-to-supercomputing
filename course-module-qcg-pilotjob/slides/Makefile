@@ -1,5 +1,6 @@
-# Build qcg-pilotjob-slides.pdf from qcg-pilotjob-slides.org.
-# `make clean` removes the build files and keeps the PDF.
+# Build qcg-pilotjob-slides.pdf and workflow-alternatives.pdf from their Org sources.
+# Both decks share pptx-style.tex, export.el and the QCG deck's fonts and colours.
+# `make clean` removes the build files and keeps the PDFs.
 # Needs Emacs with Org 9.6 or newer, XeLaTeX, latexmk, TikZ, varwidth,
 # Carlito, Liberation Sans and Mono, and DejaVu Sans.
 # On Debian or Ubuntu:
@@ -7,18 +8,17 @@
 #     texlive-pictures fonts-crosextra-carlito fonts-liberation \
 #     fonts-dejavu-core
 
-DECK := qcg-pilotjob-slides
+DECKS := qcg-pilotjob-slides workflow-alternatives
 
-all: $(DECK).pdf
+all: $(DECKS:=.pdf)
 
-$(DECK).tex: $(DECK).org export.el
-	emacs --batch $(DECK).org --load export.el
+%.tex: %.org export.el
+	emacs --batch $< --load export.el
 
-$(DECK).pdf: $(DECK).tex pptx-style.tex $(DECK)-style.tex $(wildcard figures/$(DECK)/*)
-	latexmk -xelatex -interaction=nonstopmode -halt-on-error $(DECK).tex
+%.pdf: %.tex pptx-style.tex qcg-pilotjob-slides-style.tex $(wildcard figures/*/*)
+	latexmk -xelatex -interaction=nonstopmode -halt-on-error $<
 
 clean:
-	latexmk -c $(DECK).tex
-	-rm -f $(DECK).tex $(DECK).*vrb $(DECK).xdv $(DECK).nav $(DECK).snm
+	for d in $(DECKS); do latexmk -c $$d.tex; rm -f $$d.tex $$d.*vrb $$d.xdv $$d.nav $$d.snm; done
 
 .PHONY: all clean
