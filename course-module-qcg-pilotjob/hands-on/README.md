@@ -38,4 +38,11 @@ modules per run.
 > module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
 > ```
 > and lower `--ntasks-per-node` to the core count of a workspace (`sinfo -o '%n %c'`), or override it on the command line, for example `sbatch --nodes=3 --ntasks-per-node=2 qcg_job.sh`. In the QCG Python scripts, change `modules=["2024", "Python/3.12.3-GCCcore-13.3.0"]` to `modules=["2025", "Python/3.13.1-GCCcore-14.2.0"]`. SRC does not bill in system billing units: `sacct` reports `CPUTimeRAW` in core-seconds, so count core-hours instead.
-> In example 5, `pipeline.sh` starts 16 tasks per block whatever the allocation, and its tasks only sleep, so on a node with fewer than 16 cores it still runs 16 at once while `qcg_job.sh` uses only the cores it was given; the comparison then comes out the wrong way round. Run both with 16 tasks on a node with at least 16 cores, or replace the 16 in `pipeline.sh` with `$SLURM_NTASKS`.
+> The examples are sized for 16-core Snellius nodes. On 2-core SRC workspaces, scale them down so a run takes minutes, not an hour:
+> ```
+> sbatch --array=0-99%10 array_job.sh                                # example 2: 100 of the 1000 files
+> QCG_MAX_INPUTS=100 sbatch --ntasks=2 qcg_job.sh                    # example 4: 100 of the 1000 files, each version
+> TIMES_FILE=times_short.txt sbatch --ntasks=2 pipeline.sh           # example 5: the same 160 tasks, an eighth of the sleep
+> TIMES_FILE=times_short.txt sbatch --ntasks=2 qcg_job.sh
+> ```
+> In example 5, `pipeline.sh` runs its tasks in blocks of the job's task count, so both runs use the same number of slots and the comparison holds at any size.
