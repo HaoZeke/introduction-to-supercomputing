@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
 
     const size_t n = (size_t)strtoull(argv[1], NULL, 10);  // Matrix size from command line input
 
-    printf("Matrix size: %ld x %ld\n", n, n);
+    printf("Matrix size: %zu x %zu\n", n, n);
 
     // Allocate memory for the matrices
     double **A = (double**) malloc(n * sizeof(double*));
