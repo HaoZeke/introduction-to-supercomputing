@@ -21,7 +21,7 @@ Each tool has a directory with the job scripts `average.sh` and `profile.sh`. Ru
 cd hyperqueue
 ```
 
-Module: `HyperQueue/0.24.0` (with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them).
+Module: `HyperQueue/0.24.0` (with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them). On the SRC course cluster this is a site installation on top of EESSI, not part of EESSI. On Snellius, check that it exists with `module spider HyperQueue`.
 
 The script starts a HyperQueue server and one worker inside the Slurm allocation. It lists the CSV files in `files.txt` and submits one task per line with `hq submit --each-line`. The `--wait` flag blocks until every task has finished, and only then does the script build `result.csv`.
 
@@ -38,7 +38,7 @@ The dependency sits in `hq submit --wait`: the aggregation is the line after it.
 cd snakemake
 ```
 
-Module: `snakemake/9.22.0-foss-2025b`.
+Module: `snakemake/9.22.0-foss-2025b`, from EESSI on the 2025b toolchain. On Snellius, check that it exists with `module spider snakemake`.
 
 The `Snakefile` defines a rule `average` that turns `input/{name}.csv` into `averages/{name}.csv`, and a rule `aggregate` that builds `result.csv`. `snakemake --cores $SLURM_NTASKS` works out which files are missing and runs the rules on the cores of the allocation. `Snakefile.profile` has one rule instance per task length.
 
@@ -55,7 +55,7 @@ The dependency sits in the `input` of the `aggregate` rule: it lists every file 
 cd fireworks
 ```
 
-Module: `FireWorks/2.1.4-gfbf-2025a`.
+Module: `FireWorks/2.1.4-gfbf-2025a`. On the SRC course cluster this is a site installation on top of EESSI, not part of EESSI. On Snellius, check that it exists with `module spider FireWorks`.
 
 `workflow.py` writes one Firework per task into a LaunchPad, which here is a file under `$TMPDIR` (no MongoDB server needed). `rlaunch multi` then starts one worker per core, and each worker runs whichever Firework is ready until none are left.
 
@@ -81,7 +81,7 @@ The lanes in the plot are the CPU number each task reported at its start. Tasks 
 
 ## Measured results
 
-Measured on a 2-core SRC test cluster, with the 32 tasks of example 5 at their original lengths on 2 slots:
+Measured once on 2-core SRC nodes with 2 slots, with the 32 tasks of example 5 at their original lengths. These numbers describe that setup, not the tools in general; a 16-core Snellius allocation was not measured:
 
 | Tool | Span | Idle |
 |---|---|---|
@@ -91,9 +91,9 @@ Measured on a 2-core SRC test cluster, with the 32 tasks of example 5 at their o
 | Snakemake | 172 s | 2% |
 | FireWorks | 173 s | 3% |
 
-Most of the QCG-PilotJob idle time is the module load that each task does.
+Most of the QCG-PilotJob idle time came from the module load that each task did in that run. The QCG examples leave `modules=` out, so the tasks inherit the job's environment and a new run should show less idle time for QCG-PilotJob.
 
-Averages of 100 files (example 4):
+Averages of 100 files (example 4), on the same 2-core SRC nodes with 2 slots:
 
 | Tool | Time |
 |---|---|
