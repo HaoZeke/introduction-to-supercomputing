@@ -16,7 +16,6 @@ with open(os.environ.get("TIMES_FILE", "times.txt"), "r") as f:
                  args=["sleep.py", sleep_time],
                  stdout=f'{tmpdir}/qcg_{i}.out',
                  stderr=f'{tmpdir}/qcg_{i}.err',
-                 modules=["2025", "Python/3.13.1-GCCcore-14.2.0"],
                  iteration=1)
         i = i + 1
 
