@@ -146,8 +146,8 @@ rule aggregate:
 #+begin_tb
 - The LaunchPad is a file under \\
   =$TMPDIR=; no MongoDB server.
-- =rlaunch multi= starts one worker \\
-  per core.
+- =rlaunch rapidfire=: one worker. \\
+  A file LaunchPad allows no more.
 #+end_tb
 #+attr_latex: :options [x=69,y=251.13,s=18,l=21.6,b]
 #+begin_tb
@@ -194,7 +194,6 @@ bash pipeline & 266 s & 36\%\\
 QCG-PilotJob & 221 s & 23\%\\
 HyperQueue & 172 s & 2\%\\
 Snakemake & 172 s & 2\%\\
-FireWorks & 173 s & 3\%\\
 \end{tabular}
 #+end_export
 #+end_tb
@@ -215,7 +214,6 @@ The same 2-core SRC nodes, 2 slots.
 \textbf{Tool} & \textbf{Time}\\[4bp]
 HyperQueue & 23 s\\
 Snakemake & 46 s\\
-FireWorks & 25 s\\
 QCG-PilotJob & 3 min 12 s per version\\
 \end{tabular}
 #+end_export
@@ -231,7 +229,7 @@ QCG-PilotJob & 3 min 12 s per version\\
 - The bash pipeline runs tasks in blocks of the slot count, so a block waits for its longest task.
 - QCG-PilotJob: most of the 23% came from the module load each task did in that run. The examples \\
   leave *modules* out, so the tasks inherit the job's environment.
-- HyperQueue, Snakemake and FireWorks start the next task when a slot frees up: 2% to 3% idle.
+- HyperQueue and Snakemake start the next task when a slot frees up: 2% idle.
 - Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping \\
   bars can leave white space that is not idle time.
 - The idle figure comes from the task start and end times.
@@ -248,7 +246,7 @@ QCG-PilotJob & 3 min 12 s per version\\
   from Python; HyperQueue from the command line, with a Python API as well.
 - *Snakemake*: rules on files; a rerun builds only what changed.
 - *FireWorks*: a database of workflows with states and reruns. Not for many small tasks: \\
-  with the file-backed LaunchPad, 1000 averages took over 9 min on 16 cores, Snakemake 15 s.
+  without a MongoDB server one worker runs them in turn, 212 s for 1000 averages (Snakemake 15 s).
 #+end_tb
 
 * Have fun! :)

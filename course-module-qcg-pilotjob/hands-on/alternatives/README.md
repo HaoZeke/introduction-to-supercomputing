@@ -71,7 +71,7 @@ source $HOME/venvs/fireworks/bin/activate
 pip install "fireworks[mongomock]"
 ```
 
-`workflow.py` writes one Firework per task into a LaunchPad, which here is a file under `$TMPDIR` (no MongoDB server needed). `rlaunch multi` then starts one worker per core, and each worker runs whichever Firework is ready until none are left.
+`workflow.py` writes one Firework per task into a LaunchPad, which here is a file under `$TMPDIR` (no MongoDB server needed). `rlaunch rapidfire` then starts one worker, which runs whichever Firework is ready until none are left. Only one worker may use a file-backed LaunchPad: with several (`rlaunch multi`), Firework states get lost and the aggregation never runs. Parallel workers need a MongoDB server.
 
 ```
 sbatch average.sh
@@ -80,7 +80,7 @@ sbatch profile.sh
 
 The dependency sits in `parents=averages` on the `aggregate` Firework in `workflow.py`.
 
-`average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. With the file-backed LaunchPad, all 1000 files took over 9 minutes on 16 Snellius cores; Snakemake took 15 s on the same allocation. Do not use FireWorks this way for many small tasks: it keeps a database entry per task, which pays off for long tasks that need states and reruns, and it wants a real MongoDB server at larger scale.
+`average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. On Snellius the one worker took 9 s for 100 files and 212 s for all 1000; Snakemake took 15 s for 1000 files on 16 cores. Do not use FireWorks for many small tasks: without a MongoDB server it runs them one at a time.
 
 ## Plot the profiles
 
@@ -105,7 +105,8 @@ Measured once on 2-core SRC nodes with 2 slots, with the 32 tasks of example 5 a
 | QCG-PilotJob | 221 s | 23% |
 | HyperQueue | 172 s | 2% |
 | Snakemake | 172 s | 2% |
-| FireWorks | 173 s | 3% |
+
+FireWorks is left out of both tables: it was measured with two `rlaunch multi` workers, which the file-backed LaunchPad does not support.
 
 Most of the QCG-PilotJob idle time came from the module load that each task did in that run. The QCG examples leave `modules=` out, so the tasks inherit the job's environment and a new run should show less idle time for QCG-PilotJob.
 
@@ -115,7 +116,6 @@ Averages of 100 files (example 4), on the same 2-core SRC nodes with 2 slots:
 |---|---|
 | HyperQueue | 23 s |
 | Snakemake | 46 s |
-| FireWorks | 25 s |
 | QCG-PilotJob | 3 min 12 s per version |
 
 ## Questions
