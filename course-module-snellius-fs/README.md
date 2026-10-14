@@ -98,9 +98,9 @@ Next, use the script below to launch a job that lists the contents of `$TMPDIR`,
 #SBATCH -t 5
 #SBATCH -p thin_course
 
+hostname
 ls -l $TMPDIR
 touch "$TMPDIR/testfile.foo"
-hostname > "$TMPDIR/testfile.foo"
 ls -l $TMPDIR
 echo $TMPDIR
 realpath $TMPDIR
@@ -113,7 +113,7 @@ We executed the job twice and provided the outputs below. Despite both jobs bein
 tcn386.local.snellius.surf.nl
 total 0
 total 0
--rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile-.foo
+-rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile.foo
 /scratch-local/scur1448.4401218
 /gpfs/scratch1/nodespecific/tcn386/scur1448.4401218
 ```
@@ -123,7 +123,7 @@ total 0
 tcn386.local.snellius.surf.nl
 total 0
 total 0
--rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile-.foo
+-rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile.foo
 /scratch-local/scur1448.4401219
 /gpfs/scratch1/nodespecific/tcn386/scur1448.4401219
 ```
