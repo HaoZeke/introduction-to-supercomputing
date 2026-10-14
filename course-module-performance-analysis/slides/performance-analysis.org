@@ -1601,7 +1601,7 @@ Free
 #+end_tb
 #+attr_latex: :options [x=536.45,y=439.07,s=9,l=10.8,f=arial]
 #+begin_tb
-performance analysis tool for MPI+OpenMP
+MPI+OpenMP analysis with Score-P (Score-P/9.3-gompi-2025a)
 #+end_tb
 #+attr_latex: :options [x=206.7,y=455.55,s=9,l=10.8,f=arial,b]
 #+begin_tb
