@@ -10,6 +10,7 @@ module load 2025
 module load FireWorks/2.1.4-gfbf-2025a
 
 export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json TASK_DIR=$TMPDIR/tasks
+echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"
 python workflow.py profile >&2
 echo START,$(date +%s)
 (cd "$TMPDIR" && rlaunch multi "$SLURM_NTASKS" >&2)
