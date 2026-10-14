@@ -128,7 +128,7 @@ On Snellius, accounting information is collected and exposed through dedicated c
 Finally, use the following commands to collect details about your quota and compute budgets, and include them to your log file:
 
 ```
-[<username>@int6 ~]$ last -n -R 1 $USER
+[<username>@int6 ~]$ last -n 1 -R $USER
 <username>  pts/5        Tue Oct 28 20:12   still logged in
 [<username>@int6 ~]$ myquota
 <username>@home6
