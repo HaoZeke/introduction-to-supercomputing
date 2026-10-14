@@ -19,7 +19,7 @@ module load 2023               # Load the specific environment (update as needed
 module load foss/2023a         # Load the desired compiler/toolchain (update as needed)
 
 # Compile the program
-gcc dot.c -o dot.out -lm
+gcc -O2 dot.c -o dot.out -lm
 
 # Execute the program with N passed as an argument
 N=$1                           # Set the vector size from the first command line argument
