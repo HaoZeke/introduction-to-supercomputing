@@ -193,11 +193,11 @@ And Boolean logic, zeros and ones!
 #+end_tb
 #+attr_latex: :options [x=893.61,y=330.36,s=7,l=8.4,c=c177ABF,i]
 #+begin_tb
-[[https://upload.wikimedia.org/wikipedia/commons/c/c0/8%20bytes%20vs.%208Gbytes.jpg][_source_]]
+[[https://commons.wikimedia.org/wiki/File:8_bytes_vs._8Gbytes.jpg][_source_]]
 #+end_tb
 #+attr_latex: :options [x=893.51,y=505.91,s=7,l=8.4,c=c177ABF,i]
 #+begin_tb
-[[https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FMechanicalKeyboards%2Fcomments%2Fuu7p0b%2Fmany_keyboards%2F&psig=AOvVaw2EbOGL_nXquuQgmro0R0TO&ust=1741274239287000&source=images&cd=vfe&opi=89978449&ved=0CBcQjhxqFwoTCPjBnZae84sDFQAAAAAdAAAAABAS][_source_]]
+[[https://www.reddit.com/r/MechanicalKeyboards/comments/uu7p0b/many_keyboards/][_source_]]
 #+end_tb
 #+attr_latex: :options [x=687.42,y=505.91,s=7,l=8.4,c=c177ABF,i]
 #+begin_tb
@@ -205,7 +205,7 @@ And Boolean logic, zeros and ones!
 #+end_tb
 #+attr_latex: :options [x=893.61,y=168.18,s=7,l=8.4,c=c177ABF,i]
 #+begin_tb
-[[https://upload.wikimedia.org/wikipedia/commons/c/c0/8%20bytes%20vs.%208Gbytes.jpg][_source_]]
+[[https://commons.wikimedia.org/wiki/File:8_bytes_vs._8Gbytes.jpg][_source_]]
 #+end_tb
 
 * A larger computer could be
@@ -915,7 +915,7 @@ hence *heavy tasks must be avoided*.
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-238,816 cores + 640 GPUs: *37.9 Pflop/s of peak performance* and *1,421* TB memory.
+1,258 rome and genoa nodes + 604 GPUs: *37.9 Pflop/s of peak performance*.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
@@ -1663,7 +1663,7 @@ When you log in with =ssh=, you access the login nodes.
 #+end_tb
 #+attr_latex: :options [x=64.38,y=181.46,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Alternative for untrusted connections: =ssh <username>@doornode.hpcv.surf.nl=.
+- Alternative for untrusted connections: the SURF door node; its address is on the Snellius login page of the SURF user documentation.
 #+end_tb
 #+attr_latex: :options [x=179.2,y=212.05,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
@@ -1739,7 +1739,7 @@ supercomputers
 #+end_tb
 #+attr_latex: :options [x=357.43,y=200.97,s=16,l=19.2]
 #+begin_tb
-@@beamer:{\fontsize{32}{38.4}\selectfont \textcolor{c070809}{\textbf{@@#9@@beamer:}}}@@ on the Top500 list
+@@beamer:{\fontsize{32}{38.4}\selectfont \textcolor{c070809}{\textbf{@@#11@@beamer:}}}@@ on the Top500 list
 #+end_tb
 #+attr_latex: :options [x=81.24,y=431.04,s=32,l=38.4,c=c036B99,f=cg,b]
 #+begin_tb
@@ -1827,11 +1827,11 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 1387 CPU nodes (AMD Rome and Genoa)
+- 1382 CPU nodes (AMD Rome and Genoa)
 #+end_tb
 #+attr_latex: :options [x=66.07,y=363.14,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 160 GPU nodes with NVIDIA GPUs
+- 151 GPU nodes with NVIDIA GPUs
 #+end_tb
 #+attr_latex: :options [x=66.07,y=392.42,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
