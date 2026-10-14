@@ -151,7 +151,7 @@ application
 #+beamer: \slidegraphics{figures/performance-analysis/g06}
 #+attr_latex: :options [x=68.18,y=139.83,s=18,l=21.6,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
-- Using tools, e.g. Vtune, Scalasca, nvprof, memory-profiler
+- Using tools, e.g. Vtune, Scalasca, Nsight Systems, memory-profiler
 #+end_tb
 #+attr_latex: :options [x=68.18,y=171.35,s=18,l=21.6,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -1449,7 +1449,7 @@ Description
 #+end_tb
 #+attr_latex: :options [x=203.95,y=225.92,s=9,l=10.8,f=arial,b]
 #+begin_tb
-ARM DDT
+Linaro DDT
 #+end_tb
 #+attr_latex: :options [x=346.9,y=225.92,s=9,l=10.8,f=arial]
 #+begin_tb
@@ -1617,7 +1617,7 @@ IO profiler
 #+end_tb
 #+attr_latex: :options [x=210.7,y=472.02,s=9,l=10.8,f=arial,b]
 #+begin_tb
-nvprof
+Nsight
 #+end_tb
 #+attr_latex: :options [x=355.15,y=472.02,s=9,l=10.8,f=arial]
 #+begin_tb
@@ -1625,11 +1625,11 @@ Free
 #+end_tb
 #+attr_latex: :options [x=545.85,y=472.02,s=9,l=10.8,f=arial]
 #+begin_tb
-Thread profiler (inc. GPU) from NVIDIA
+NVIDIA Nsight Systems and Nsight Compute (GPU)
 #+end_tb
 #+attr_latex: :options [x=203.2,y=488.52,s=9,l=10.8,f=arial,b]
 #+begin_tb
-ARM MAP
+Linaro MAP
 #+end_tb
 #+attr_latex: :options [x=346.9,y=488.52,s=9,l=10.8,f=arial]
 #+begin_tb
@@ -1927,7 +1927,6 @@ POWER(W)
 #+beamer: \slidegraphics{figures/performance-analysis/g20}
 #+attr_latex: :options [x=68.18,y=139.83,s=16,l=19.2,p=5,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
-- Advanced RISC Machines (ARM)
 - American Standard Code for Information \\
   Interchange (ASCII)
 - Array of structures (AOS)
@@ -1936,7 +1935,7 @@ POWER(W)
 - Energy Aware Runtime (EAR)
 - Fast Fourier transform (FFT)
 - Floating-point operation (FLOP)
-- Arm Forge profiler (MAP)
+- Linaro Forge profiler (MAP)
 #+end_tb
 #+attr_latex: :options [x=500,y=139.83,s=16,l=19.2,p=5,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
