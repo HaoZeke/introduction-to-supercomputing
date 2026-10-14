@@ -247,7 +247,8 @@ QCG-PilotJob & 3 min 12 s per version\\
 - *QCG-PilotJob* and *HyperQueue*: many tasks inside one allocation. QCG-PilotJob is driven \\
   from Python; HyperQueue from the command line, with a Python API as well.
 - *Snakemake*: rules on files; a rerun builds only what changed.
-- *FireWorks*: a database of workflows with states and reruns, here with a file-backed LaunchPad.
+- *FireWorks*: a database of workflows with states and reruns. Not for many small tasks: \\
+  with the file-backed LaunchPad, 1000 averages took over 9 min on 16 cores, Snakemake 15 s.
 #+end_tb
 
 * Have fun! :)

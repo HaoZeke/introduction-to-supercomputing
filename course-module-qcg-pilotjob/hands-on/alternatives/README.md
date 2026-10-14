@@ -80,6 +80,8 @@ sbatch profile.sh
 
 The dependency sits in `parents=averages` on the `aggregate` Firework in `workflow.py`.
 
+`average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. With the file-backed LaunchPad, all 1000 files took over 9 minutes on 16 Snellius cores; Snakemake took 15 s on the same allocation. Do not use FireWorks this way for many small tasks: it keeps a database entry per task, which pays off for long tasks that need states and reruns, and it wants a real MongoDB server at larger scale.
+
 ## Plot the profiles
 
 The profile job scripts print `START`, `END` and one `TASK` line per task, in the same format as example 5. Plot each output file:
