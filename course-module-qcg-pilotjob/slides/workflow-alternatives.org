@@ -73,7 +73,7 @@ lp.add_wf(Workflow(averages + [aggregate], name="average"))
 
 * Results: idle time
 
-32 tasks of example 5 at their original lengths, 2 slots, 2-core SRC test cluster:
+One run on 2-core SRC nodes with 2 slots, 32 tasks of example 5 at their original lengths. Not a general result:
 
 | Tool          | Span  | Idle |
 |---------------+-------+------|
@@ -85,6 +85,8 @@ lp.add_wf(Workflow(averages + [aggregate], name="average"))
 
 * Results: averages of 100 files
 
+Same 2-core SRC nodes, 2 slots:
+
 | Tool         | Time                   |
 |--------------+------------------------|
 | HyperQueue   | 23 s                   |
@@ -95,7 +97,7 @@ lp.add_wf(Workflow(averages + [aggregate], name="average"))
 * What the idle time comes from
 
 - The bash pipeline runs tasks in blocks of the slot count, so a block waits for its longest task.
-- QCG-PilotJob: most of the 23% is the module load that each task does.
+- QCG-PilotJob: most of the 23% came from the module load each task did in that run. The examples leave =modules= out, so the tasks inherit the job's environment.
 - HyperQueue, Snakemake and FireWorks start the next task when a slot frees up: 2% to 3% idle.
 - Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping bars can leave white space that is not idle time.
 - The idle figure comes from the task start and end times.
