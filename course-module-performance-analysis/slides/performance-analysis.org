@@ -1601,7 +1601,7 @@ Free
 #+end_tb
 #+attr_latex: :options [x=536.45,y=439.07,s=9,l=10.8,f=arial]
 #+begin_tb
-MPI+OpenMP analysis with Score-P (Score-P/9.3-gompi-2025a)
+MPI+OpenMP analysis with Score-P (Score-P/9.2-gompi-2025a)
 #+end_tb
 #+attr_latex: :options [x=206.7,y=455.55,s=9,l=10.8,f=arial,b]
 #+begin_tb
@@ -1625,7 +1625,7 @@ Free
 #+end_tb
 #+attr_latex: :options [x=545.85,y=472.02,s=9,l=10.8,f=arial]
 #+begin_tb
-NVIDIA Nsight Systems and Nsight Compute (GPU)
+GPU: nsys (Nsight-Systems/2025.4.1), ncu (CUDA/12.8.0)
 #+end_tb
 #+attr_latex: :options [x=203.2,y=488.52,s=9,l=10.8,f=arial,b]
 #+begin_tb
@@ -1676,8 +1676,8 @@ Standard unix/linux profiling utility
 #+attr_latex: :options [x=120.47,y=190.42,s=15.8,l=18.78,c=cD9D9D9,f=cal,code]
 #+begin_tb
 @@beamer:\$@@ module purge \\
-@@beamer:\$@@ module load 2024 \\
-@@beamer:\$@@ module load AMD-uProf/5.0.1479 \\
+@@beamer:\$@@ module load 2025 \\
+@@beamer:\$@@ module load AMD-uProf/5.1.701 \\
 @@beamer:{\fontsize{18}{21.6}\selectfont \$@@ AMDuProfPcm roofline -X -o res.csv -- <prog> <args>@@beamer:}@@
 #+end_tb
 #+attr_latex: :options [x=122.32,y=356.85,s=15.8,l=18.77,c=cD9D9D9,f=cal,code]
