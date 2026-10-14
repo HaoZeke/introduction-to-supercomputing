@@ -175,7 +175,6 @@ realpath "$TMPDIR/testfile-scratch-node.foo"
 
 > On an SRC cluster, `/home` and `/scratch` share one disk on the manager, often a few tens of GB for the whole class, and there are no per-user quotas. Run this exercise with 100 files instead of 1000 (`{1..100}`), use a job's `$TMPDIR` as the second file system instead of scratch, and do the clean-up at the end. The same goes for `ex1/run.sh`: it writes up to 10^9 numbers (more than 7 GB) to `$HOME`; on an SRC cluster set `wdir=$TMPDIR` and `iend=9` before you submit it.
 
-
 ##### Objective
 - Learn how to generate large numbers of files with random data.
 - Compare the efficiency of transferring these files as individual files versus transferring them as an archive between different file systems (e.g., home and scratch).
