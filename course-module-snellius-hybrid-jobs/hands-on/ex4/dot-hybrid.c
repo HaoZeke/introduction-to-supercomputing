@@ -36,7 +36,7 @@ double dot(size_t local_n, double *x, double *y) {
             offset = thread_n * tid + remainder;
         }
 
-        printf("Thread %d from %ld to %ld\n", tid, offset, offset + thread_n);
+        printf("Thread %d from %zu to %zu\n", tid, offset, offset + thread_n);
         for (size_t i = offset; i < offset + thread_n; i++) {
             local_sum += x[i] * y[i];
         }
@@ -78,8 +78,8 @@ int main(int argc, char **argv) {
     }
 
     if (rank == 0) {
-        printf("Global length of the arrays: %ld\n", n);
-        printf("Local length of the arrays: %ld\n", local_n);
+        printf("Global length of the arrays: %zu\n", n);
+        printf("Local length of the arrays: %zu\n", local_n);
     }
 
     // Allocate memory for the local vectors
