@@ -16,10 +16,10 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const size_t n = (size_t)atoi(argv[1]);  // Size of the vectors from command line input
+    const size_t n = (size_t)strtoull(argv[1], NULL, 10);  // Size of the vectors from command line input
     const double a = 2.0f;                    // Scalar multiplier
 
-    printf("Lenght of the arrays: %ld\n", n);
+    printf("Length of the arrays: %zu\n", n);
 
     // Allocate memory for the vectors
     double *x = (double*) malloc(n * sizeof(double));

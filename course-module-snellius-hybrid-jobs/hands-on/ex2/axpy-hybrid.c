@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
         MPI_Finalize();
         return -1;
     }
-    n = atoi(argv[1]);
+    n = (size_t)strtoull(argv[1], NULL, 10);
 
     // Calculate local sizes based on the rank
     remainder = n % world;
@@ -43,8 +43,8 @@ int main(int argc, char **argv) {
     }
 
     if (rank == 0) {
-        printf("Global length of the arrays: %ld\n", n);
-        printf("Local length of the arrays: %ld\n", local_n);
+        printf("Global length of the arrays: %zu\n", n);
+        printf("Local length of the arrays: %zu\n", local_n);
     }
 
     // Allocate memory for the local vectors

@@ -18,7 +18,7 @@ module load 2023
 module load foss/2023a
 
 # Compile the program
-mpicc -fopenmp axpy-hybrid.c -o axpy-hybrid.out
+mpicc -O2 -fopenmp axpy-hybrid.c -o axpy-hybrid.out
 
 # Set the OMP_NUM_THREADS environment variable to match the cpus-per-task
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
