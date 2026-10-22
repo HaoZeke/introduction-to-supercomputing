@@ -3,9 +3,13 @@
 import glob
 import os
 
-MAX = int(os.environ.get("QCG_MAX_INPUTS") or os.environ.get("MAX_INPUTS", "0"))
+MAX = int(os.environ.get("QCG_MAX_INPUTS") or os.environ.get("MAX_INPUTS", "100"))
+if MAX < 0:
+    raise ValueError("QCG_MAX_INPUTS must be nonnegative; 0 selects all files")
 NAMES = sorted(os.path.basename(f)[:-len(".csv")] for f in glob.glob("input/*.csv"))
 NAMES = NAMES[:MAX] if MAX else NAMES
+if not NAMES:
+    raise ValueError("No input CSV files found")
 
 
 rule all:

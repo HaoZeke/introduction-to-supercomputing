@@ -8,12 +8,13 @@ In this hands-on you run the two exercises of the QCG-PilotJob module with three
 Each tool has a directory with the job scripts `average.sh` and `profile.sh`. Run every command from inside the tool directory. The scripts extract `../../example_04/input.tar.gz` and call the helper scripts of examples 4 and 5, so keep the directory layout as it is.
 
 > [!NOTE]
-> The scripts ask for 16 cores. On SRC workspaces with 2 cores, scale the runs down:
+> HyperQueue and Snakemake request 16 tasks; FireWorks requests one task for its single worker. All average scripts default to 100 files; `QCG_MAX_INPUTS=0` selects all files. On SRC workspaces with 2 cores, scale HyperQueue and Snakemake down:
 > ```
 > QCG_MAX_INPUTS=100 sbatch --ntasks=2 average.sh
 > TIMES_FILE=../../example_05/times_short.txt sbatch --ntasks=2 profile.sh
 > ```
 > `times_short.txt` keeps the original task lengths of the first 32 of the 160 tasks. SRC does not bill in system billing units: `sacct` reports `CPUTimeRAW` in core-seconds, so count core-hours instead.
+> For FireWorks retain `--ntasks=1`; use `TIMES_FILE=../../example_05/times_short.txt sbatch profile.sh` for the shorter profile. Start each tool from its own directory. Concurrent runs in one directory share `result.csv`; use separate working copies for concurrent comparisons.
 
 ## HyperQueue
 
@@ -88,9 +89,9 @@ The profile job scripts print `START`, `END` and one `TASK` line per task, in th
 
 ```
 module load 2025 SciPy-bundle/2025.06-gfbf-2025a matplotlib/3.10.3-gfbf-2025a
-python ../../example_05/plot_profile.py hq.<<<SLURM_JOB_ID>>>.out
-python ../../example_05/plot_profile.py snakemake.<<<SLURM_JOB_ID>>>.out
-python ../../example_05/plot_profile.py fw.<<<SLURM_JOB_ID>>>.out
+python ../../example_05/plot_profile.py ../hyperqueue/hq.<jobid>.out
+python ../../example_05/plot_profile.py ../snakemake/snakemake.<jobid>.out
+python ../../example_05/plot_profile.py ../fireworks/fw.<jobid>.out
 ```
 
 The lanes in the plot are the CPU number each task reported at its start. Tasks stay unpinned, so overlapping bars can leave white space in a lane that is not idle time. The idle figure below comes from the start and end times of the tasks.
@@ -116,7 +117,7 @@ Averages of 100 files (example 4), on the same 2-core SRC nodes with 2 slots:
 |---|---|
 | HyperQueue | 23 s |
 | Snakemake | 46 s |
-| QCG-PilotJob | 3 min 12 s per version |
+| QCG-PilotJob, with a module load in every task | 3 min 12 s per version |
 
 ## Questions
 
