@@ -66,3 +66,11 @@ __pycache__/
 *.log
 *.err
 *.bak
+
+# Generated presentation PDFs stay beside their sources as local exports.
+/course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.pdf
+/course-module-performance-analysis/performance-analysis.pdf
+/course-module-qcg-pilotjob/slides/qcg-pilotjob-slides.pdf
+/course-module-qcg-pilotjob/slides/workflow-alternatives.pdf
+/course-module-snellius-fs/slides/snellius-fs.pdf
+/teaching/lesson.pdf
