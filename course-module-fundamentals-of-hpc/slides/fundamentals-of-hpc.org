@@ -915,7 +915,7 @@ hence *heavy tasks must be avoided*.
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-1,256 rome and genoa nodes + 600 GPUs: *37.9 Pflop/s of peak performance*.
+1,256 thin rome/genoa nodes + fat/high-memory nodes + 600 GPUs.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
@@ -1827,7 +1827,7 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 1380 CPU nodes (AMD Rome and Genoa)
+- 1380 CPU nodes, including fat and high-memory nodes
 #+end_tb
 #+attr_latex: :options [x=66.07,y=363.14,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -2189,7 +2189,7 @@ echo "DONE"
 #+end_tb
 #+attr_latex: :options [x=410.87,y=330.77,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Try *=mpirun=* instead, and compare the output.
+- Load =2025 foss/2025a= before trying =mpirun hostname=.
 #+end_tb
 #+attr_latex: :options [x=54.52,y=136.23,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
@@ -2236,8 +2236,7 @@ echo "DONE"
 #+end_tb
 #+attr_latex: :options [x=424.91,y=297.65,s=16,l=17.4,b,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- @@beamer:\texttt{sbatch --dependency=afterok:<jobid> second-}@@ \\
-  =job.sh=
+- =sbatch --dependency=afterok:<jobid> second-job.sh=
 #+end_tb
 #+attr_latex: :options [x=410.87,y=346.13,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2290,7 +2289,7 @@ Don't use =/home= as work dir
 #+begin_tb
 Your home directory has limited \\
 performance for high-throughput \\
-tasks; use =/scratch= storage for \\
+tasks; use =/scratch-shared= storage for \\
 faster I/O.
 #+end_tb
 #+attr_latex: :options [x=55.76,y=176.84,s=18,l=21.6,b]
@@ -2823,7 +2822,7 @@ Shows information about =<modulename>=.
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
 - Could you modify the initial script to prepare it as a template \\
-  for the next session with R???
+  to run an R expression?
 #+end_tb
 #+attr_latex: :options [x=424.91,y=184.13,s=16,l=17.28,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -2876,11 +2875,11 @@ echo "DONE"
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g47}
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Check the file "python.sh" in your home directory:
+- Open =python.sh= in the course's =hands-on= directory:
 #+end_tb
 #+attr_latex: :options [x=424.91,y=164.69,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- linux-cluster-computing/cluster/batch
+- =course-module-fundamentals-of-hpc/hands-on=
 #+end_tb
 #+attr_latex: :options [x=410.87,y=195.65,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
