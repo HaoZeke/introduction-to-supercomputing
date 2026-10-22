@@ -47,11 +47,11 @@ For a two-core SRC workspace, use these overrides from each exercise's
 
 | Exercise | Submission on two-core nodes |
 | --- | --- |
-| 1, AXPY threads | `sbatch --cpus-per-task=2 submit-axpy.sh 10000000` |
+| 1, sequential AXPY | `sbatch --cpus-per-task=1 submit-axpy.sh 10000000` |
 | 2, AXPY MPI | `sbatch --ntasks=2 submit-axpy-hybrid.sh 10000000` |
-| 3, dot product threads | `sbatch --cpus-per-task=2 submit-dot.sh 10000000` |
+| 3, sequential dot product | `sbatch --cpus-per-task=1 submit-dot.sh 10000000` |
 | 4, dot product MPI | `sbatch --nodes=3 --ntasks=6 submit-dot-hybrid.sh 30000000` |
-| 5, matrix multiplication | `sbatch --cpus-per-task=2 submit-matmul.sh 500` |
+| 5, sequential matrix multiplication | `sbatch --cpus-per-task=1 submit-matmul.sh 500` |
 
 For the hostname exercise use `--nodes=3 --ntasks=6 --ntasks-per-node=2`.
 These are SRC resource overrides; retain the Snellius requests on Snellius.
