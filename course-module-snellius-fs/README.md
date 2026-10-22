@@ -173,7 +173,7 @@ realpath "$TMPDIR/testfile-scratch-node.foo"
 
 #### Advanced exercise: Creating large file sets and evaluating transfers
 
-> On an SRC cluster, `/home` and `/scratch` share one disk on the manager, often a few tens of GB for the whole class, and there are no per-user quotas. Run this exercise with 100 files instead of 1000 (`{1..100}`), use a job's `$TMPDIR` as the second file system instead of scratch, and do the clean-up at the end. The same goes for `ex1/run.sh`: it writes up to 10^9 numbers (more than 7 GB) to `$HOME`; on an SRC cluster set `wdir=$TMPDIR` and `iend=9` before you submit it.
+> On an SRC cluster, `/home` and `/scratch` share the NFS server's disk; that server is the manager unless the instructor provisions a separate storage workspace. Check `df -h` before generating data. Run this exercise with 100 files instead of 1000 (`{1..100}`), use a job's `$TMPDIR` as the second file system, and do the clean-up at the end. `ex1/run.sh` defaults to 10^6 and 10^7 values in the job's `$TMPDIR`, falling back to home outside a job. To compare home storage, submit `wdir="$HOME" sbatch ex1/run.sh` from the module directory. The environment variables `ibeg`, `iend` (exclusive), and `nmax` control the range; increasing them requires enough memory for the array and enough disk space for the output. Never set `wdir` to a login node's `$TMPDIR` for a compute job.
 
 ##### Objective
 - Learn how to generate large numbers of files with random data.
