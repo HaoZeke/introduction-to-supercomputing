@@ -2,51 +2,61 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
-void generate_random_values(double *array, int n){
+void generate_random_values(double *array, long n){
     srand(time(NULL));
 
-    for(int i=0; i<n; ++i){
+    for(long i=0; i<n; ++i){
         array[i] = (double)rand()/RAND_MAX; // Generate a random value between 0 and 1
     }
 }
 
-void print_to_file_ascii(const char *filename, double *array, int n){
+// Flush the data to the file system and return the number of bytes written
+long close_file(FILE *output_file){
+    fflush(output_file);
+    fsync(fileno(output_file));
+    long bytes = ftell(output_file);
+    fclose(output_file);
+    return bytes;
+}
+
+long print_to_file_ascii(const char *filename, double *array, long n){
     FILE *output_file = fopen(filename, "w");
     if(output_file==NULL){
         printf("Error opening file for writing\n");
-        return;
+        return -1;
     }
 
-    for(int i=0; i<n; i++){
+    for(long i=0; i<n; i++){
         fprintf(output_file, "%.6lf\n", array[i]);
     }
 
-    fclose(output_file);
+    return close_file(output_file);
 }
 
-void print_to_file_binary(const char *filename, double *array, int n){
+long print_to_file_binary(const char *filename, double *array, long n){
     FILE *output_file = fopen(filename, "wb");
     if(output_file==NULL){
         printf("Error opening file for writing\n");
-        return;
+        return -1;
     }
 
     fwrite(array, sizeof(double), n, output_file);
 
-    fclose(output_file);
+    return close_file(output_file);
 }
 
 int main(int argc, char** argv){
     if(argc!=4){
-        printf("Usage: %s <file> <n> <format>\n", argv[0]);
+        printf("Usage: %s <n> <file> <format>\n", argv[0]);
         printf("  <n> must be a positive integer'\n");
         printf("  <file> must be a valid file name\n");
         printf("  <format> must be either 'ascii' or 'binary'\n");
         return 1;
     }
 
-    long int n = atoi(argv[1]);
+    long int n = strtol(argv[1], NULL, 10);
     const char* filename = argv[2];
     const char* format = argv[3];
 
@@ -64,28 +74,35 @@ int main(int argc, char** argv){
 
     generate_random_values(array, n);
 
-    clock_t start = clock(); // Start the timer
+    long bytes = -1;
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start); // Start the wall-clock timer
 
     if(strcmp(format, "ascii")==0){
-        print_to_file_ascii(filename, array, n);
+        bytes = print_to_file_ascii(filename, array, n);
     }
     else if(strcmp(format, "binary")==0){
-        print_to_file_binary(filename, array, n);
+        bytes = print_to_file_binary(filename, array, n);
     }
     else{
         printf("Parameter <format> must be either 'ascii' or 'binary'\n");
     }
 
-    clock_t end = clock(); // Stop the timer
-    double elapsed_time = (double)(end - start)/CLOCKS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &end); // Stop the timer
+    double elapsed_time = (double)(end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec)/1.0e9;
 
-    // Calculate data size in MB and data transfer rate in MB/s
-    double data_size = (double)(sizeof(double)*n)/(1.0e6); // Data size in MB
+    if(bytes<0){
+        free(array);
+        return 1;
+    }
+
+    // Calculate the size of the written file in MB and data transfer rate in MB/s
+    double data_size = (double)bytes/(1.0e6); // Data size in MB
     double transfer_rate = data_size/elapsed_time; // Data transfer rate in MB/s
 
     printf("%ld random double-precision values written to %s in %s format\n", n, filename, format);
     printf(" Elapsed time [s]: %.6f\n", elapsed_time);
-    printf(" Buffer size [MB]: %ld\n", sizeof(double)*n);
+    printf(" File size [MB]: %.6f\n", data_size);
     printf(" Transfer rate [MB/s]: %.6f\n", transfer_rate);
 
     free(array);
