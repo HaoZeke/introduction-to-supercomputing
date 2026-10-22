@@ -21,6 +21,15 @@ sbatch qcg_job.sh
 
 6. Estimate the total execution time and SBUs spent on this task.
 
+The final version, `qcg_job_v4.py`, checks that every selected average task
+succeeds before submitting aggregation. It writes the selected output filenames
+to `selected.json` in its own `qcg-averages-*` directory. The aggregation job runs
+`aggregate.py` with that directory as its only argument, so selecting all 1000
+inputs does not create a shell command containing every output path. The helper
+reads only the listed files, requires one finite mean for each selected dataset,
+and sorts the rows into `result.csv`. A missing or malformed output makes the
+aggregation task fail; unrelated CSV files are excluded.
+
 The required SBUs can be estimated with the `sacct` tool:
 ``` 
 sacct -X --format="JobID%24,Timelimit,AllocCPUS,CPUTime,CPUTimeRAW" -j 16235860

@@ -1,7 +1,7 @@
 from glob import glob
+import json
 import os
 from pathlib import Path
-import shlex
 import sys
 import tempfile
 
@@ -30,7 +30,7 @@ def main():
         for filename in names:
             name = Path(filename).name
             output = outputs / name
-            files.append(str(output))
+            files.append(name)
             jobs.add(name=name, exec=sys.executable, args=['average.py', filename],
                      stdout=str(output), stderr=str(outputs / f'{name}.err'))
         print('-- submit computational jobs')
@@ -38,9 +38,11 @@ def main():
         manager.wait4(ids)
         if not succeeded(manager, ids):
             raise RuntimeError('An average task failed; aggregation cannot run')
+        (outputs / 'selected.json').write_text(json.dumps(files), encoding='utf-8')
         aggregate = Jobs()
-        aggregate.add(name='aggregate',
-                      script=shlex.join(['cat', *files]) + ' | sort',
+        aggregate.add(name='aggregate', exec=sys.executable,
+                      args=[str(Path(__file__).with_name('aggregate.py').resolve()),
+                            str(outputs)],
                       stdout='result.csv', stderr=str(outputs / 'aggregate.err'))
         ids = manager.submit(aggregate)
         manager.wait4(ids)
