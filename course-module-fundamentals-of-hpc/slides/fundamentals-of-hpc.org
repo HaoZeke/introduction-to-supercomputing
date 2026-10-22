@@ -2899,48 +2899,9 @@ echo "DONE"
 - Can you play around with the variable 'ncores' and see some \\
   parallel efficiency?
 #+end_tb
-#+attr_latex: :options [x=56.71,y=122.01,s=14,l=16.81,c=cFFFFFF,f=mono,v]
+#+attr_latex: :options [x=56.71,y=122.01,s=12,l=14.4,c=cFFFFFF,f=mono,v]
 #+begin_tb
-#+begin_example
-#!/bin/bash
-#SBATCH --job-name="pi"
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=32
-#SBATCH --time=00:10:00
-#SBATCH --partition=rome
-#+end_example
-#+end_tb
-#+attr_latex: :options [x=56.72,y=256.44,s=14,l=16.81,c=cFFFFFF,f=mono,v]
-#+begin_tb
-#+begin_example
-module load 2025
-module load GCC/14.2.0
-#+end_example
-#+end_tb
-#+attr_latex: :options [x=56.72,y=306.85,s=14,l=16.8,c=cFFFFFF,f=mono,v]
-#+begin_tb
-#+begin_example
-echo "OpenMP parallelism"
-#+end_example
-#+end_tb
-#+attr_latex: :options [x=56.72,y=340.45,s=14,l=16.81,c=cFFFFFF,f=mono,v]
-#+begin_tb
-#+begin_example
-for ncores in `seq 8 4 32`
-do
-#+end_example
-#+end_tb
-#+attr_latex: :options [x=56.72,y=374.06,s=14,l=16.81,c=cFFFFFF,f=mono,v]
-#+begin_tb
-#+begin_example
-  export OMP_NUM_THREADS=$ncores
-  echo "CPUS: " $OMP_NUM_THREADS
-  echo "CPUS: " $OMP_NUM_THREADS >&2
-  ./pi
-  echo "DONE"
-done
-#+end_example
+#+INCLUDE: "../hands-on/pi.sh" example
 #+end_tb
 
 * Some additional information

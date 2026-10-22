@@ -12,7 +12,7 @@ DECK := fundamentals-of-hpc
 
 all: $(DECK).pdf
 
-$(DECK).tex: $(DECK).org export.el
+$(DECK).tex: $(DECK).org export.el ../hands-on/pi.sh
 	emacs --batch $(DECK).org --load export.el
 
 $(DECK).pdf: $(DECK).tex pptx-style.tex $(DECK)-style.tex $(wildcard figures/$(DECK)/*)
