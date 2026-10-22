@@ -1663,7 +1663,7 @@ When you log in with =ssh=, you access the login nodes.
 #+end_tb
 #+attr_latex: :options [x=64.38,y=181.46,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Alternative for untrusted connections: the SURF door node; its address is on the Snellius login page of the SURF user documentation.
+- For untrusted connections, use the [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system][documented SURF door node]].
 #+end_tb
 #+attr_latex: :options [x=179.2,y=212.05,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
@@ -1676,16 +1676,13 @@ scur0000@int4:~$
 #+attr_latex: :options [x=179.16,y=331.23,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
 #+begin_example
-user@local:~$ ls
-local-file.txt
+user@local:~$ printf 'hello\n' > local-file.txt
 user@local:~$ scp ./local-file.txt scur0000@snellius.surf.nl:~/
-user@local:~$ scp scur0000@snellius.surf.nl:~/snellius-file.txt ./
-user@local:~$ ls
-snellius-file.txtlocal-file.txt
-user@local:~$ ssh scur0000@snellius.surf.nl
-Password:
-scur0000@int2:~$ ls
-snellius-file.txtlocal-file.txt
+user@local:~$ scp scur0000@snellius.surf.nl:~/local-file.txt downloaded.txt
+user@local:~$ cat downloaded.txt
+hello
+user@local:~$ ssh scur0000@snellius.surf.nl 'ls local-file.txt'
+local-file.txt
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=64.38,y=302.1,s=18,l=21.6]
