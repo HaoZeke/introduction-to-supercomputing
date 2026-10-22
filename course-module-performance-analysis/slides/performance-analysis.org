@@ -420,27 +420,7 @@ Real
 #+end_tb
 #+attr_latex: :options [x=90.7,y=275.75,s=18,l=21.6]
 #+begin_tb
-Scales with
-#+end_tb
-#+attr_latex: :options [x=183.02,y=275.75,s=18,l=21.6,f=math,fw=20.06]
-#+begin_tb
-𝑂(
-#+end_tb
-#+attr_latex: :options [x=214.95,y=275.75,s=18,l=21.6,f=math,fw=19.06]
-#+begin_tb
-𝑃)
-#+end_tb
-#+attr_latex: :options [x=234.01,y=275.75,s=18,l=21.6]
-#+begin_tb
-for
-#+end_tb
-#+attr_latex: :options [x=262.33,y=275.75,s=18,l=21.6,i]
-#+begin_tb
-P
-#+end_tb
-#+attr_latex: :options [x=272.98,y=275.75,s=18,l=21.6]
-#+begin_tb
-processes
+Communication cost depends on message sizes, topology and synchronization.
 #+end_tb
 #+attr_latex: :options [x=313.83,y=411.12,s=13.5,l=16.2,c=c595959,r=90]
 #+begin_tb
@@ -490,23 +470,7 @@ Speedup
 #+end_tb
 #+attr_latex: :options [x=90.7,y=293.03,s=18,l=21.6]
 #+begin_tb
-Scales with
-#+end_tb
-#+attr_latex: :options [x=183.02,y=293.03,s=18,l=21.6,f=math,fw=39.16]
-#+begin_tb
-𝑂(𝑃)
-#+end_tb
-#+attr_latex: :options [x=222.18,y=293.03,s=18,l=21.6]
-#+begin_tb
-for
-#+end_tb
-#+attr_latex: :options [x=250.47,y=293.03,s=18,l=21.6,i]
-#+begin_tb
-P
-#+end_tb
-#+attr_latex: :options [x=261.12,y=293.03,s=18,l=21.6]
-#+begin_tb
-processes
+Ideal speedup is $P$ for $P$ processors at fixed total work.
 #+end_tb
 #+attr_latex: :options [x=68.18,y=293.03,s=18,l=21.6,c=cEE7628,f=arial]
 #+begin_tb
