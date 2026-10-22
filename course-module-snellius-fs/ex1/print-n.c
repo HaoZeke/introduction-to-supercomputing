@@ -64,13 +64,13 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    char *end;
+    char *number_end;
     errno = 0;
-    long int n = strtol(argv[1], &end, 10);
+    long int n = strtol(argv[1], &number_end, 10);
     const char* filename = argv[2];
     const char* format = argv[3];
 
-    if(errno || end == argv[1] || *end || n<=0 || (unsigned long)n > SIZE_MAX/sizeof(double)){
+    if(errno || number_end == argv[1] || *number_end || n<=0 || (unsigned long)n > SIZE_MAX/sizeof(double)){
         printf("Parameter <n> must be a positive integer\n");
         return 1;
     }
