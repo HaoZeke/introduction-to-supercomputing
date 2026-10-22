@@ -19,7 +19,7 @@ module load 2023               # Load the specific environment (update as needed
 module load foss/2023a         # Load the desired compiler/toolchain (update as needed)
 
 # Compile the program
-gcc matmul.c -o matmul.out     # Compile the matrix multiplication C program
+gcc -O2 matmul.c -o matmul.out     # Compile the matrix multiplication C program
 
 # Execute the program with N passed as an argument
 N=$1                           # Set the matrix size from the first command line argument
