@@ -81,6 +81,13 @@ sbatch profile.sh
 
 The dependency sits in `parents=averages` on the `aggregate` Firework in `workflow.py`.
 
+The workflow records its selected output paths in `selected.json` under its
+private `fw-averages-*` directory. Its aggregation task invokes the shared
+`aggregate.py --manifest selected.json` helper with a short command, including
+when all 1000 inputs live under a long scratch path. The helper reads exactly
+those outputs and rejects missing or malformed rows. HyperQueue keeps using
+the same helper's positional-file interface.
+
 `average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. On Snellius the one worker took 9 s for 100 files and 212 s for all 1000; Snakemake took 15 s for 1000 files on 16 cores. Do not use FireWorks for many small tasks: without a MongoDB server it runs them one at a time.
 
 ## Plot the profiles
