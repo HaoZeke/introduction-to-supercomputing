@@ -25,25 +25,29 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const size_t n = (size_t)atoi(argv[1]);  // Matrix size from command line input
+    const size_t n = (size_t)strtoull(argv[1], NULL, 10);  // Matrix size from command line input
 
-    printf("Matrix size: %ld x %ld\n", n, n);
+    printf("Matrix size: %zu x %zu\n", n, n);
 
     // Allocate memory for the matrices
     double **A = (double**) malloc(n * sizeof(double*));
     double **B = (double**) malloc(n * sizeof(double*));
     double **C = (double**) malloc(n * sizeof(double*));
 
+    // Check for successful memory allocation before using the row pointers
+    if (A == NULL || B == NULL || C == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        return 1;
+    }
+
     for (size_t i = 0; i < n; i++) {
         A[i] = (double*) malloc(n * sizeof(double));
         B[i] = (double*) malloc(n * sizeof(double));
         C[i] = (double*) malloc(n * sizeof(double));
-    }
-
-    // Check for successful memory allocation
-    if (A == NULL || B == NULL || C == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return 1;
+        if (A[i] == NULL || B[i] == NULL || C[i] == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            return 1;
+        }
     }
 
     // Initialize the matrices
