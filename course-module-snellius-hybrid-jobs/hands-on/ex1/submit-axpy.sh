@@ -19,7 +19,7 @@ module load 2025               # Load the specific environment (update as needed
 module load foss/2025a         # Load the desired compiler/toolchain (update as needed)
 
 # Compile the program
-gcc axpy.c -o axpy.out
+gcc -O2 axpy.c -o axpy.out
 
 # Execute the program with N passed as an argument
 N=$1                           # Set the vector size from the first command line argument

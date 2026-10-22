@@ -1,6 +1,6 @@
 # Average algorithm
 
-Compute the average of one column in several CSV files. Aggregate the results in one output CSV file `results.csv`. This example is same as `example_02` from this hands-on.
+Compute the average of one column in several CSV files. Aggregate the results in one output CSV file `result.csv`. This example is same as `example_02` from this hands-on.
 
 ## Usage
 1. Extract input data from the tarball
@@ -36,4 +36,4 @@ The raw CPU time in this example is 7232 seconds. It can be converted to SBUs:
 ```
 
 ## Data source
-https://www.ncdc.noaa.gov/ghcnd-data-access
+https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily
