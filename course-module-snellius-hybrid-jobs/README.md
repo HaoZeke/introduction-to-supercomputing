@@ -5,7 +5,7 @@
 ### About the course module and hands-on session
 
 > [!NOTE]
-> The materials for this course module have been adapted from *Introducción a la Supercomputación* by **José Luis Bosque, Borja Pérez, Ramón Beivide,** and **Carmen Martínez** of the Universidad de Cantabria. This adaptation was carried out by the EuroCC NL team at SURF. For more information about the EuroCC2 project, please visit [EuroCC2](https://www.eurocc-access.eu/about-us/the-projects/). The EuroCC NL team expresses gratitude to the original authors for their contributions to these materials.
+> The materials for this course module have been adapted from *Introducción a la Supercomputación* by **José Luis Bosque, Borja Pérez, Ramón Beivide,** and **Carmen Martínez** of the Universidad de Cantabria. This adaptation was carried out by the EuroCC NL team at SURF. For more information about the EuroCC2 project, please visit [EuroCC2](https://www.eurohpc-ju.europa.eu/research-innovation/our-projects/eurocc-2_en). The EuroCC NL team expresses gratitude to the original authors for their contributions to these materials.
 
 In this session, we will dive deeper into the Slurm resource manager, focusing on understanding key parameters for efficient parallel job scheduling, including threads, cores, sockets, nodes, and processes. Our goal is to connect to the Snellius supercomputer and explore hybrid job execution, which leverages both shared-memory (OpenMP) and distributed-memory (MPI) parallelism.
 
@@ -15,10 +15,10 @@ We will explore three basic linear algebra kernels, each with a different parall
 2. **Dot product (scalar product)**: The dot product of two vectors, $$z \gets \sum_{i=1}^{n} x_i * y_i$$, involves multiplying corresponding elements of two vectors and summing the results. The parallel complexity arises from the need for a reduction operation to sum the products. This requires synchronization between threads or processes to accumulate the intermediate sums.
 3. **Matrix multiplication**: The matrix product $$C \gets A * B$$ is more complex, as it involves computing the dot product of rows from matrix `A` with columns from matrix `B`. Efficient parallelization requires distributing the data across multiple nodes or threads, managing both computation and data transfer, which introduces a higher level of parallel complexity compared to vector operations.
 
-The provided materials include two implementations for each kernel:
+The provided materials include these implementations:
 
-- A **sequential** version to understand the basic functionality.
-- A **hybrid** version combining shared-memory (OpenMP) and distributed-memory (MPI) parallelization.
+- A **sequential** version of each kernel, to understand the basic functionality (`ex1` axpy, `ex3` dot product, `ex5` matrix multiplication).
+- A **hybrid** version of axpy (`ex2`) and the dot product (`ex4`), combining shared-memory (OpenMP) and distributed-memory (MPI) parallelization. Matrix multiplication has no hybrid version; parallelizing `ex5/matmul.c` is left as an open exercise.
 
 The main objective is to gain practical experience in running hybrid jobs on supercomputing systems, focusing on the challenges and strategies for parallelizing different computations.
 
@@ -30,12 +30,12 @@ We will work with a small subset of the Snellius supercomputer, a powerful syste
 
 Snellius features a range of node types:
 
-- **Thin nodes**: 1,263 nodes with AMD Rome or Genoa CPUs, each containing either 128 or 192 CPU cores, for a total of over 208,000 cores.
-- **Fat nodes**: 120 nodes, each with 1 TiB or 1.5 TiB of RAM, intended for memory-intensive jobs.
-- **High-memory nodes**: 4 nodes with up to 64 GiB of RAM, intended for extremely memory-intensive jobs.
-- **GPU nodes**: 160 nodes equipped with 4 NVIDIA A100 or H100 GPUs per node, designed for massively parallel computations such as machine learning and molecular dynamics.
+- **CPU nodes**: partition `rome` with 520 nodes of 128 AMD Rome cores, and partition `genoa` with 736 nodes of 192 AMD Genoa cores, for a total of 207,872 cores.
+- **Fat nodes**: partitions `fat_rome` and `fat_genoa`, 120 nodes, each with 1 TiB or 1.5 TiB of RAM, intended for memory-intensive jobs.
+- **High-memory nodes**: partitions `himem_4tb` and `himem_8tb`, 4 nodes with 4 TiB or 8 TiB of RAM, intended for extremely memory-intensive jobs.
+- **GPU nodes**: partition `gpu_a100` with 62 nodes of 4 NVIDIA A100 GPUs (and 4 more A100 nodes split into MIG slices in `gpu_mig`), and partition `gpu_h100` with 88 nodes of 4 NVIDIA H100 GPUs, designed for massively parallel computations such as machine learning and molecular dynamics.
 
-The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/display/WIKI/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
+The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
 
 ### Connecting to Snellius
 
@@ -43,8 +43,8 @@ Since this module is part of the third section in the *Introduction to Supercomp
 
 However, if needed, you can refer to the following guides for assistance:
 
-- [Connecting to the system](https://servicedesk.surf.nl/wiki/display/WIKI/Connecting+to+the+system).
-- [Interacting with the filesystem](https://servicedesk.surf.nl/wiki/display/WIKI/Interacting+with+the+filesystem).
+- [Connecting to the system](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system).
+- [Interacting with the filesystem](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668034/Interacting+with+the+filesystem).
 
 ### Snellius environment modules
 
@@ -196,12 +196,13 @@ We will begin by executing a sequential version of `axpy` in C to understand the
 sbatch submit-axpy.sh <N>
 ```
 
-Example of output:
+Example of output for `N` = 10000000. The kernel runs 100 times, so `y[0]` = 2 + 100 * 2 * 1 = 202. Your times will differ:
 
 ```bash
-$ cat axpy-8061138.out 
-y[0] = 4.000000
-Time taken for axpy execution: 0.537750 seconds
+$ cat axpy-28085116.out
+Length of the arrays: 10000000
+y[0] = 202.000000
+Time taken for axpy execution: 0.963870 seconds
 ```
 
 > [!TIP]
@@ -214,13 +215,35 @@ We will follow by executing a shared- and distributed-memory parallel version of
 ```bash
 sbatch submit-axpy-hybrid.sh <N>
 ```
-Example of output:
+Example of output for `N` = 10000000 with the script's 128 tasks:
 
 ```bash
-$ cat axpy-hybrid-8061673.out
-y[0] = 4.000000
-Time taken for axpy execution: 0.042496 seconds
+$ cat axpy-hybrid-28085117.out
+Global length of the arrays: 10000000
+Local length of the arrays: 78125
+y[0] = 202.000000
+Time taken for axpy execution: 0.009485 seconds
 ```
+
+`Hyb-T-C` in the table below means `T` MPI tasks with `C` OpenMP threads each. Options on the `sbatch` command line override the `#SBATCH` lines, so `sbatch --ntasks=1 --cpus-per-task=16 submit-axpy-hybrid.sh <N>` runs `Hyb-1-16`.
+
+> [!NOTE]
+> With more than one OpenMP thread per task, pin the threads to cores so that the operating system does not move them during the run, which adds noise to the timings. Set these before `srun` in the job script, and bind the tasks as well:
+> ```bash
+> export OMP_PLACES=cores
+> export OMP_PROC_BIND=close
+> srun --cpu-bind=cores ./axpy-hybrid.out $N
+> ```
+> `OMP_PLACES=cores` gives each thread its own core, `OMP_PROC_BIND=close` keeps the threads of a task on neighbouring cores, and `--cpu-bind=cores` binds each task to the cores Slurm allocated to it.
+
+After a job has finished, check how well it used the cores it asked for:
+
+```bash
+seff <jobid>
+sacct -j <jobid> --format=JobID,AllocCPUS,Elapsed,TotalCPU,MaxRSS,State
+```
+
+`seff` reports the CPU efficiency: the CPU time used divided by the allocated cores times the elapsed time. The whole job counts, including compilation and initialization, so a short kernel gives a low figure even when it scales well. Compare the efficiency between configurations rather than reading one value on its own.
 
 > [!TIP]
 > Try submitting multiple jobs with different `ntasks` and `cpus-per-task`. Compare the time to solution between different executions. Complete the table by recording the time taken for the axpy operation across different vector sizes and parallel configurations.
@@ -231,6 +254,10 @@ Time taken for axpy execution: 0.042496 seconds
 > | 100,000,000   |            |          |           |           |          |           |           |
 > | 1,000,000,000 |            |          |           |           |          |           |           |
 > | 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
+>
+> `Hyb-256-1` and `Hyb-2-128` need 256 cores, two `rome` nodes, while the script asks for one node. Add `--nodes=2` for those columns, for example `sbatch --nodes=2 --ntasks=256 --cpus-per-task=1 submit-axpy-hybrid.sh <N>` and `sbatch --nodes=2 --ntasks=2 --cpus-per-task=128 submit-axpy-hybrid.sh <N>`.
 
 ### Scalar product
 
@@ -254,12 +281,13 @@ To submit the job, run the following command:
 sbatch submit-dot.sh <N>
 ```
 
-Example of output:
+The vectors hold `sin(i)` and `0.5 * cos(i)`, and the result sums the dot product over 100 repetitions. Example of output for `N` = 10000000:
 
 ```bash
-$ cat dot-1234567.out
-Dot product: 4999999.500000
-Time taken for dot product execution: 0.143875 seconds
+$ cat dot-28085119.out
+Length of the arrays: 10000000
+Dot product result: 12.3778
+Time taken for dot product execution: 1.21664 seconds
 ```
 
 > [!TIP]
@@ -269,7 +297,7 @@ Time taken for dot product execution: 0.143875 seconds
 
 After understanding the sequential version, we will proceed with executing parallel versions of the dot product using both OpenMP for shared-memory parallelism and MPI for distributed-memory parallelism. Each process or thread will compute a portion of the dot product independently, followed by a reduction step to sum the partial results.
 
-The parallel implementations can be found in the repository: `hands-on/dot-hybrid`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
+The parallel implementations can be found in the repository: `hands-on/ex4`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
 
 To submit the parallel job, run the following command:
 
@@ -277,12 +305,14 @@ To submit the parallel job, run the following command:
 sbatch submit-dot-hybrid.sh <N>
 ```
 
-Example of output:
+Example of output for `N` = 10000000 with the script's 128 tasks. The result matches the sequential run to the printed digits; the order of the additions differs, so later digits can differ:
 
 ```bash
-$ cat dot-hybrid-654321.out
-Dot product: 5000000.000000
-Time taken for dot product execution: 0.034125 seconds
+$ cat dot-hybrid-28085121.out
+Global length of the arrays: 10000000
+Local length of the arrays: 78125
+Global dot product result: 12.3778
+Time taken for dot product execution: 0.039711 seconds
 ```
 
 > [!TIP]
@@ -294,3 +324,7 @@ Time taken for dot product execution: 0.034125 seconds
 >| 100,000,000   |            |          |           |           |          |           |           |
 >| 1,000,000,000 |            |          |           |           |          |           |           |
 >| 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
+>
+> `Hyb-256-1` and `Hyb-2-128` need 256 cores, two `rome` nodes, while the script asks for one node. Add `--nodes=2` for those columns, for example `sbatch --nodes=2 --ntasks=256 --cpus-per-task=1 submit-dot-hybrid.sh <N>` and `sbatch --nodes=2 --ntasks=2 --cpus-per-task=128 submit-dot-hybrid.sh <N>`.
