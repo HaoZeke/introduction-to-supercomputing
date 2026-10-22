@@ -594,8 +594,8 @@ Questions
 #+end_tb
 #+attr_latex: :options [x=502.16,y=224.99,s=13.7,l=13.68,c=cC3E88D,code]
 #+begin_tb
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2024@@beamer:}@@ \\
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load Python/3.12.3-GCCcore-13.3.0
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2025@@beamer:}@@ \\
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load Python/3.13.1-GCCcore-14.2.0
 #+end_tb
 #+attr_latex: :options [x=502.16,y=266.8,s=13.7,l=13.7,c=c546E7A,code]
 #+begin_tb
@@ -625,7 +625,7 @@ input_file_path@@beamer:\textcolor{c89DDFF}{@@=@@beamer:}\textcolor{cFFCB6B}{@@i
 :END:
 #+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g18}
 
-* QCGPilot-Job
+* QCG-PilotJob
 :PROPERTIES:
 :BEAMER_opt: pg=19
 :END:
@@ -727,26 +727,26 @@ Job output with QCG-
 PilotJob metrics
 #+end_tb
 
-* QCGPilot-Job: Set up the environment
+* QCG-PilotJob: Set up the environment
 :PROPERTIES:
 :BEAMER_opt: pg=21
 :END:
 #+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g21}
 #+attr_latex: :options [x=68.15,y=138.56,s=15.9,l=19.08,ind=22.02,bf=cal]
 #+begin_tb
-- The *QCG-PilotJob* package is available as a module in the *2024* environment.
+- Load *QCG-PilotJob* from the *2025* course environment.
 #+end_tb
 #+attr_latex: :options [x=68.15,y=168.13,s=15.9,l=17.3,ind=22.02,bf=cal]
 #+begin_tb
-- Note that the environment from the login node is @@beamer:\textbf{\textit{@@not transferred@@beamer:}}@@ to the compute \\
-  nodes, unless defined in, e.g., the *.bashrc* file. Thus, you have to re-load the QCG- \\
-  PilotJob package in your job script.
+- Slurm exports the submission environment by default. Load the required \\
+  modules in the batch script to select predictable software versions \\
+  independently of the modules in your interactive shell.
 #+end_tb
 #+attr_latex: :options [x=154.28,y=325.17,s=15.9,l=18.74,c=cDDDDDD,code]
 #+begin_tb
 @@beamer:\$@@ module purge \\
-@@beamer:\$@@ module load 2024 \\
-@@beamer:\$@@ module load QCG-PilotJob/0.14.1-gfbf-2024a
+@@beamer:\$@@ module load 2025 \\
+@@beamer:\$@@ module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
 #+end_tb
 
 * Workflow
@@ -819,7 +819,7 @@ Job output with QCG-
 PilotJob metrics
 #+end_tb
 
-* QCGPilot-Job: SLURM job script
+* QCG-PilotJob: SLURM job script
 :PROPERTIES:
 :BEAMER_opt: pg=23
 :END:
@@ -837,8 +837,8 @@ PilotJob metrics
 #+end_tb
 #+attr_latex: :options [x=207.31,y=333.24,s=15.9,l=19.46,c=cC3E88D,code]
 #+begin_tb
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2024@@beamer:}@@ \\
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load QCG-PilotJob/0.14.1-gfbf-2024a
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2025@@beamer:}@@ \\
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load QCG-PilotJob/0.14.1-GCCcore-14.2.0
 #+end_tb
 #+attr_latex: :options [x=207.31,y=390.91,s=15.9,l=19.08,c=cC3E88D,code]
 #+begin_tb
@@ -919,7 +919,7 @@ Job output with QCG-
 PilotJob metrics
 #+end_tb
 
-* QCGPilot-Job: Python script
+* QCG-PilotJob: Python script
 :PROPERTIES:
 :BEAMER_opt: pg=25
 :END:
@@ -954,7 +954,7 @@ PilotJob metrics
   *QCG-PilotJob Manager* has been run
 #+end_tb
 
-* QCGPilot-Job: Python script
+* QCG-PilotJob: Python script
 :PROPERTIES:
 :BEAMER_opt: pg=26
 :END:
@@ -985,7 +985,7 @@ test.py
 Example output
 #+end_tb
 
-* QCGPilot-Job: Python script
+* QCG-PilotJob: Python script
 :PROPERTIES:
 :BEAMER_opt: pg=27
 :END:
@@ -1036,7 +1036,7 @@ test.py
 Example output
 #+end_tb
 
-* QCGPilot-Job: Python script
+* QCG-PilotJob: Python script
 :PROPERTIES:
 :BEAMER_opt: pg=28
 :END:
@@ -1098,7 +1098,7 @@ test.py
 Example output
 #+end_tb
 
-* QCGPilot-Job: Create jobs
+* QCG-PilotJob: Create jobs
 :PROPERTIES:
 :BEAMER_opt: pg=29
 :END:
@@ -1133,7 +1133,7 @@ jobs_ids = manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@submit@@beamer:\te
 @@beamer:\textcolor{cFFFFFF}{@@...@@beamer:}@@
 #+end_tb
 
-* QCGPilot-Job: Job description (main parameters)
+* QCG-PilotJob: Job description (main parameters)
 :PROPERTIES:
 :BEAMER_opt: pg=30
 :END:
@@ -1160,7 +1160,7 @@ jobs_ids = manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@submit@@beamer:\te
 - *model* - model of execution
 #+end_tb
 
-* QCGPilot-Job: Job description (main parameters)
+* QCG-PilotJob: Job description (main parameters)
 :PROPERTIES:
 :BEAMER_opt: pg=31
 :END:
@@ -1187,7 +1187,7 @@ jobs_ids = manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@submit@@beamer:\te
 - *model* - model of execution
 #+end_tb
 
-* QCGPilot-Job: execution models
+* QCG-PilotJob: execution models
 :PROPERTIES:
 :BEAMER_opt: pg=32
 :END:
@@ -1209,7 +1209,7 @@ jobs_ids = manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@submit@@beamer:\te
 [[https://qcg-pilotjob.readthedocs.io/en/develop/execution_models.html][@@beamer:\uline{@@https://qcg-pilotjob.readthedocs.io/en/develop/execution_models.html@@beamer:}@@]]
 #+end_tb
 
-* QCGPilot-Job: Calling for an executable
+* QCG-PilotJob: Calling for an executable
 :PROPERTIES:
 :BEAMER_opt: pg=33
 :END:
@@ -1395,9 +1395,6 @@ jobs@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@add@@beamer:\textcolor{c89DDFF}{
 
 @@beamer:\textcolor{cFF5370}{@@stdout@@beamer:}\textcolor{cC792EA}{@@=@@beamer:}\textcolor{c89DDFF}{'}@@average_@@beamer:\textcolor{cF78C6C}{@@{}@@beamer:}\textcolor{c89DDFF}{'@@.@@beamer:}\textcolor{cEEFFFF}{@@format@@beamer:}\textcolor{c89DDFF}{@@(@@beamer:}\textcolor{cEEFFFF}{@@jname@@beamer:}\textcolor{c89DDFF}{@@),@@beamer:}@@ \\
 @@beamer:\textcolor{cFF5370}{@@stderr@@beamer:}\textcolor{cC792EA}{@@=@@beamer:}\textcolor{c89DDFF}{'}@@job.@@beamer:\textcolor{cF78C6C}{@@{}@@beamer:}@@.err@@beamer:\textcolor{c89DDFF}{'@@.@@beamer:}\textcolor{cEEFFFF}{@@format@@beamer:}\textcolor{c89DDFF}{@@(@@beamer:}\textcolor{cEEFFFF}{@@jname@@beamer:}\textcolor{c89DDFF}{@@),@@beamer:}@@ \\
-@@beamer:\textcolor{cFF5370}{@@modules@@beamer:}\textcolor{cC792EA}{@@=@@beamer:}\textcolor{c89DDFF}{@@[@@beamer:}@@
-
-@@beamer:\textcolor{c89DDFF}{"}@@2024@@beamer:\textcolor{c89DDFF}{"@@, @@beamer:"}@@Python/3.12.3-GCCcore-13.3.0@@beamer:\textcolor{c89DDFF}{"@@],@@beamer:}@@
 #+end_tb
 #+attr_latex: :options [x=577.89,y=382.92,s=12.3,l=14.42,c=cFF5370,code]
 #+begin_tb
