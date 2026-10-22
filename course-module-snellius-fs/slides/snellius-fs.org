@@ -39,7 +39,7 @@ They perform intensive \alert{computations}, coordinate \alert{communications} b
 
 Extensive numerical operations on a specific region of interest (/e.g./, mesh elements, particles, or even words in a text document).
 
-- Scale $\mathcal{O}(P)$ for $P$ processors.
+- Ideal speedup is $P$ for $P$ processors at fixed total work; dependencies and imbalance reduce it.
 
 ** Communications and I/O
 
@@ -51,7 +51,7 @@ Extensive numerical operations on a specific region of interest (/e.g./, mesh el
 
 Coordination and data exchanges between parallel processes to produce the final results.
 
-- Scale $\mathcal{O}(\sqrt{P})$ for $P$ processors.
+- Cost depends on topology, message sizes and synchronization; more workers can add overhead.
 
 *** I/O operations
 :PROPERTIES:
@@ -61,7 +61,7 @@ Coordination and data exchanges between parallel processes to produce the final 
 
 Interactions with the file system to read input data, write output results, and perform intermediate data storage.
 
-- Unlike computations and communications, they have no scaling factor in most applications.
+- Throughput depends on the file system and access pattern; more processes can increase contention.
 
 ** Overview of I/O operations
 
