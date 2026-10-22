@@ -34,6 +34,7 @@ if sys.argv[1:] not in (["average"], ["profile"]):
     sys.exit(__doc__)
 if lp.get_fw_ids():
     sys.exit("Use a new private LaunchPad file for each exercise run.")
+lp.reset("", require_password=False)
 
 if sys.argv[1:] == ["average"]:
     names = sorted(glob.glob(os.path.join(HERE, "input", "*.csv")))
