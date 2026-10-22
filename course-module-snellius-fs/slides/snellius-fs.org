@@ -142,9 +142,9 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 
 *Tasks*:
 - Start in the ~home~ directory and use ~pwd~ to check your location.
-- Use ~cd~ to change to the ~scratch~ directory.
-- Explore the contents of ~scratch~ directory with ~ls~.
-- Return to the ~home~ directory using ~cd~.
+- Create your scratch directory: ~mkdir -p /scratch-shared/$USER~.
+- Explore it: ~cd /scratch-shared/$USER~ and ~ls~.
+- Return to your home directory using ~cd~.
 
 *Expected output*:
 - Comfortable moving around and exploring directories in the HPC file system.
