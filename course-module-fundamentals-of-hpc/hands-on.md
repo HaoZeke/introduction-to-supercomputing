@@ -19,7 +19,7 @@ This hands-on session introduces **basic usage of the Snellius supercomputer at 
 | 2  | What is your current working directory?       | `pwd`                                 | `echo $PWD`          |
 | 3  | What is your home directory?                  | _none_                                | `echo $HOME`         |
 | 4  | Which login node are you on?                  | `hostname`                            | `echo $HOSTNAME`     |
-| 5  | When did you last log in to Snellius?         | `last -n 1 $USER`                     | _none_               |
+| 5  | When did you last log in to Snellius?         | `last -n 1 -R $USER`                  | _none_               |
 | 6  | How much storage quota do you have?           | `myquota`                             | _none_               |
 | 7  | What is your compute budget and usage?        | `accinfo`                             | _none_               |
 
