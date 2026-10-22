@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+module load 2025 GCC/14.2.0
+gcc -O3 -fopenmp -Wall -Wextra pi.c -o pi
