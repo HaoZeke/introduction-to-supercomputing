@@ -1,0 +1,175 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usetheme{metropolis}
+\usepackage{minted,booktabs}
+\setminted{fontsize=\scriptsize,breaklines,bgcolor=black!3}
+\setbeamertemplate{navigation symbols}{}
+\title{From a shell to a trustworthy HPC result}
+\subtitle{Introduction to supercomputing: the teaching path}
+\author{SURF course materials}
+\date{}
+\begin{document}
+\maketitle
+\begin{frame}{What you will be able to do}
+\begin{enumerate}
+\item Find your way around the system and select software.
+\item Submit a job with resources that match the program.
+\item Check the answer before interpreting its performance.
+\item Place files deliberately and express workflow dependencies.
+\end{enumerate}
+\end{frame}
+\begin{frame}{One path through the exercises}
+\begin{center}
+Shell $\longrightarrow$ modules $\longrightarrow$ Slurm $\longrightarrow$ results\par\bigskip
+Results $\longrightarrow$ parallelism $\longrightarrow$ I/O $\longrightarrow$ workflows
+\end{center}
+\medskip
+Keep the first job small enough to understand. The backup slides hold full
+scripts and details; the module decks provide the extended reference.
+\end{frame}
+\begin{frame}{Start with where you are}
+Identify your login node, home directory and course directory.
+\begin{itemize}
+\item The login node is for preparation and light interactive work.
+\item A batch job runs on resources selected by the scheduler.
+\item Home, shared scratch and job-local temporary storage serve different needs.
+\end{itemize}
+Explain which machine executes each command.
+\end{frame}
+\begin{frame}{Select software before submitting work}
+\begin{itemize}
+\item Modules select compilers, libraries and applications.
+\item Record the modules that the job requires inside its script.
+\item On the SRC teaching cluster, stack aliases select the EESSI environment.
+\item Check the site's instructions; an alias does not reproduce its hardware.
+\end{itemize}
+\end{frame}
+\begin{frame}[fragile]{First result: run Python through Slurm}
+From \texttt{course-module-fundamentals-of-hpc/hands-on}:
+\begin{minted}{bash}
+sbatch python.sh
+squeue -u "$USER"
+cat slurm-JOBID.out
+\end{minted}
+Replace \texttt{JOBID} with the number returned by \texttt{sbatch}.
+Expect the compute hostname and \texttt{sum: 499999500000}.
+Find the actual runnable script in backup.
+\end{frame}
+\begin{frame}{Resources describe how the program runs}
+\begin{description}
+\item[Tasks] Separate processes, commonly MPI ranks.
+\item[CPUs per task] Cores available to each process, including OpenMP threads.
+\item[Nodes] Machines across which tasks are placed.
+\end{description}
+One sequential process does not use extra CPUs simply because they were requested.
+\end{frame}
+\begin{frame}[fragile]{Threads: check pi, then compare runtimes}
+From the same hands-on directory:
+\begin{minted}{bash}
+bash compilepi
+sbatch --cpus-per-task=2 pi.sh
+\end{minted}
+The script runs with one and two threads inside the allocation.
+Both answers should be approximately \texttt{3.141592654}.
+Discuss correctness, elapsed time and overhead separately.
+\end{frame}
+\begin{frame}{MPI: split data and combine the answer}
+\begin{itemize}
+\item Use the hybrid-jobs AXPY and dot-product examples.
+\item Try a size not divisible by the number of ranks.
+\item AXPY prints \texttt{y[0] = 202}; the global dot product must match the serial result.
+\item Explain which process owns each element and where results are combined.
+\end{itemize}
+Use the SRC notes for small teaching allocations.
+\end{frame}
+\begin{frame}{Files belong where their lifetime requires}
+\begin{description}
+\item[Home] Keep scripts and small persistent material.
+\item[Shared scratch] Share active data across compute nodes, subject to site policy.
+\item[Job temporary directory] Use \texttt{\$TMPDIR} inside the compute job.
+\end{description}
+The filesystem exercise writes bounded data and reports actual bytes.
+Inspect free space before increasing the input size.
+\end{frame}
+\begin{frame}{Many tasks need an explicit dependency}
+For the CSV exercise, compute each dataset's mean, then aggregate.
+\begin{itemize}
+\item Aggregation waits for every required producer to succeed.
+\item It consumes exactly the selected input set.
+\item A failed producer must make the workflow fail.
+\end{itemize}
+Compare the QCG teaching variants before using the workflow alternatives.
+\end{frame}
+\begin{frame}{Compare engines through observable results}
+QCG-PilotJob, HyperQueue, Snakemake and FireWorks express dependencies differently.
+\begin{itemize}
+\item Use the same datasets and check the same CSV means.
+\item Repeat with fewer inputs to expose retained output.
+\item Inspect task states and the command's exit status.
+\item Compare performance only with the worker count and allocation stated.
+\end{itemize}
+\end{frame}
+\begin{frame}{Explain your result to a neighbour}
+\begin{enumerate}
+\item Which machine ran the program, with which software?
+\item Which tasks and threads did it use?
+\item What expected value checked the answer?
+\item Which files and dependencies did it need?
+\end{enumerate}
+\end{frame}
+\appendix
+\section{Backup: runnable scripts and reference}
+\begin{frame}[fragile]{Python job: included from the runnable file}
+\inputminted{bash}{../course-module-fundamentals-of-hpc/hands-on/python.sh}
+\end{frame}
+\begin{frame}[fragile]{Compile pi: included from the runnable file}
+\inputminted{bash}{../course-module-fundamentals-of-hpc/hands-on/compilepi}
+\end{frame}
+\begin{frame}[fragile]{OpenMP job: included from the runnable file}
+\inputminted{bash}{../course-module-fundamentals-of-hpc/hands-on/pi.sh}
+\end{frame}
+\begin{frame}[fragile]{The pi calculation}
+\inputminted[fontsize=\tiny]{c}{../course-module-fundamentals-of-hpc/hands-on/pi.c}
+\end{frame}
+\begin{frame}{Independent numerical checks}
+\begin{itemize}
+\item AXPY: $y_0=202$ for the exercise's initial values.
+\item Dot product: $25\sin(N)\sin(N-1)/\sin(1)$ for the given initialization.
+\item Matrix multiplication: all entries are $2N$, so the checksum is $2N^3$.
+\item Binary filesystem output: $8N$ bytes for $N$ doubles on the teaching platform.
+\end{itemize}
+Check uneven MPI partitions as well as sizes divisible by the rank count.
+\end{frame}
+\begin{frame}{SRC resource examples}
+\begin{tabular}{lll}
+\toprule
+Exercise & Processes & CPUs per process\\\midrule
+Sequential AXPY, dot, matrix & 1 & 1\\
+MPI AXPY & 2 & 1\\
+Hybrid dot (three nodes) & 6 & 1\\
+OpenMP pi & 1 & 2\\\bottomrule
+\end{tabular}
+\medskip
+These are correctness allocations. Read the module's SRC notes for complete
+submission overrides and ensure the nodes have enough memory.
+\end{frame}
+\begin{frame}{Workflow exercise versions are teaching steps}
+The QCG versions expose races, ordering and dependency choices. A finishing
+launcher alone does not establish a correct result.
+\begin{itemize}
+\item Explain the dependency graph in each version.
+\item Inspect the final version's aggregate against the selected inputs.
+\item Run alternatives in separate directories to preserve their outputs.
+\end{itemize}
+\end{frame}
+\begin{frame}{Extended module references}
+\begin{itemize}
+\item Fundamentals: site architecture, accounting and Slurm directives.
+\item Hybrid jobs: serial, MPI and OpenMP source and submission scripts.
+\item Filesystems: navigation, permissions and I/O exercises.
+\item Performance analysis: profiling tools and interpretation.
+\item QCG-PilotJob and workflow alternatives: orchestration exercises.
+\end{itemize}
+The concise teaching path selects a first lesson; the extended decks remain
+available for site-specific questions and deeper classes.
+\end{frame}
+\end{document}
