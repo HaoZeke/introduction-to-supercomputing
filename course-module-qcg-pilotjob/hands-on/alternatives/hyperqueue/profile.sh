@@ -13,17 +13,26 @@ module load 2025
 module load Python/3.13.1-GCCcore-14.2.0 2>/dev/null || true
 module load HyperQueue/0.24.0
 
-export HQ_SERVER_DIR=$TMPDIR/hq-server
+export HQ_SERVER_DIR=$(mktemp -d "$TMPDIR/hq-profile.XXXXXXXX")
 hq server start >&2 &
-until hq server info >/dev/null 2>&1; do sleep 1; done
+server_pid=$!
+worker_pid=
+trap 'rc=$?; trap - EXIT; hq server stop >/dev/null 2>&1 || true; kill "$server_pid" ${worker_pid:+"$worker_pid"} 2>/dev/null || true; wait || true; exit "$rc"' EXIT
+for attempt in {1..60}; do
+    hq server info >/dev/null 2>&1 && break
+    kill -0 "$server_pid"
+    sleep 1
+done
+hq server info >/dev/null
 hq worker start --cpus="$SLURM_NTASKS" >&2 &
+worker_pid=$!
 hq worker wait 1 >&2
 
 times=$(realpath "${TIMES_FILE:-../../example_05/times.txt}")
-mkdir -p "$TMPDIR/tasks"
+tasks=$(mktemp -d "$TMPDIR/hq-tasks.XXXXXXXX")
 echo START,$(date +%s)
-hq submit --each-line "$times" --cpus=1 --wait --stdout "$TMPDIR/tasks/%{TASK_ID}.out" --stderr none \
+hq submit --each-line "$times" --cpus=1 --wait --stdout "$tasks/%{TASK_ID}.out" --stderr none \
     -- bash -c "cd $PWD/../../example_05 && python sleep.py \"\$HQ_ENTRY\"" >&2
 echo END,$(date +%s)
-cat "$TMPDIR"/tasks/*.out
+cat "$tasks"/*.out
 hq server stop >&2

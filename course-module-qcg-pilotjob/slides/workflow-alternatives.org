@@ -50,7 +50,8 @@ hands-on/alternatives/
 #+begin_tb
 - *Example 4*: one average per CSV file, then an aggregation that must wait for every average.
 - *Example 5*: sleeping tasks of different lengths, to measure idle time from the start and end time of each task.
-- Same input files, same helper scripts, same allocation for every tool.
+- Same inputs and helper scripts. HyperQueue and Snakemake use 16 tasks; \\
+  the file-backed FireWorks example uses one worker and one task.
 - Job scripts: *average.sh* and *profile.sh* in a directory per tool.
 #+end_tb
 
@@ -246,7 +247,7 @@ QCG-PilotJob & 3 min 12 s per version\\
   from Python; HyperQueue from the command line, with a Python API as well.
 - *Snakemake*: rules on files; a rerun builds only what changed.
 - *FireWorks*: a database of workflows with states and reruns. Not for many small tasks: \\
-  without a MongoDB server one worker runs them in turn, 212 s for 1000 averages (Snakemake 15 s).
+  on Snellius one worker took 212 s for 1000 averages; Snakemake took 15 s on 16 cores.
 #+end_tb
 
 * Have fun! :)

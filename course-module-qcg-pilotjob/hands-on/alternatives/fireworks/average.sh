@@ -14,12 +14,15 @@ module load 2025
 # SRC course cluster: module. Snellius has no FireWorks module: use the venv from the README.
 module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || { module load Python/3.13.1-GCCcore-14.2.0; source "$HOME/venvs/fireworks/bin/activate"; }
 
-export MONGOMOCK_SERVERSTORE_FILE=$TMPDIR/launchpad.json
+run_dir=$(mktemp -d "$TMPDIR/fw-average.XXXXXXXX")
+export MONGOMOCK_SERVERSTORE_FILE=$run_dir/launchpad.json
 echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"   # an empty LaunchPad, as in the FireWorks quickstart
 tar -xf ../../example_04/input.tar.gz
-QCG_MAX_INPUTS=${QCG_MAX_INPUTS:-100} python workflow.py average
+QCG_MAX_INPUTS=${QCG_MAX_INPUTS:-${MAX_INPUTS:-100}} python workflow.py average
 cd "$TMPDIR"   # rlaunch makes a directory per Firework run
 rlaunch rapidfire
 lpad get_fws -d count -s COMPLETED
 cd - >/dev/null
+python workflow.py check
+test -s result.csv
 echo "result.csv: $(wc -l < result.csv) rows"
