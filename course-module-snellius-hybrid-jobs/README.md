@@ -42,6 +42,20 @@ The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all 
 
 ### Connecting to Snellius
 
+For a two-core SRC workspace, use these overrides from each exercise's
+`hands-on/exN` directory. Check the actual core count with `sinfo` first:
+
+| Exercise | Submission on two-core nodes |
+| --- | --- |
+| 1, AXPY threads | `sbatch --cpus-per-task=2 submit-axpy.sh 10000000` |
+| 2, AXPY MPI | `sbatch --ntasks=2 submit-axpy-hybrid.sh 10000000` |
+| 3, dot product threads | `sbatch --cpus-per-task=2 submit-dot.sh 10000000` |
+| 4, dot product MPI | `sbatch --nodes=3 --ntasks=6 submit-dot-hybrid.sh 30000000` |
+| 5, matrix multiplication | `sbatch --cpus-per-task=2 submit-matmul.sh 500` |
+
+For the hostname exercise use `--nodes=3 --ntasks=6 --ntasks-per-node=2`.
+These are SRC resource overrides; retain the Snellius requests on Snellius.
+
 Since this module is part of the third section in the *Introduction to Supercomputing* course series, we assume that participants already have established connections to Snellius and are familiar with the system, including moving data and interacting with the filesystem. 
 
 However, if needed, you can refer to the following guides for assistance:
