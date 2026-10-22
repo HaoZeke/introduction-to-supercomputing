@@ -41,10 +41,12 @@ Extensive numerical operations on a specific region of interest (/e.g./, mesh el
 
 - Scale $\mathcal{O}(P)$ for $P$ processors.
 
+** Communications and I/O
+
 *** Communications
 :PROPERTIES:
 :BEAMER_env: alertblock
-:BEAMER_act: <3->
+:BEAMER_act: <1->
 :END:
 
 Coordination and data exchanges between parallel processes to produce the final results.
@@ -54,7 +56,7 @@ Coordination and data exchanges between parallel processes to produce the final 
 *** I/O operations
 :PROPERTIES:
 :BEAMER_env: exampleblock
-:BEAMER_act: <4->
+:BEAMER_act: <2->
 :END:
 
 Interactions with the file system to read input data, write output results, and perform intermediate data storage.
