@@ -102,11 +102,11 @@ Next, use the script below to launch a job that lists the contents of `$TMPDIR`,
 #!/bin/bash
 #SBATCH -J files
 #SBATCH -t 5
-#SBATCH -p thin_course
+#SBATCH -p rome
 
+hostname
 ls -l $TMPDIR
 touch "$TMPDIR/testfile.foo"
-hostname > "$TMPDIR/testfile.foo"
 ls -l $TMPDIR
 echo $TMPDIR
 realpath $TMPDIR
@@ -119,7 +119,7 @@ We executed the job twice and provided the outputs below. Despite both jobs bein
 tcn386.local.snellius.surf.nl
 total 0
 total 0
--rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile-.foo
+-rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile.foo
 /scratch-local/scur1448.4401218
 /gpfs/scratch1/nodespecific/tcn386/scur1448.4401218
 ```
@@ -129,7 +129,7 @@ total 0
 tcn386.local.snellius.surf.nl
 total 0
 total 0
--rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile-.foo
+-rw-r----- 1 scur1448 scur1448 0 Nov  9 00:25 testfile.foo
 /scratch-local/scur1448.4401219
 /gpfs/scratch1/nodespecific/tcn386/scur1448.4401219
 ```
@@ -151,7 +151,7 @@ The scratch-node behavior is technically similar to scratch-local. For each assi
 
 Please be aware that when requesting a shared node, you will only receive a portion of the local NVMe disk, such as 25%, 50%, or 75%, depending on the requested job resources.
 
-Scratch-node is available on all fat nodes and on a subset of thin and GPU nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
+Scratch-node is available on all fat nodes and on a subset of the `rome`, `genoa` and GPU nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
 
 > [!NOTE]
 > Scratch-node and `--constraint=scratch-node` exist only on Snellius. On an SRC cluster, `$TMPDIR` already sits on the node's own disk, so drop the constraint and write to `$TMPDIR` in the exercise.
@@ -163,7 +163,7 @@ Modify the script above to launch a job that creates a file on scratch-node and 
 #!/bin/bash
 #SBATCH -J scratch-node-test
 #SBATCH -t 5
-#SBATCH -p thin_course
+#SBATCH -p rome
 #SBATCH --constraint=scratch-node
 
 touch "$TMPDIR/testfile-scratch-node.foo"
@@ -173,8 +173,7 @@ realpath "$TMPDIR/testfile-scratch-node.foo"
 
 #### Advanced exercise: Creating large file sets and evaluating transfers
 
-> On an SRC cluster, `/home` and `/scratch` share one disk on the manager, often a few tens of GB for the whole class, and there are no per-user quotas. Run this exercise with 100 files instead of 1000 (`{1..100}`), use a job's `$TMPDIR` as the second file system instead of scratch, and do the clean-up at the end. The same goes for `ex1/run.sh`: it writes up to 10^9 numbers (more than 7 GB) to `$HOME`; on an SRC cluster set `wdir=$TMPDIR` and `iend=9` before you submit it.
-
+> On an SRC cluster, `/home` and `/scratch` share the NFS server's disk; that server is the manager unless the instructor provisions a separate storage workspace. Check `df -h` before generating data. Run this exercise with 100 files instead of 1000 (`{1..100}`), use a job's `$TMPDIR` as the second file system, and do the clean-up at the end. `ex1/run.sh` defaults to 10^6 and 10^7 values in the job's `$TMPDIR`, falling back to home outside a job. To compare home storage, submit `wdir="$HOME" sbatch ex1/run.sh` from the module directory. The environment variables `ibeg`, `iend` (exclusive), and `nmax` control the range; increasing them requires enough memory for the array and enough disk space for the output. Never set `wdir` to a login node's `$TMPDIR` for a compute job.
 
 ##### Objective
 - Learn how to generate large numbers of files with random data.
@@ -225,15 +224,15 @@ Now, we'll move these files between different file systems (e.g., from **home** 
 2. **Transfer as an archive**:
    - Archive and compress the directory using `tar` and `gzip`:
      ```bash
-     tar -czf file_transfer_test.tar.gz ~/file_transfer_test
+     tar -C ~ -czf ~/file_transfer_test.tar.gz file_transfer_test
      ```
    - Measure the size of the compressed archive:
      ```bash
-     du -sh file_transfer_test.tar.gz
+     du -sh ~/file_transfer_test.tar.gz
      ```
    - Now, transfer the archive to the **scratch** directory:
      ```bash
-     time cp file_transfer_test.tar.gz /path/to/scratch/
+     time cp ~/file_transfer_test.tar.gz /path/to/scratch/
      ```
 
 3. **Extract the archive in the scratch directory**:
@@ -250,11 +249,11 @@ Now, we'll move these files between different file systems (e.g., from **home** 
    - Discuss how much time it took to transfer the files as individual files versus as a compressed archive.
 
 2. **Compare data size**:
-   - Check the total size of the original directory and the compressed archive. Highlight the difference in storage requirements and transfer speeds based on compression.
+   - Check the total size of the original directory and the archive. The files contain random data, which gzip cannot compress, so the archive has about the same size.
 
 3. **Discuss trade-offs**:
    - **When to use individual file transfers**: If you're working with a small number of files or if they will be used directly without further processing.
-   - **When to use archived file transfers**: Compressing many small files reduces both disk space usage and transfer time due to fewer I/O operations.
+   - **When to use archived file transfers**: Packing many small files into one archive reduces transfer time, because the copy needs fewer file operations. Compression saves disk space only for data that compresses, such as text.
 
 4. **Advanced considerations**:
    - Discuss how these operations scale using larger directories or more complex file systems.

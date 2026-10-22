@@ -36,7 +36,7 @@ double dot(size_t local_n, double *x, double *y) {
             offset = thread_n * tid + remainder;
         }
 
-        printf("Thread %d from %ld to %ld\n", tid, offset, offset + thread_n);
+        printf("Thread %d from %zu to %zu\n", tid, offset, offset + thread_n);
         for (size_t i = offset; i < offset + thread_n; i++) {
             local_sum += x[i] * y[i];
         }
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
         MPI_Finalize();
         return -1;
     }
-    const size_t n = (size_t)atoi(argv[1]);
+    const size_t n = (size_t)strtoull(argv[1], NULL, 10);
 
     // Calculate local sizes based on the rank
     remainder = n % world;
@@ -78,8 +78,8 @@ int main(int argc, char **argv) {
     }
 
     if (rank == 0) {
-        printf("Global length of the arrays: %ld\n", n);
-        printf("Local length of the arrays: %ld\n", local_n);
+        printf("Global length of the arrays: %zu\n", n);
+        printf("Local length of the arrays: %zu\n", local_n);
     }
 
     // Allocate memory for the local vectors
@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
 
     // Check for successful memory allocation
     if (x == NULL || y == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return 1;
+        fprintf(stderr, "Rank %d: memory allocation failed\n", rank);
+        MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
     // Initialize local vectors
@@ -104,10 +104,12 @@ int main(int argc, char **argv) {
 
     // Perform the local dot product computation using OpenMP
     for(size_t i = 0; i < REP; i++) {
-        result += dot(local_n, x, y);
+        double local_result = dot(local_n, x, y);
+        double global_result = 0.0;
 
         // Reduce the local dot products to a global sum
-        MPI_Allreduce(MPI_IN_PLACE, &result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+        result += global_result;
     }
 
 
