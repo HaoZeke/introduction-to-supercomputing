@@ -151,7 +151,7 @@ application
 #+beamer: \slidegraphics{figures/performance-analysis/g06}
 #+attr_latex: :options [x=68.18,y=139.83,s=18,l=21.6,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
-- Using tools, e.g. Vtune, Scalasca, Nsight Systems, memory-profiler
+- Using tools, e.g. Score-P, Scalasca, Nsight Systems, AMD uProf
 #+end_tb
 #+attr_latex: :options [x=68.18,y=171.35,s=18,l=21.6,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -1649,7 +1649,7 @@ Free
 #+end_tb
 #+attr_latex: :options [x=536.45,y=505,s=9,l=10.8,f=arial]
 #+begin_tb
-performance analysis tool for MPI+OpenMP
+AMD CPU counters, sampling and roofline analysis
 #+end_tb
 #+attr_latex: :options [x=213.2,y=521.47,s=9,l=10.8,f=arial,b]
 #+begin_tb
