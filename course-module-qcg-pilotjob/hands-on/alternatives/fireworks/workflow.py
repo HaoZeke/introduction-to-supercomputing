@@ -7,6 +7,7 @@ The LaunchPad is the file in MONGOMOCK_SERVERSTORE_FILE (no MongoDB server neede
 TIMES_FILE scale the runs down, as for the QCG examples.
 """
 import glob
+import json
 import os
 import sys
 import shlex
@@ -55,7 +56,11 @@ if sys.argv[1:] == ["average"]:
                                  name=os.path.basename(path)))
     # parents=averages is the dependency qcg_job_v0.py forgets: FireWorks will not run this
     # Firework before every average has finished
-    command = shlex.join([sys.executable, os.path.join(HERE, "..", "aggregate.py"), *outputs])
+    manifest = os.path.join(output_dir, "selected.json")
+    with open(manifest, "w", encoding="utf-8") as stream:
+        json.dump(outputs, stream)
+    command = shlex.join([sys.executable, os.path.join(HERE, "..", "aggregate.py"),
+                          "--manifest", manifest])
     aggregate = Firework(ScriptTask.from_str(f"{command} > {shlex.quote(os.path.join(HERE, 'result.csv'))}"),
                          name="aggregate", parents=averages)
     lp.add_wf(Workflow(averages + [aggregate], name="average"))
