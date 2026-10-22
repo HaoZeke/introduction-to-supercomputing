@@ -32,7 +32,7 @@ times=$(realpath "${TIMES_FILE:-../../example_05/times.txt}")
 tasks=$(mktemp -d "$TMPDIR/hq-tasks.XXXXXXXX")
 echo START,$(date +%s)
 hq submit --each-line "$times" --cpus=1 --wait --stdout "$tasks/%{TASK_ID}.out" --stderr none \
-    -- bash -c "cd $PWD/../../example_05 && python sleep.py \"\$HQ_ENTRY\"" >&2
+    -- bash -c 'cd "$1" && python3 sleep.py "$HQ_ENTRY"' _ "$PWD/../../example_05" >&2
 echo END,$(date +%s)
 cat "$tasks"/*.out
 hq server stop >&2

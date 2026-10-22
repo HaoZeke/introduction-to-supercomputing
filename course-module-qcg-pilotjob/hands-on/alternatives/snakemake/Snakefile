@@ -19,11 +19,12 @@ rule all:
 
 rule average:
     input:
-        "input/{name}.csv",
+        csv="input/{name}.csv",
+        script="../../example_04/average.py",
     output:
         "averages/{name}.csv",
     shell:
-        "python3 ../../example_04/average.py {input} > {output}"
+        "python3 {input.script:q} {input.csv:q} > {output:q}"
 
 
 # Snakemake starts this rule only when every file it needs exists: the dependency that
@@ -34,4 +35,4 @@ rule aggregate:
     output:
         "result.csv",
     shell:
-        "cat {input} | sort > {output}"
+        "cat {input:q} | sort > {output:q}"
