@@ -15,10 +15,10 @@ We will explore three basic linear algebra kernels, each with a different parall
 2. **Dot product (scalar product)**: The dot product of two vectors, $$z \gets \sum_{i=1}^{n} x_i * y_i$$, involves multiplying corresponding elements of two vectors and summing the results. The parallel complexity arises from the need for a reduction operation to sum the products. This requires synchronization between threads or processes to accumulate the intermediate sums.
 3. **Matrix multiplication**: The matrix product $$C \gets A * B$$ is more complex, as it involves computing the dot product of rows from matrix `A` with columns from matrix `B`. Efficient parallelization requires distributing the data across multiple nodes or threads, managing both computation and data transfer, which introduces a higher level of parallel complexity compared to vector operations.
 
-The provided materials include two implementations for each kernel:
+The provided materials include these implementations:
 
-- A **sequential** version to understand the basic functionality.
-- A **hybrid** version combining shared-memory (OpenMP) and distributed-memory (MPI) parallelization.
+- A **sequential** version of each kernel, to understand the basic functionality (`ex1` axpy, `ex3` dot product, `ex5` matrix multiplication).
+- A **hybrid** version of axpy (`ex2`) and the dot product (`ex4`), combining shared-memory (OpenMP) and distributed-memory (MPI) parallelization. Matrix multiplication has no hybrid version; parallelizing `ex5/matmul.c` is left as an open exercise.
 
 The main objective is to gain practical experience in running hybrid jobs on supercomputing systems, focusing on the challenges and strategies for parallelizing different computations.
 
@@ -196,12 +196,13 @@ We will begin by executing a sequential version of `axpy` in C to understand the
 sbatch submit-axpy.sh <N>
 ```
 
-Example of output:
+Example of output for `N` = 10000000. The kernel runs 100 times, so `y[0]` = 2 + 100 * 2 * 1 = 202. Your times will differ:
 
 ```bash
-$ cat axpy-8061138.out 
-y[0] = 4.000000
-Time taken for axpy execution: 0.537750 seconds
+$ cat axpy-28085116.out
+Length of the arrays: 10000000
+y[0] = 202.000000
+Time taken for axpy execution: 0.963870 seconds
 ```
 
 > [!TIP]
@@ -214,13 +215,35 @@ We will follow by executing a shared- and distributed-memory parallel version of
 ```bash
 sbatch submit-axpy-hybrid.sh <N>
 ```
-Example of output:
+Example of output for `N` = 10000000 with the script's 128 tasks:
 
 ```bash
-$ cat axpy-hybrid-8061673.out
-y[0] = 4.000000
-Time taken for axpy execution: 0.042496 seconds
+$ cat axpy-hybrid-28085117.out
+Global length of the arrays: 10000000
+Local length of the arrays: 78125
+y[0] = 202.000000
+Time taken for axpy execution: 0.009485 seconds
 ```
+
+`Hyb-T-C` in the table below means `T` MPI tasks with `C` OpenMP threads each. Options on the `sbatch` command line override the `#SBATCH` lines, so `sbatch --ntasks=1 --cpus-per-task=16 submit-axpy-hybrid.sh <N>` runs `Hyb-1-16`.
+
+> [!NOTE]
+> With more than one OpenMP thread per task, pin the threads to cores so that the operating system does not move them during the run, which adds noise to the timings. Set these before `srun` in the job script, and bind the tasks as well:
+> ```bash
+> export OMP_PLACES=cores
+> export OMP_PROC_BIND=close
+> srun --cpu-bind=cores ./axpy-hybrid.out $N
+> ```
+> `OMP_PLACES=cores` gives each thread its own core, `OMP_PROC_BIND=close` keeps the threads of a task on neighbouring cores, and `--cpu-bind=cores` binds each task to the cores Slurm allocated to it.
+
+After a job has finished, check how well it used the cores it asked for:
+
+```bash
+seff <jobid>
+sacct -j <jobid> --format=JobID,AllocCPUS,Elapsed,TotalCPU,MaxRSS,State
+```
+
+`seff` reports the CPU efficiency: the CPU time used divided by the allocated cores times the elapsed time. The whole job counts, including compilation and initialization, so a short kernel gives a low figure even when it scales well. Compare the efficiency between configurations rather than reading one value on its own.
 
 > [!TIP]
 > Try submitting multiple jobs with different `ntasks` and `cpus-per-task`. Compare the time to solution between different executions. Complete the table by recording the time taken for the axpy operation across different vector sizes and parallel configurations.
@@ -231,6 +254,10 @@ Time taken for axpy execution: 0.042496 seconds
 > | 100,000,000   |            |          |           |           |          |           |           |
 > | 1,000,000,000 |            |          |           |           |          |           |           |
 > | 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
+>
+> `Hyb-256-1` and `Hyb-2-128` need 256 cores, two `rome` nodes, while the script asks for one node. Add `--nodes=2` for those columns, for example `sbatch --nodes=2 --ntasks=256 --cpus-per-task=1 submit-axpy-hybrid.sh <N>` and `sbatch --nodes=2 --ntasks=2 --cpus-per-task=128 submit-axpy-hybrid.sh <N>`.
 
 ### Scalar product
 
@@ -254,12 +281,13 @@ To submit the job, run the following command:
 sbatch submit-dot.sh <N>
 ```
 
-Example of output:
+The vectors hold `sin(i)` and `0.5 * cos(i)`, and the result sums the dot product over 100 repetitions. Example of output for `N` = 10000000:
 
 ```bash
-$ cat dot-1234567.out
-Dot product: 4999999.500000
-Time taken for dot product execution: 0.143875 seconds
+$ cat dot-28085119.out
+Length of the arrays: 10000000
+Dot product result: 12.3778
+Time taken for dot product execution: 1.21664 seconds
 ```
 
 > [!TIP]
@@ -269,7 +297,7 @@ Time taken for dot product execution: 0.143875 seconds
 
 After understanding the sequential version, we will proceed with executing parallel versions of the dot product using both OpenMP for shared-memory parallelism and MPI for distributed-memory parallelism. Each process or thread will compute a portion of the dot product independently, followed by a reduction step to sum the partial results.
 
-The parallel implementations can be found in the repository: `hands-on/dot-hybrid`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
+The parallel implementations can be found in the repository: `hands-on/ex4`. The Slurm job script is prepared to accept the global size of the vector, `N`, as an input parameter.
 
 To submit the parallel job, run the following command:
 
@@ -277,12 +305,14 @@ To submit the parallel job, run the following command:
 sbatch submit-dot-hybrid.sh <N>
 ```
 
-Example of output:
+Example of output for `N` = 10000000 with the script's 128 tasks. The result matches the sequential run to the printed digits; the order of the additions differs, so later digits can differ:
 
 ```bash
-$ cat dot-hybrid-654321.out
-Dot product: 5000000.000000
-Time taken for dot product execution: 0.034125 seconds
+$ cat dot-hybrid-28085121.out
+Global length of the arrays: 10000000
+Local length of the arrays: 78125
+Global dot product result: 12.3778
+Time taken for dot product execution: 0.039711 seconds
 ```
 
 > [!TIP]
@@ -294,3 +324,7 @@ Time taken for dot product execution: 0.034125 seconds
 >| 100,000,000   |            |          |           |           |          |           |           |
 >| 1,000,000,000 |            |          |           |           |          |           |           |
 >| 10,000,000,000|            |          |           |           |          |           |           |
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
+>
+> `Hyb-256-1` and `Hyb-2-128` need 256 cores, two `rome` nodes, while the script asks for one node. Add `--nodes=2` for those columns, for example `sbatch --nodes=2 --ntasks=256 --cpus-per-task=1 submit-dot-hybrid.sh <N>` and `sbatch --nodes=2 --ntasks=2 --cpus-per-task=128 submit-dot-hybrid.sh <N>`.
