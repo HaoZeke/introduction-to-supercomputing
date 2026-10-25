@@ -1727,7 +1727,7 @@ Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting
 #+end_tb
 #+attr_latex: :options [x=64.38,y=232.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
 #+begin_tb
-- *Software*: =module load 2025= loads EESSI 2025.06, the names Snellius' 2025 stack uses. Old names in published scripts (=2024=, =foss/2023a=) load the same stack. QCG-PilotJob is a site build here (=QCG-PilotJob/0.14.1-GCCcore-14.2.0= after =module load 2025=); on Snellius it is =QCG-PilotJob/0.14.1-gfbf-2024a= after =module load 2024=.
+- *Software*: =module load 2025= loads EESSI 2025.06, the names Snellius' 2025 stack uses. Old names in published scripts (=2024=, =foss/2023a=) load the same stack. QCG-PilotJob is a site build here, and the course scripts' own lines (=module load 2024=, =QCG-PilotJob/0.14.1-gfbf-2024a=) load it, as on Snellius.
 #+end_tb
 #+attr_latex: :options [x=64.38,y=296.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
 #+begin_tb
