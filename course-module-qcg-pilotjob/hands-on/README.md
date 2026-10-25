@@ -32,7 +32,7 @@ modules per run.
    [documentation](https://qcg-pilotjob.readthedocs.io/en/develop/logs.html).
 
 > [!NOTE]
-> EESSI 2025.06 does not include QCG-PilotJob, so the SRC cluster carries a site installation on top of it as `QCG-PilotJob/0.14.1-GCCcore-14.2.0`. In the job scripts, replace the two `module load` lines with:
+> EESSI 2025.06 does not include QCG-PilotJob, so the SRC cluster carries a site installation on top of it as `QCG-PilotJob/0.14.1-GCCcore-14.2.0`. In `qcg_job.sh` of `example_03`, `example_04` and `example_05`, replace the two `module load` lines with:
 > ```
 > module load 2025
 > module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
