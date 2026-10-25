@@ -749,7 +749,7 @@ PilotJob metrics
 #+end_tb
 #+attr_latex: :options [x=68.15,y=420,s=13,l=15.6,ind=22.02,bf=cal,w=820]
 #+begin_tb
-- On the course cluster (SURF Research Cloud) the same step is =module load 2025= and the site build =QCG-PilotJob/0.14.1-GCCcore-14.2.0=; the hands-on README says so, and the two lines are the only difference.
+- The course cluster (SURF Research Cloud) answers these two lines with its own site build, so the scripts run there unchanged; the hands-on README has the details.
 #+end_tb
 
 * Workflow
