@@ -1669,6 +1669,10 @@ Bandwidth
 #+begin_tb
 Throughput
 #+end_tb
+#+attr_latex: :options [x=413.6,y=470,s=13.5,l=16.2,c=cD9D9D9,f=cal,w=420]
+#+begin_tb
+uProf reports Throughput in GFLOP/s and Bandwidth in GB/s, so this run has AI = 6.7257 / 2.6767 = 2.5 FLOP per byte; compare it with the ridge point of the roofline on the next slide.
+#+end_tb
 
 * Roofline model
 :PROPERTIES:
