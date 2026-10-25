@@ -107,9 +107,9 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
       \texttt{/home} & Normal & 200 GiB & Yes & Project end + 15 weeks \\
       \texttt{/scratch-shared} & Fast & \multirow{2}{*}{8 TiB total} & No & 14 days \\
       \texttt{/scratch-local} & Fast & & No & 6 days \\
-      \texttt{/scratch-node} & Fastest & & No & End of job \\
+      \texttt{/scratch-node} & Very fast & & No & End of job \\
       \texttt{/projects} & Fast & On demand & No & Project end \\
-      \texttt{/archive} & Slow & On demand & Yes & Project end \\
+      \texttt{/archive} & Very slow & On demand & Yes & Project end \\
     \end{tabular}
   \end{center}
 }
@@ -120,8 +120,8 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 ** Objectives of the hands-on session
 
 1. *Exploring file systems*:
-   - Understand the structure of HPC file systems (home, project, scratch, archive)
-   - Move between directories and check the current location @@beamer:\vspace{6pt}@@
+   - Know the file systems of the table (home, scratch, project, archive)
+   - Move between your home and scratch-shared and check the current location @@beamer:\vspace{6pt}@@
 2. *File management*:
    - Create, view, and edit files using basic terminal commands
    - Move, rename, and copy files between different file systems @@beamer:\vspace{6pt}@@
@@ -135,7 +135,7 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 
 ** 1. Exploring file systems
 
-*Objective*: Learn how to move between directories in different file systems (home, project, scratch, archive) and understand the structure of the HPC environment.
+*Objective*: Learn how to move between your home and your scratch-shared directory, the two file systems every account has, and check where you are.
 
 *Key commands*:
 - ~pwd~ - Display the current directory
@@ -149,7 +149,7 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 - Return to your home directory using ~cd~.
 
 *Expected output*:
-- Comfortable moving around and exploring directories in the HPC file system.
+- ~pwd~ prints ~/home/<user>~ at the start and ~/scratch-shared/<user>~ after the ~cd~; ~ls~ of the new directory prints nothing.
 
 ** 2. File management
 
@@ -169,7 +169,7 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 - Rename or move the file using ~mv~.
 
 *Expected output*:
-- Understand how to manage files: creation, editing, copying, and renaming.
+- ~cat~ prints the line you typed; ~ls /scratch-shared/$USER~ lists the copy; after ~mv~, ~ls~ shows the new name and not the old one.
 
 ** 3. Directory management
 
@@ -188,7 +188,7 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 - Remove the directory using ~rmdir~.
 
 *Expected output*:
-- Understand how to create, enter, and remove directories and manage directory structure effectively.
+- ~ls~ inside the new directory prints nothing; after ~rmdir~, ~ls ~~ no longer lists it.
 
 ** 4. File permissions
 
@@ -209,7 +209,7 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 - Verify the permission changes with ~ls -l~.
 
 *Expected output*:
-- Understand how to check and modify file permissions in the HPC environment.
+- ~ls -l~ shows ~-rw-r--r--~ for the file after ~chmod 644~.
 
 ** 5. Disk usage monitoring
 
@@ -225,4 +225,4 @@ At the same time, HPC systems are equipped with \alert{distinct file systems} to
 - Identify where you are using the most space.
 
 *Expected output*:
-- Understand how to monitor storage usage and manage disk space efficiently.
+- ~df -h /home /scratch-shared~ prints one line per file system with its size, use and free space; ~du -sh ~~ prints one size for your home.
