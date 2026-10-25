@@ -22,7 +22,7 @@ Each tool has a directory with the job scripts `average.sh` and `profile.sh`. Ru
 cd hyperqueue
 ```
 
-Module: `HyperQueue/0.24.0`, with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them. The same module name exists on Snellius (2025 stack, which also lists 0.19.0 and 0.20.0). On the SRC course cluster it is a site installation on top of EESSI, not part of EESSI.
+Module: `HyperQueue/0.24.0`, with `module load 2025` and `Python/3.13.1-GCCcore-14.2.0`; the scripts load them. Snellius has the same module: `module spider HyperQueue` in its 2025 stack lists 0.19.0, 0.20.0 and 0.24.0 (checked on 2026-10-25). On the SRC course cluster it is a site installation on top of EESSI, not part of EESSI.
 
 The script starts a HyperQueue server and one worker inside the Slurm allocation. It lists the CSV files in `files.txt` and submits one task per line with `hq submit --each-line`. The `--wait` flag blocks until every task has finished, and only then does the script build `result.csv`.
 
@@ -88,11 +88,11 @@ when all 1000 inputs live under a long scratch path. The helper reads exactly
 those outputs and rejects missing or malformed rows. HyperQueue keeps using
 the same helper's positional-file interface.
 
-`average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. On Snellius the one worker took 9 s for 100 files and 212 s for all 1000; Snakemake took 15 s for 1000 files on 16 cores. Do not use FireWorks for many small tasks: without a MongoDB server it runs them one at a time.
+`average.sh` uses 100 of the 1000 files unless `QCG_MAX_INPUTS` says otherwise. On Snellius the one worker took 9 s for 100 files and 212 s for all 1000 on its one core; Snakemake took 15 s for the 1000 files on 16 cores, about 240 core-seconds, so the cost per core is alike. The difference is that the file-backed LaunchPad allows one worker: without a MongoDB server FireWorks cannot use more cores, so do not use it for many small tasks without one.
 
 ## Plot the profiles
 
-The profile job scripts print `START`, `END` and one `TASK` line per task, in the same format as example 5. Plot each output file:
+The profile job scripts print `START`, `END` and one `TASK` line per task, in the same format as example 5. From any of the three tool directories, plot each output file:
 
 ```
 module load 2025 SciPy-bundle/2025.06-gfbf-2025a matplotlib/3.10.3-gfbf-2025a
@@ -129,5 +129,5 @@ Averages of 100 files (example 4), on the same 2-core SRC nodes with 2 slots:
 ## Questions
 
 1. Which tool needed the least code to express that the aggregation waits for every average? Compare the lines in `average.sh`, the `Snakefile` and `workflow.py` with the dependency you found in `qcg_job_v0.py`.
-2. Which run had the least idle time, and why? Look at where the idle time sits in each plot.
+2. Which runs had the least idle time (HyperQueue and Snakemake, 2% each), and why does the bash pipeline reach 36%? Look at where the idle time sits in each plot.
 3. What does each run cost in core-hours? Use `sacct -X --format="JobID%24,Timelimit,AllocCPUS,CPUTime,CPUTimeRAW" -j <jobid>`, as in example 4, and divide `CPUTimeRAW` by 3600.

@@ -1,5 +1,5 @@
 # Example 4 with Snakemake: one average per CSV file, then result.csv from all of them.
-# QCG_MAX_INPUTS (or MAX_INPUTS) limits the number of files (all of them by default).
+# QCG_MAX_INPUTS (or MAX_INPUTS) limits the number of files: 100 by default, 0 selects all.
 import glob
 import os
 

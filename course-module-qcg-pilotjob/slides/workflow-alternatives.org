@@ -84,7 +84,7 @@ The dependency
 #+begin_example
 hq submit --each-line files.txt \
     --cpus=1 --wait \
-    --stdout "$PWD/averages/%{TASK_ID}.csv" \
+    --stdout "$averages/%{TASK_ID}.csv" \
     -- bash -c \
     'python3 ../../example_04/average.py "$HQ_ENTRY"'
 #+end_example
@@ -96,7 +96,7 @@ hq submit --each-line files.txt \
 #+attr_latex: :options [x=503.03,y=375,s=13.7,l=17,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
-cat averages/*.csv | sort > result.csv
+python3 ../aggregate.py "$averages"/*.csv > result.csv
 #+end_example
 #+end_tb
 
@@ -166,12 +166,13 @@ The dependency
 #+attr_latex: :options [x=503.03,y=212,s=13.7,l=17,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
+command = shlex.join([sys.executable,
+    os.path.join(HERE, "..", "aggregate.py"),
+    "--manifest", manifest])
 aggregate = Firework(
-    ScriptTask.from_str(
-        f"cat {HERE}/averages/*.csv"
-        f" | sort > {HERE}/result.csv"),
-    name="aggregate",
-    parents=averages)
+    ScriptTask.from_str(f"{command} > "
+        f"{shlex.quote(os.path.join(HERE, 'result.csv'))}"),
+    name="aggregate", parents=averages)
 lp.add_wf(Workflow(averages + [aggregate],
                    name="average"))
 #+end_example
@@ -246,8 +247,9 @@ QCG-PilotJob & 3 min 12 s per version\\
 - *QCG-PilotJob* and *HyperQueue*: many tasks inside one allocation. QCG-PilotJob is driven \\
   from Python; HyperQueue from the command line, with a Python API as well.
 - *Snakemake*: rules on files; a rerun builds only what changed.
-- *FireWorks*: a database of workflows with states and reruns. Not for many small tasks: \\
-  on Snellius one worker took 212 s for 1000 averages; Snakemake took 15 s on 16 cores.
+- *FireWorks*: a database of workflows with states and reruns. Without a MongoDB server the \\
+  file LaunchPad allows one worker: 212 s for 1000 averages on one core on Snellius, against \\
+  Snakemake's 15 s on 16 cores; alike per core, but FireWorks cannot take more cores.
 #+end_tb
 
 * Have fun! :)
