@@ -915,7 +915,7 @@ hence *heavy tasks must be avoided*.
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-1,256 thin rome/genoa nodes + fat/high-memory nodes + 600 GPUs.
+1,258 thin rome/genoa nodes + fat/high-memory nodes + 604 GPUs.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
@@ -979,7 +979,7 @@ rome
 #+end_tb
 #+attr_latex: :options [x=149.96,y=160.64,s=12,l=14.4]
 #+begin_tb
-520
+521
 #+end_tb
 #+attr_latex: :options [x=226.16,y=160.64,s=12,l=14.4]
 #+begin_tb
@@ -1091,7 +1091,7 @@ genoa
 #+end_tb
 #+attr_latex: :options [x=149.97,y=285.1,s=12,l=14.4]
 #+begin_tb
-736
+737
 #+end_tb
 #+attr_latex: :options [x=226.17,y=285.1,s=12,l=14.4]
 #+begin_tb
@@ -1147,7 +1147,7 @@ gpu_a100
 #+end_tb
 #+attr_latex: :options [x=153.21,y=352.32,s=12,l=14.4]
 #+begin_tb
-62
+63
 #+end_tb
 #+attr_latex: :options [x=226.17,y=352.32,s=12,l=14.4]
 #+begin_tb
@@ -1175,7 +1175,7 @@ NVIDIA A100 40 GB
 #+end_tb
 #+attr_latex: :options [x=832.94,y=352.32,s=12,l=14.4]
 #+begin_tb
-1/8
+1/4
 #+end_tb
 #+attr_latex: :options [x=68.48,y=385.94,s=12,l=14.4]
 #+begin_tb
@@ -1713,6 +1713,35 @@ Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting
 - run applications with graphical user interfaces.
 #+end_tb
 
+* This course runs on a course cluster built like Snellius
+:PROPERTIES:
+:BEAMER_opt: ts=30,tw=860
+:END:
+#+attr_latex: :options [x=64.38,y=122.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- The hands-on of this course run on a *course cluster* built from SURF Research Cloud workspaces with the same parts as Snellius: Slurm, the EESSI software stack, a shared file system, a web portal. What you type here works on Snellius; the numbers are smaller.
+#+end_tb
+#+attr_latex: :options [x=64.38,y=186.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- *Login*: =ssh <name>@<manager>= or the web portal; your trainer's setup link makes your password. There is one login node and no SURFcua account.
+#+end_tb
+#+attr_latex: :options [x=64.38,y=232.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- *Software*: =module load 2025= loads EESSI 2025.06, the names Snellius' 2025 stack uses. Old names in published scripts (=2024=, =foss/2023a=) load the same stack. QCG-PilotJob is a site build here (=QCG-PilotJob/0.14.1-GCCcore-14.2.0= after =module load 2025=); on Snellius it is =QCG-PilotJob/0.14.1-gfbf-2024a= after =module load 2024=.
+#+end_tb
+#+attr_latex: :options [x=64.38,y=296.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- *Nodes*: two cores each, ten on the GPU node, 16 in all, Ethernet in place of InfiniBand. =rome= and =thin_course= are names for the same nodes, =gpu= holds the two cards. Shrink =--ntasks= and =--cpus-per-task= on the =sbatch= line; the scripts stay as published.
+#+end_tb
+#+attr_latex: :options [x=64.38,y=360.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- *File systems*: =/home= and =/project= on one shared file system, =/scratch= over the nodes' disks, =$TMPDIR= on the node. No =/scratch-shared=, =/scratch-node=, =/archive=, no =myquota=: use =df -h= and =du -sh=.
+#+end_tb
+#+attr_latex: :options [x=64.38,y=424.00,s=15,l=18,ind=22.56,bc=cEE7628,bf=arial,w=830]
+#+begin_tb
+- *Budget*: none. The collaboration's wallet pays; =accinfo= and system billing units do not exist; =sacct= reports core-seconds in =CPUTimeRAW=.
+#+end_tb
+
 * LUMI, a European flagship supercomputer
 :PROPERTIES:
 :BEAMER_opt: pg=26
@@ -1824,11 +1853,11 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 1380 CPU nodes, including fat and high-memory nodes
+- 1382 CPU nodes, including fat and high-memory nodes
 #+end_tb
 #+attr_latex: :options [x=66.07,y=363.14,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 150 GPU nodes with NVIDIA GPUs
+- 151 GPU nodes with NVIDIA GPUs
 #+end_tb
 #+attr_latex: :options [x=66.07,y=392.42,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -2865,18 +2894,19 @@ echo "DONE"
 #+end_example
 #+end_tb
 
-* Parallel computation with threads (OpenMP)
+* Batch jobs: Python, then OpenMP
 :PROPERTIES:
 :BEAMER_opt: pg=47
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g47}
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Open =python.sh= in the course's =hands-on= directory:
+- Clone the course and open =python.sh= in its =hands-on= directory:
 #+end_tb
-#+attr_latex: :options [x=424.91,y=164.69,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
+#+attr_latex: :options [x=424.91,y=164.69,s=13,l=15.6,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- =course-module-fundamentals-of-hpc/hands-on=
+- =git clone https://github.com/sara-nl/introduction-to-supercomputing.git= \\
+  =cd introduction-to-supercomputing/course-module-fundamentals-of-hpc/hands-on=
 #+end_tb
 #+attr_latex: :options [x=410.87,y=195.65,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
