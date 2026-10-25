@@ -205,6 +205,8 @@ Submit it and note the job ID that `sbatch` prints:
 sbatch hello.sh
 ```
 
+It answers `Submitted batch job <jobid>`. On a quiet day the job starts within a minute; on a busy one it waits in the queue, and the next section shows how to watch it.
+
 ### 2.3. Monitoring the job
 
 While the job waits or runs, `squeue` lists it. The `ST` column shows `PD` for pending and `R` for running:
