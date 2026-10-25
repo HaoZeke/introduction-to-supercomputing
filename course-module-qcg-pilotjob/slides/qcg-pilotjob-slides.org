@@ -491,7 +491,7 @@ Clone the repository
 #+attr_latex: :options [x=110.66,y=325.19,s=15.9,l=18.75,c=cEEFFFF,code]
 #+begin_tb
 @@beamer:\$@@ cd ~ \\
-@@beamer:\$@@ git clone <repository_url.git> \\
+@@beamer:\$@@ git clone https://github.com/sara-nl/introduction-to-supercomputing.git \\
 @@beamer:\$@@ cd introduction-to-supercomputing \\
 @@beamer:\$@@ cd course-module-qcg-pilotjob
 #+end_tb
@@ -575,7 +575,7 @@ Questions
 - Take a look at the job script *array_job.sh*
 - Run *prepare_input.sh*
 - Submit the SLURM job script
-- Run *aggregate.sh* when all jobs are finished
+- Run *./aggregate.sh <job_id>* when all jobs are finished
 #+end_tb
 #+attr_latex: :options [x=69,y=379.46,s=15.9,l=15.87,p=5.78,ind=14.2,bf=cal]
 #+begin_tb
@@ -734,7 +734,7 @@ PilotJob metrics
 #+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g21}
 #+attr_latex: :options [x=68.15,y=138.56,s=15.9,l=19.08,ind=22.02,bf=cal]
 #+begin_tb
-- Load *QCG-PilotJob* from the *2025* course environment.
+- Load *QCG-PilotJob* from the *2024* environment: the 2025 stack has no build of it.
 #+end_tb
 #+attr_latex: :options [x=68.15,y=168.13,s=15.9,l=17.3,ind=22.02,bf=cal]
 #+begin_tb
@@ -744,9 +744,12 @@ PilotJob metrics
 #+end_tb
 #+attr_latex: :options [x=154.28,y=325.17,s=15.9,l=18.74,c=cDDDDDD,code]
 #+begin_tb
-@@beamer:\$@@ module purge \\
-@@beamer:\$@@ module load 2025 \\
-@@beamer:\$@@ module load QCG-PilotJob/0.14.1-GCCcore-14.2.0
+@@beamer:\$@@ module load 2024 \\
+@@beamer:\$@@ module load QCG-PilotJob/0.14.1-gfbf-2024a
+#+end_tb
+#+attr_latex: :options [x=68.15,y=420,s=13,l=15.6,ind=22.02,bf=cal,w=820]
+#+begin_tb
+- On the course cluster (SURF Research Cloud) the same step is =module load 2025= and the site build =QCG-PilotJob/0.14.1-GCCcore-14.2.0=; the hands-on README says so, and the two lines are the only difference.
 #+end_tb
 
 * Workflow
@@ -837,8 +840,8 @@ PilotJob metrics
 #+end_tb
 #+attr_latex: :options [x=207.31,y=333.24,s=15.9,l=19.46,c=cC3E88D,code]
 #+begin_tb
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2025@@beamer:}@@ \\
-@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load QCG-PilotJob/0.14.1-GCCcore-14.2.0
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load @@beamer:\textcolor{cF78C6C}{@@2024@@beamer:}@@ \\
+@@beamer:\textcolor{cFFCB6B}{@@module@@beamer:}@@ load QCG-PilotJob/0.14.1-gfbf-2024a
 #+end_tb
 #+attr_latex: :options [x=207.31,y=390.91,s=15.9,l=19.08,c=cC3E88D,code]
 #+begin_tb
@@ -972,9 +975,9 @@ manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@finish@@beamer:\textcolor{c89
 #+end_tb
 #+attr_latex: :options [x=189.31,y=404.57,s=18,l=19.46,c=cDDDDDD,code]
 #+begin_tb
-available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 96, @@beamer:'@@used_cores@@beamer:'@@: 0,
+available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 16, @@beamer:'@@used_cores@@beamer:'@@: 0,
 
-@@beamer:'@@free_cores@@beamer:'@@: 96}
+@@beamer:'@@free_cores@@beamer:'@@: 16}
 #+end_tb
 #+attr_latex: :options [x=711.58,y=140.1,s=20.2,l=24.24,c=cF2985E,b]
 #+begin_tb
@@ -1003,9 +1006,9 @@ manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@finish@@beamer:\textcolor{c89
 #+end_tb
 #+attr_latex: :options [x=189.31,y=404.57,s=18,l=19.46,c=cDDDDDD,code]
 #+begin_tb
-available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 96, @@beamer:'@@used_cores@@beamer:'@@: 0,
+available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 16, @@beamer:'@@used_cores@@beamer:'@@: 0,
 
-@@beamer:'@@free_cores@@beamer:'@@: 96}
+@@beamer:'@@free_cores@@beamer:'@@: 16}
 #+end_tb
 #+attr_latex: :options [x=13.58,y=228.98,s=18,l=21.6,b]
 #+begin_tb
@@ -1065,9 +1068,9 @@ manager@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@finish@@beamer:\textcolor{c89
 #+end_tb
 #+attr_latex: :options [x=189.31,y=404.57,s=18,l=19.46,c=cDDDDDD,code]
 #+begin_tb
-available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 96, @@beamer:'@@used_cores@@beamer:'@@: 0,
+available resources: {@@beamer:'@@total_nodes@@beamer:'@@: 1, @@beamer:'@@total_cores@@beamer:'@@: 16, @@beamer:'@@used_cores@@beamer:'@@: 0,
 
-@@beamer:'@@free_cores@@beamer:'@@: 96}
+@@beamer:'@@free_cores@@beamer:'@@: 16}
 #+end_tb
 #+attr_latex: :options [x=13.58,y=228.98,s=18,l=21.6,b]
 #+begin_tb
@@ -1295,6 +1298,8 @@ Task
 #+end_tb
 #+attr_latex: :options [x=542.11,y=165.33,s=12.2,l=14.4,c=c546E7A,i,code]
 #+begin_tb
+@@beamer:@@# the jobs write into output/, which git does not track \\
+os@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@makedirs@@beamer:\textcolor{c89DDFF}{@@(@@beamer:"}@@output@@beamer:\textcolor{c89DDFF}{"@@,@@beamer:} \textcolor{cFF5370}{@@exist_ok@@beamer:}\textcolor{cC792EA}{@@=@@beamer:}\textcolor{cF78C6C}{@@True@@beamer:}\textcolor{c89DDFF}{@@)@@beamer:}@@ \\
 @@beamer:@@# create the QCG manager and the Jobs object \\
 @@beamer:\textcolor{cEEFFFF}{@@manager@@beamer:} \textcolor{cC792EA}{@@=@@beamer:} \textcolor{cEEFFFF}{@@LocalManager@@beamer:}\textcolor{c89DDFF}{@@()@@beamer:}@@ \\
 @@beamer:\textcolor{cEEFFFF}{@@jobs@@beamer:} \textcolor{cC792EA}{@@=@@beamer:} \textcolor{cEEFFFF}{@@Jobs@@beamer:}\textcolor{c89DDFF}{@@()@@beamer:}@@
@@ -1351,8 +1356,8 @@ jobs@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@add@@beamer:\textcolor{c89DDFF}{
 #+begin_tb
 @@beamer:{\fontsize{18}{21.6}\selectfont \textbf{@@Steps@@beamer:}}@@
 - The @@beamer:\textbf{@@*v0@@beamer:}@@ script has a problem. Can you spot it?
-- Execute *qcg_job_v1.py*, compare results with the results \\
-  from *qcg_job_v0.py*
+- In *qcg_job.sh*, comment out the *v0* line and uncomment the *v1* \\
+  line; resubmit and compare its results with those of *v0*
 #+end_tb
 #+attr_latex: :options [x=542.11,y=65.62,s=12.3,l=14.76,c=cEEFFFF,code]
 #+begin_tb
