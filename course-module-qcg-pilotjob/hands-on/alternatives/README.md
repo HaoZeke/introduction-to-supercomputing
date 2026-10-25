@@ -105,29 +105,29 @@ The lanes in the plot are the CPU number each task reported at its start. Tasks 
 
 ## Measured results
 
-Measured once on 2-core SRC nodes with 2 slots, with the 32 tasks of example 5 at their original lengths. These numbers describe that setup, not the tools in general; a 16-core Snellius allocation was not measured:
+One run on 25 October 2026 on the SURF Research Cloud course cluster: two-core workspaces, each job alone on its node with `--nodes=1 --ntasks=2` (FireWorks `--ntasks=1`), the 32 tasks of `times_short.txt` at their original lengths, 338 task-seconds in all. The job outputs, the `sacct` lines and the driver are in `measurements/`; the idle figure is `1 - busy / (slots * span)` from the `START`, `END` and `TASK` lines. These numbers describe that setup, not the tools in general; a 16-core Snellius allocation was not measured.
 
-| Tool | Span | Idle |
-|---|---|---|
-| bash pipeline | 266 s | 36% |
-| QCG-PilotJob | 221 s | 23% |
-| HyperQueue | 172 s | 2% |
-| Snakemake | 172 s | 2% |
+| Tool | Span | Idle | Where the idle time sits |
+|---|---|---|---|
+| bash pipeline | 267 s | 37% | each block of 2 tasks waits for its longer task |
+| QCG-PilotJob | 181 s | 7% | 1 s before the first task, 3 s after the last, short gaps between tasks |
+| HyperQueue | 172 s | 2% | 1 s of start-up, 0.1 s between tasks |
+| Snakemake | 250 s | 32% | 77 s of start-up before the first task; the tasks themselves spanned 171 s with 0.1 s gaps |
+| FireWorks | 344 s | 2% of its one slot | one worker, so the tasks run one after another |
 
-FireWorks is left out of both tables: it was measured with two `rlaunch multi` workers, which the file-backed LaunchPad does not support.
+QCG-PilotJob's tasks inherit the job's environment (the examples pass no `modules=`), so no task pays for a module load; an earlier run with a module load in every task showed 23% idle. Snakemake's start-up is its own: the Python it imports and the DAG it builds before the first job, which on this cluster come from the EESSI software stack over CernVM-FS.
 
-Most of the QCG-PilotJob idle time came from the module load that each task did in that run. The QCG examples leave `modules=` out, so the tasks inherit the job's environment and a new run should show less idle time for QCG-PilotJob.
-
-Averages of 100 files (example 4), on the same 2-core SRC nodes with 2 slots:
+Averages of 100 files (example 4), on the same nodes:
 
 | Tool | Time |
 |---|---|
-| HyperQueue | 23 s |
-| Snakemake | 46 s |
-| QCG-PilotJob, with a module load in every task | 3 min 12 s per version |
+| HyperQueue | 11 s |
+| QCG-PilotJob, `qcg_job_v4.py` | 18 s |
+| FireWorks, one worker | 25 s |
+| Snakemake | 67 s |
 
 ## Questions
 
 1. Which tool needed the least code to express that the aggregation waits for every average? Compare the lines in `average.sh`, the `Snakefile` and `workflow.py` with the dependency you found in `qcg_job_v0.py`.
-2. Which runs had the least idle time (HyperQueue and Snakemake, 2% each), and why does the bash pipeline reach 36%? Look at where the idle time sits in each plot.
+2. Which run had the least idle time (HyperQueue, 2%), where does Snakemake's 32% sit (before its first task, not between tasks), and why does the bash pipeline reach 37%? Look at where the idle time sits in each plot.
 3. What does each run cost in core-hours? Use `sacct -X --format="JobID%24,Timelimit,AllocCPUS,CPUTime,CPUTimeRAW" -j <jobid>`, as in example 4, and divide `CPUTimeRAW` by 3600.

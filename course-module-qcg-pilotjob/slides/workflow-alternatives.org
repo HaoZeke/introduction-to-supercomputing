@@ -185,17 +185,18 @@ lp.add_wf(Workflow(averages + [aggregate],
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
 #+attr_latex: :options [x=69,y=145,s=15.9,l=20]
 #+begin_tb
-One run on 2-core SRC nodes with 2 slots, 32 tasks of example 5 at their original lengths. Not a general result.
+One run on two-core course-cluster nodes with 2 slots (FireWorks: its one worker), 32 tasks of example 5 at their original lengths, 25 October 2026. Not a general result.
 #+end_tb
 #+attr_latex: :options [x=69,y=190,s=15.9,l=22]
 #+begin_tb
 #+begin_export latex
 \begin{tabular}[t]{@{}l@{\hspace{40bp}}r@{\hspace{40bp}}r@{}}
 \textbf{Tool} & \textbf{Span} & \textbf{Idle}\\[4bp]
-bash pipeline & 266 s & 36\%\\
-QCG-PilotJob & 221 s & 23\%\\
+bash pipeline & 267 s & 37\%\\
+QCG-PilotJob & 181 s & 7\%\\
 HyperQueue & 172 s & 2\%\\
-Snakemake & 172 s & 2\%\\
+Snakemake & 250 s & 32\%\\
+FireWorks, one worker & 344 s & 2\% of 1 slot\\
 \end{tabular}
 #+end_export
 #+end_tb
@@ -207,16 +208,17 @@ Snakemake & 172 s & 2\%\\
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
 #+attr_latex: :options [x=69,y=145,s=15.9,l=20]
 #+begin_tb
-The same 2-core SRC nodes, 2 slots.
+The same two-core nodes, 2 slots (FireWorks 1).
 #+end_tb
 #+attr_latex: :options [x=69,y=190,s=15.9,l=22]
 #+begin_tb
 #+begin_export latex
 \begin{tabular}[t]{@{}l@{\hspace{40bp}}l@{}}
 \textbf{Tool} & \textbf{Time}\\[4bp]
-HyperQueue & 23 s\\
-Snakemake & 46 s\\
-QCG-PilotJob & 3 min 12 s per version\\
+HyperQueue & 11 s\\
+QCG-PilotJob (v4) & 18 s\\
+FireWorks, one worker & 25 s\\
+Snakemake & 67 s\\
 \end{tabular}
 #+end_export
 #+end_tb
@@ -229,9 +231,11 @@ QCG-PilotJob & 3 min 12 s per version\\
 #+attr_latex: :options [x=69,y=150,s=15.9,l=22,ind=16.06,bf=arial,p=8]
 #+begin_tb
 - The bash pipeline runs tasks in blocks of the slot count, so a block waits for its longest task.
-- QCG-PilotJob: most of the 23% came from the module load each task did in that run. The examples \\
-  leave *modules* out, so the tasks inherit the job's environment.
-- HyperQueue and Snakemake start the next task when a slot frees up: 2% idle.
+- QCG-PilotJob: 7%, a second at the start, three at the end, short gaps between tasks. With a \\
+  module load in every task an earlier run showed 23%; the examples leave *modules* out.
+- HyperQueue: 2%, the next task starts when a slot frees up. Snakemake: the same between tasks, \\
+  but 77 s of its own start-up before the first one, so 32%.
+- FireWorks: one worker on a file LaunchPad, so the tasks run one after another: 344 s.
 - Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping \\
   bars can leave white space that is not idle time.
 - The idle figure comes from the task start and end times.
