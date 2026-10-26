@@ -75,7 +75,7 @@ Turn a directory of small files into one archive, then record a checksum. Check 
 #+end_tb
 #+attr_latex: :options [x=76,y=290,s=15.9,l=19.08,w=370]
 #+begin_tb
-GNU tar, sha256sum, and mksquashfs are the tools. ~--sort=name~ makes the tar bytes stable from one run to the next.
+GNU tar, sha256sum, and mksquashfs are the tools. ~--sort=name~ gives archive entries a stable order.
 #+end_tb
 #+attr_latex: :options [x=508,y=150,s=15.9,l=19.08,b,c=cC3E88D]
 #+begin_tb
@@ -209,7 +209,7 @@ Two Rome nodes
 #+end_tb
 #+attr_latex: :options [x=76,y=166,s=15.9,l=19.08,w=370]
 #+begin_tb
-Snellius uses the ~rome~ partition for these CPU nodes. The script walks the source, copies it, and walks the copy. EESSI 2023.06 and 2025.06 do not provide mpiFileUtils yet, so you use the module your site provides or build it with EasyBuild.
+Snellius uses the ~rome~ partition for these CPU nodes. The script walks the source and copies it to the destination. EESSI 2023.06 and 2025.06 do not provide mpiFileUtils yet, so you use the module your site provides or build it with EasyBuild.
 #+end_tb
 #+attr_latex: :options [x=76,y=330,s=15.9,l=19.08,w=370]
 #+begin_tb
@@ -346,7 +346,7 @@ Write the order first
 #+begin_tb
 Use bash. ~time~ prints real, user, and sys: write down real.
 1. Make 20,000 small files.
-2. Time ~cp -r~, tar then ~cp~, and ~rsync -a~.
+2. Time ~cp -r~, copying a packed tar, and ~rsync -a~.
 3. Checksum the archive, copy it, and check it again.
 4. Interrupt one rsync and resume it.
 5. Stage into ~$TMPDIR~ in a short Slurm job, then copy the result back.
@@ -443,7 +443,7 @@ stage.slurm
 #+beamer: \slidegraphics{figures/data-movement/gtext}
 #+attr_latex: :options [x=84,y=136,s=15.9,l=19.08,w=780]
 #+begin_tb
-Example on a local ext4 disk, 26 October 2026. Record your own seconds on Snellius. The order matches the prediction: tar then cp moves one file, while cp -r and rsync -a each create 20,000 files. After timeout the partial file was 4128768 bytes of 50331648. The second rsync made cmp agree, and sha256sum -c printed src.tar: OK.
+Local ext4 example, 26 October 2026; measure your own Snellius times. The archive bar measures copying an existing tar, excluding packing. The other copies create 20,000 files. The interrupted copy held 4128768 of 50331648 bytes; rerunning rsync passed cmp, and sha256sum reported src.tar: OK.
 #+end_tb
 #+beamer: \input{figures/data-movement/timings.tex}
 
