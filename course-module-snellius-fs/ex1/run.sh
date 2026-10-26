@@ -13,16 +13,16 @@ exec_name=print-n.out
 gcc print-n.c -o ${exec_name}
 
 # Array length <n> is calculated as 10**i
-#  Use ibeg and iend to tune the range of i (the Snellius exercise: 10**6 to 10**9 values, up to 8 GB)
+#  The default range is 10**6 to 10**7 values; set iend=10 for up to 8 GB.
 #  Use nmax to limit the size of the output vector (10**10 results in 80 GB)
 #  Use wdir for the directory written to; wdir=TMPDIR means the job's own $TMPDIR
 # Each one is taken from the environment when set, so `iend=8 wdir=TMPDIR sbatch run.sh`
-# runs a small version on a small cluster without editing this file.
+# uses the job temporary directory without editing this file.
 ibeg=${ibeg:-6}
-iend=${iend:-10}
-nmax=${nmax:-10000000000}
+iend=${iend:-8}
+nmax=${nmax:-100000000}
 
-wdir=${wdir:-$HOME}
+wdir=${wdir:-${TMPDIR:-$HOME}}
 if [ "$wdir" = TMPDIR ]; then wdir=$TMPDIR; fi
 
 for (( i = $ibeg; i < $iend; ++i ))
