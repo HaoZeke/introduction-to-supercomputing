@@ -747,7 +747,7 @@ PilotJob metrics
 @@beamer:\$@@ module load 2024 \\
 @@beamer:\$@@ module load QCG-PilotJob/0.14.1-gfbf-2024a
 #+end_tb
-#+attr_latex: :options [x=68.15,y=420,s=13,l=15.6,ind=22.02,bf=cal,w=820]
+#+attr_latex: :options [x=68.15,y=420,s=14,l=16.8,ind=22.02,bf=cal,w=820]
 #+begin_tb
 - The course cluster (SURF Research Cloud) answers these two lines with its own site build, so the scripts run there unchanged; the hands-on README has the details.
 #+end_tb
