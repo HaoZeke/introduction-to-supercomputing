@@ -15,7 +15,8 @@ $(DECK).tex: $(DECK).org export.el
 	emacs --batch $(DECK).org --load export.el
 
 $(DECK).pdf: $(DECK).tex pptx-style.tex $(DECK)-style.tex $(wildcard figures/$(DECK)/*)
-	latexmk -xelatex -interaction=nonstopmode -halt-on-error $(DECK).tex
+	tectonic -Z shell-escape-cwd=$(CURDIR) --keep-logs $(DECK).tex
+	python3 deck-gate.py --pdf $(DECK).pdf --log $(DECK).log --allow deck-gate.allow $(if $(REFERENCE),--reference $(REFERENCE))
 
 clean:
 	latexmk -c $(DECK).tex

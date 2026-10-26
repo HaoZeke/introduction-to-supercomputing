@@ -19,6 +19,10 @@
 #+begin_tb
 06.03.2026
 #+end_tb
+#+attr_latex: :options [x=56.63,y=522,s=13.7,l=16.44,c=cFFFFFF]
+#+begin_tb
+Adapted and updated by Rohit Goswami
+#+end_tb
 
 * Embarrassingly Parallel workflows and how to execute them
 :PROPERTIES:
@@ -231,7 +235,7 @@ Tools
 #+end_tb
 #+attr_latex: :options [x=87.32,y=285.67,s=13.7,l=16.44]
 #+begin_tb
-instance, on Snellius it's 16 cores and 28 GiB of memory on the "rome" partition.
+instance, on Snellius it's 16 cores and 28 GiB of memory on the ``rome'' partition.
 #+end_tb
 #+attr_latex: :options [x=68.15,y=315.96,s=13.7,l=16.44,ind=19.17,bf=cal]
 #+begin_tb
@@ -282,7 +286,7 @@ job.sh
 #+end_tb
 #+attr_latex: :options [x=87.32,y=285.67,s=13.7,l=16.44]
 #+begin_tb
-instance, on Snellius it's 16 cores and 28 GiB of memory on the "rome" partition.
+instance, on Snellius it's 16 cores and 28 GiB of memory on the ``rome'' partition.
 #+end_tb
 #+attr_latex: :options [x=68.15,y=315.96,s=13.7,l=16.44,ind=19.17,bf=cal]
 #+begin_tb
@@ -329,7 +333,7 @@ to its array index value.
 #+end_tb
 #+attr_latex: :options [x=87.32,y=225.09,s=13.7,l=16.44,b]
 #+begin_tb
-"%" separator@@beamer:\textmd{@@.@@beamer:}@@
+``%'' separator@@beamer:\textmd{@@.@@beamer:}@@
 #+end_tb
 #+attr_latex: :options [x=177.07,y=264.86,s=12.3,l=14.4,c=cF2F2F2,code]
 #+begin_tb
@@ -369,7 +373,7 @@ to its array index value
 #+end_tb
 #+attr_latex: :options [x=87.32,y=225.09,s=13.7,l=16.44,b]
 #+begin_tb
-"%" separator@@beamer:\textmd{@@.@@beamer:}@@
+``%'' separator@@beamer:\textmd{@@.@@beamer:}@@
 #+end_tb
 #+attr_latex: :options [x=177.07,y=264.86,s=12.3,l=14.4,c=cF2F2F2,code]
 #+begin_tb
@@ -747,7 +751,7 @@ PilotJob metrics
 @@beamer:\$@@ module load 2024 \\
 @@beamer:\$@@ module load QCG-PilotJob/0.14.1-gfbf-2024a
 #+end_tb
-#+attr_latex: :options [x=68.15,y=420,s=13,l=15.6,ind=22.02,bf=cal,w=820]
+#+attr_latex: :options [x=68.15,y=224,s=15.9,l=18,ind=22.02,bf=cal,w=540]
 #+begin_tb
 - The course cluster (SURF Research Cloud) answers these two lines with its own site build, so the scripts run there unchanged; the hands-on README has the details.
 #+end_tb
@@ -1272,7 +1276,7 @@ Task
 #+attr_latex: :options [x=69,y=161.7,s=15.9,l=17.3,ind=14.2,bf=cal]
 #+begin_tb
 - Execute *512 independent short jobs* on two nodes on the \\
-  "rome" partition. Each node in that partition \\
+  ``rome'' partition. Each node in that partition \\
   has 128 cores.
 #+end_tb
 #+attr_latex: :options [x=69,y=244.63,s=15.9,l=23.78,b,ind=14.2,bf=cal]
@@ -1356,8 +1360,9 @@ jobs@@beamer:\textcolor{c89DDFF}{@@.@@beamer:}@@add@@beamer:\textcolor{c89DDFF}{
 #+begin_tb
 @@beamer:{\fontsize{18}{21.6}\selectfont \textbf{@@Steps@@beamer:}}@@
 - The @@beamer:\textbf{@@*v0@@beamer:}@@ script has a problem. Can you spot it?
-- In *qcg_job.sh*, comment out the *v0* line and uncomment the *v1* \\
-  line; resubmit and compare its results with those of *v0*
+- In *qcg_job.sh*, comment out the *v0* line and \\
+  uncomment the *v1* line; resubmit and compare \\
+  its results with those of *v0*
 #+end_tb
 #+attr_latex: :options [x=542.11,y=65.62,s=12.3,l=14.76,c=cEEFFFF,code]
 #+begin_tb
