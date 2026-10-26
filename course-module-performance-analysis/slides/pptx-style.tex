@@ -93,7 +93,15 @@
   % its vertical list would move the box baseline above the first line.
   \csname f\tbf\endcsname
   \fontsize{\tbs bp}{\tbl bp}\selectfont\tbbold\tbital\color{\tbc}%
-  \ifnum\tbverb=1 \begin{minipage}[t]{900bp}\else\begin{varwidth}[t]{940bp}\fi
+  % w= is the wrap width. Without it a long line is set in a 940bp box
+  % and runs off a 960bp slide. fw= still scales a box that must match
+  % a traced width exactly.
+  \ifx\tbw\empty
+    \ifnum\tbverb=1 \def\tb@width{900bp}\else\def\tb@width{940bp}\fi
+  \else
+    \def\tb@width{\tbw bp}%
+  \fi
+  \ifnum\tbverb=1 \begin{minipage}[t]{\tb@width}\else\begin{varwidth}[t]{\tb@width}\fi
   \setlength\parskip{\tbp bp}\setlength\parindent{0pt}%
   \if c\tba\centering\fi \if r\tba\raggedleft\fi \if l\tba\raggedright\fi
   \tblists

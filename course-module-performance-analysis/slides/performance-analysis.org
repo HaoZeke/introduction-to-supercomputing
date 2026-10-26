@@ -23,6 +23,10 @@ Maxim Masterov
 #+begin_tb
 15.05.2025
 #+end_tb
+#+attr_latex: :options [x=56.65,y=522,s=15.8,l=18.96,c=cFFFFFF]
+#+begin_tb
+Adapted and updated by Rohit Goswami
+#+end_tb
 #+attr_latex: :options [x=56.45,y=57.7,s=1.5,l=1.8,c=cEE7628,f=arial]
 #+begin_tb
 @@beamer:•@@
@@ -175,7 +179,7 @@ application
 #+end_tb
 #+attr_latex: :options [x=68.18,y=329.08,s=18,l=21.6,ind=22.52,bc=cEE7628,bf=arial]
 #+begin_tb
-- Using "gut feeling"
+- Using ``gut feeling''
 #+end_tb
 #+attr_latex: :options [x=741.92,y=165.05,s=9.8,l=11.25,c=cFFFFFF]
 #+begin_tb
@@ -1644,7 +1648,7 @@ Standard unix/linux profiling utility
 @@beamer:\$@@ module load AMD-uProf/5.1.701 \\
 @@beamer:{\fontsize{18}{21.6}\selectfont \$@@ AMDuProfPcm roofline -X -o res.csv -- <prog> <args>@@beamer:}@@
 #+end_tb
-#+attr_latex: :options [x=122.32,y=356.85,s=15.8,l=18.77,c=cD9D9D9,f=cal,code]
+#+attr_latex: :options [x=122.32,y=316.85,s=15.8,l=18.77,c=cD9D9D9,f=cal,code]
 #+begin_tb
 [Profile Data] \\
 Application,./a.out \\
@@ -1653,25 +1657,25 @@ Name,./a.out \\
 Throughput,6.7257 \\
 Bandwidth,2.6767
 #+end_tb
-#+attr_latex: :options [x=691.03,y=350.25,s=15.8,l=18.96,c=cD9D9D9,b]
+#+attr_latex: :options [x=691.03,y=310.25,s=15.8,l=18.96,c=cD9D9D9,b]
 #+begin_tb
 Output example
 #+end_tb
-#+attr_latex: :options [x=457.92,y=436.55,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
+#+attr_latex: :options [x=457.92,y=396.55,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
 #+begin_tb
 Bandwidth
 #+end_tb
-#+attr_latex: :options [x=413.6,y=425.83,s=15.8,l=18.96,c=cD9D9D9,f=math,fw=33.01]
+#+attr_latex: :options [x=413.6,y=385.83,s=15.8,l=18.96,c=cD9D9D9,f=math,fw=33.01]
 #+begin_tb
 𝐴𝐼=
 #+end_tb
-#+attr_latex: :options [x=454.8,y=413.7,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
+#+attr_latex: :options [x=454.8,y=373.7,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
 #+begin_tb
 Throughput
 #+end_tb
-#+attr_latex: :options [x=413.6,y=470,s=13.5,l=16.2,c=cD9D9D9,f=cal,w=420]
+#+attr_latex: :options [x=148,y=446,s=15,l=18,ind=20,bc=cEE7628,bf=arial,w=760]
 #+begin_tb
-uProf reports Throughput in GFLOP/s and Bandwidth in GB/s, so this run has AI = 6.7257 / 2.6767 = 2.5 FLOP per byte; compare it with the ridge point of the roofline on the next slide.
+- uProf reports Throughput in GFLOP/s and Bandwidth in GB/s, so this run has AI = 6.7257 / 2.6767 = 2.5 FLOP per byte. Compare it with the roofline ridge.
 #+end_tb
 
 * Roofline model
@@ -1717,66 +1721,15 @@ export EARL_REPORT_LOOPS=1
 #+begin_tb
 @@beamer:\$@@ eacct -j <job-id>
 #+end_tb
-#+attr_latex: :options [x=92.85,y=288.68,s=15.8,l=18.77,c=cD9D9D9,f=cal,p=0.78,code]
+#+attr_latex: :options [x=80,y=292,s=14.5,l=18,c=cD9D9D9,v]
 #+begin_tb
-JOB-STEP AID
-
-GBS \\
-11041163-0 \\
-maximm \\
-0.00/---
-#+end_tb
-#+attr_latex: :options [x=137.28,y=288.68,s=15.8,l=18.77,c=cD9D9D9,f=cal,p=0.75,code]
-#+begin_tb
-USER
-
-CPI ENERGY(J)
-
-2747012
-
-job.sh
-
----
-#+end_tb
-#+attr_latex: :options [x=203.83,y=288.68,s=15.8,l=19.53,c=cD9D9D9,f=cal,p=0.02,code]
-#+begin_tb
-APPLICATION
-
-GFLOPS/W IO(MBs) MPI% G-POW (T/U)
-
-MO
-
----
-#+end_tb
-#+attr_latex: :options [x=315.25,y=288.68,s=15.8,l=19.55,c=cD9D9D9,f=cal,p=9.37,code]
-#+begin_tb
-POLICY NODES AVG/DEF/IMC(GHz) TIME(s)
-
-G-FREQ G-UTIL(G/MEM)
-
-2.52/2.60/1.47 56.64
-#+end_tb
-#+attr_latex: :options [x=580.32,y=288.68,s=15.8,l=57.84,c=cD9D9D9,f=cal,code]
-#+begin_tb
-POWER(W)
-
-0.44 14366
-#+end_tb
-#+attr_latex: :options [x=288.98,y=346.52,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
-#+begin_tb
-1
-#+end_tb
-#+attr_latex: :options [x=481.88,y=346.52,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
-#+begin_tb
-253.62 1.83
-#+end_tb
-#+attr_latex: :options [x=685.65,y=346.52,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
-#+begin_tb
-0.0006 0.3
-#+end_tb
-#+attr_latex: :options [x=779.6,y=346.52,s=15.8,l=18.96,c=cD9D9D9,f=cal,code]
-#+begin_tb
-0.0
+#+begin_example
+JOB-STEP AID USER APPLICATION POLICY NODES AVG/DEF/IMC(GHz) TIME(s) POWER(W)
+GBS          CPI ENERGY(J) GFLOPS/W IO(MBs) MPI% G-POW(T/U) G-FREQ G-UTIL(G/MEM)
+11041163-0   2747012
+maximm       job.sh MO 1 2.52/2.60/1.47 56.64 253.62 1.83 0.44 14366 0.0006 0.3 0.0
+0.00/---     ---    ---
+#+end_example
 #+end_tb
 
 * SLURM
