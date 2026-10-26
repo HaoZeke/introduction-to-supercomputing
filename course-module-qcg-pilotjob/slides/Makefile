@@ -16,7 +16,8 @@ all: $(DECKS:=.pdf)
 	emacs --batch $< --load export.el
 
 %.pdf: %.tex pptx-style.tex qcg-pilotjob-slides-style.tex $(wildcard figures/*/*)
-	latexmk -xelatex -interaction=nonstopmode -halt-on-error $<
+	tectonic -Z shell-escape-cwd=$(CURDIR) --keep-logs $<
+	python3 deck-gate.py --pdf $*.pdf --log $*.log --allow deck-gate.allow $(if $(REFERENCE),--reference $(REFERENCE))
 
 clean:
 	for d in $(DECKS); do latexmk -c $$d.tex; rm -f $$d.tex $$d.*vrb $$d.xdv $$d.nav $$d.snm; done

@@ -5,6 +5,7 @@
 #+LATEX_COMPILER: xelatex
 #+LATEX_HEADER: \input{pptx-style.tex}
 #+LATEX_HEADER: \input{qcg-pilotjob-slides-style.tex}
+#+LATEX_HEADER: \usepackage{booktabs}
 
 # One heading per slide, in the layout of the QCG-PilotJob deck: its title,
 # hands-on and closing backgrounds, and figures/workflow-alternatives/gtext
@@ -19,24 +20,28 @@
 #+begin_tb
 QCG-PilotJob, HyperQueue, Snakemake and FireWorks
 #+end_tb
+#+attr_latex: :options [x=56.63,y=522,s=13.7,l=16.44,c=cFFFFFF]
+#+begin_tb
+Adapted and updated by Rohit Goswami
+#+end_tb
 
 * Why compare tools
 :PROPERTIES:
 :BEAMER_opt: pg=2
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=150,s=15.9,l=26,ind=16.06,bf=arial]
+#+attr_latex: :options [x=80,y=140,s=22,l=32,ind=26,bf=arial,w=780,p=5]
 #+begin_tb
 - Many small tasks inside one Slurm allocation need a tool that starts a task as soon as a core is free.
 - QCG-PilotJob is one such tool. HyperQueue, Snakemake and FireWorks are three others.
-- Each one expresses "this task waits for those tasks" differently.
+- Each one expresses ``this task waits for those tasks'' differently.
 - The comparison: how the dependency is written, and how much of the allocation sits idle.
 #+end_tb
-#+attr_latex: :options [x=69,y=330,s=15.9,l=19.08,b]
+#+attr_latex: :options [x=80,y=396,s=22,l=26,b]
 #+begin_tb
 Hands-on
 #+end_tb
-#+attr_latex: :options [x=69,y=356,s=15.9,l=19.08,c=c546E7A,code]
+#+attr_latex: :options [x=80,y=428,s=20,l=24,c=c546E7A,code]
 #+begin_tb
 hands-on/alternatives/
 #+end_tb
@@ -46,12 +51,11 @@ hands-on/alternatives/
 :BEAMER_opt: pg=3
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=150,s=15.9,l=26,ind=16.06,bf=arial]
+#+attr_latex: :options [x=80,y=145,s=22,l=40,ind=26,bf=arial,w=780,p=12]
 #+begin_tb
 - *Example 4*: one average per CSV file, then an aggregation that must wait for every average.
 - *Example 5*: sleeping tasks of different lengths, to measure idle time from the start and end time of each task.
-- Same inputs and helper scripts. HyperQueue and Snakemake use 16 tasks; \\
-  the file-backed FireWorks example uses one worker and one task.
+- Same inputs and helper scripts. HyperQueue and Snakemake use 16 tasks; the file-backed FireWorks example uses one worker and one task.
 - Job scripts: *average.sh* and *profile.sh* in a directory per tool.
 #+end_tb
 
@@ -59,7 +63,7 @@ hands-on/alternatives/
 :PROPERTIES:
 :BEAMER_opt: pg=4
 :END:
-#+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g16}
+#+beamer: \slidegraphics{figures/workflow-alternatives/gcode}
 #+attr_latex: :options [x=69,y=137.89,s=15.9,l=22,ind=14.2,bf=cal]
 #+begin_tb
 - A server and a worker run inside the allocation.
@@ -79,7 +83,7 @@ The dependency
 #+begin_tb
 @@beamer:@@# one task per line of files.txt
 #+end_tb
-#+attr_latex: :options [x=503.03,y=212,s=13.7,l=17,c=cC3E88D,code]
+#+attr_latex: :options [x=503.03,y=212,s=12.2,l=15,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
 hq submit --each-line files.txt \
@@ -93,7 +97,7 @@ hq submit --each-line files.txt \
 #+begin_tb
 @@beamer:@@# then, after every task
 #+end_tb
-#+attr_latex: :options [x=503.03,y=375,s=13.7,l=17,c=cC3E88D,code]
+#+attr_latex: :options [x=503.03,y=375,s=12.2,l=15,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
 python3 ../aggregate.py "$averages"/*.csv > result.csv
@@ -104,7 +108,7 @@ python3 ../aggregate.py "$averages"/*.csv > result.csv
 :PROPERTIES:
 :BEAMER_opt: pg=5
 :END:
-#+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g16}
+#+beamer: \slidegraphics{figures/workflow-alternatives/gcode}
 #+attr_latex: :options [x=69,y=137.89,s=15.9,l=22,ind=14.2,bf=cal]
 #+begin_tb
 - =snakemake --cores= \\
@@ -124,7 +128,7 @@ The dependency
 #+begin_tb
 @@beamer:@@# Snakefile
 #+end_tb
-#+attr_latex: :options [x=503.03,y=212,s=13.7,l=17,c=cC3E88D,code]
+#+attr_latex: :options [x=503.03,y=212,s=12.2,l=15,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
 rule aggregate:
@@ -142,7 +146,7 @@ rule aggregate:
 :PROPERTIES:
 :BEAMER_opt: pg=6
 :END:
-#+beamer: \slidegraphics{figures/qcg-pilotjob-slides/g16}
+#+beamer: \slidegraphics{figures/workflow-alternatives/gcode}
 #+attr_latex: :options [x=69,y=137.89,s=15.9,l=22,ind=14.2,bf=cal]
 #+begin_tb
 - The LaunchPad is a file under \\
@@ -163,15 +167,17 @@ The dependency
 #+begin_tb
 @@beamer:@@# workflow.py
 #+end_tb
-#+attr_latex: :options [x=503.03,y=212,s=13.7,l=17,c=cC3E88D,code]
+#+attr_latex: :options [x=503.03,y=212,s=12.2,l=15,c=cC3E88D,code]
 #+begin_tb
 #+begin_example
 command = shlex.join([sys.executable,
     os.path.join(HERE, "..", "aggregate.py"),
     "--manifest", manifest])
 aggregate = Firework(
-    ScriptTask.from_str(f"{command} > "
-        f"{shlex.quote(os.path.join(HERE, 'result.csv'))}"),
+    ScriptTask.from_str(
+        f"{command} > "
+        + shlex.quote(os.path.join(
+            HERE, "result.csv"))),
     name="aggregate", parents=averages)
 lp.add_wf(Workflow(averages + [aggregate],
                    name="average"))
@@ -183,20 +189,24 @@ lp.add_wf(Workflow(averages + [aggregate],
 :BEAMER_opt: pg=7
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=145,s=15.9,l=20]
+#+attr_latex: :options [x=90,y=145,s=20,l=26,w=780]
 #+begin_tb
 One run on two-core course-cluster nodes with 2 slots (FireWorks: its one worker), 32 tasks of example 5 at their original lengths, 25 October 2026. Not a general result.
 #+end_tb
-#+attr_latex: :options [x=69,y=190,s=15.9,l=22]
+#+attr_latex: :options [x=120,y=220,s=22,l=28]
 #+begin_tb
 #+begin_export latex
-\begin{tabular}[t]{@{}l@{\hspace{40bp}}r@{\hspace{40bp}}r@{}}
-\textbf{Tool} & \textbf{Span} & \textbf{Idle}\\[4bp]
+\renewcommand{\arraystretch}{1.28}
+\begin{tabular}[t]{@{}l@{\hspace{90bp}}r@{\hspace{70bp}}r@{}}
+\toprule
+\textbf{Tool} & \textbf{Span} & \textbf{Idle}\\
+\midrule
 bash pipeline & 267 s & 37\%\\
 QCG-PilotJob & 181 s & 7\%\\
 HyperQueue & 172 s & 2\%\\
 Snakemake & 250 s & 32\%\\
 FireWorks, one worker & 344 s & 2\% of 1 slot\\
+\bottomrule
 \end{tabular}
 #+end_export
 #+end_tb
@@ -206,19 +216,23 @@ FireWorks, one worker & 344 s & 2\% of 1 slot\\
 :BEAMER_opt: pg=8
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=145,s=15.9,l=20]
+#+attr_latex: :options [x=90,y=150,s=22,l=28]
 #+begin_tb
 The same two-core nodes, 2 slots (FireWorks 1).
 #+end_tb
-#+attr_latex: :options [x=69,y=190,s=15.9,l=22]
+#+attr_latex: :options [x=140,y=210,s=24,l=30]
 #+begin_tb
 #+begin_export latex
-\begin{tabular}[t]{@{}l@{\hspace{40bp}}l@{}}
-\textbf{Tool} & \textbf{Time}\\[4bp]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}[t]{@{}l@{\hspace{140bp}}l@{}}
+\toprule
+\textbf{Tool} & \textbf{Time}\\
+\midrule
 HyperQueue & 11 s\\
 QCG-PilotJob (v4) & 18 s\\
 FireWorks, one worker & 25 s\\
 Snakemake & 67 s\\
+\bottomrule
 \end{tabular}
 #+end_export
 #+end_tb
@@ -228,16 +242,13 @@ Snakemake & 67 s\\
 :BEAMER_opt: pg=9
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=150,s=15.9,l=22,ind=16.06,bf=arial,p=8]
+#+attr_latex: :options [x=80,y=140,s=20,l=28,ind=26,bf=arial,w=790,p=8]
 #+begin_tb
 - The bash pipeline runs tasks in blocks of the slot count, so a block waits for its longest task.
-- QCG-PilotJob: 7%, a second at the start, three at the end, short gaps between tasks. With a \\
-  module load in every task an earlier run showed 23%; the examples leave *modules* out.
-- HyperQueue: 2%, the next task starts when a slot frees up. Snakemake: the same between tasks, \\
-  but 77 s of its own start-up before the first one, so 32%.
+- QCG-PilotJob: 7%, a second at the start, three at the end, short gaps between tasks. With a module load in every task an earlier run showed 23%; the examples leave *modules* out.
+- HyperQueue: 2%, the next task starts when a slot frees up. Snakemake: the same between tasks, but 77 s of its own start-up before the first one, so 32%.
 - FireWorks: one worker on a file LaunchPad, so the tasks run one after another: 344 s.
-- Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping \\
-  bars can leave white space that is not idle time.
+- Plot lanes show the CPU number a task reported at start. Tasks are not pinned, so overlapping bars can leave white space that is not idle time.
 - The idle figure comes from the task start and end times.
 #+end_tb
 
@@ -246,14 +257,11 @@ Snakemake & 67 s\\
 :BEAMER_opt: pg=10
 :END:
 #+beamer: \slidegraphics{figures/workflow-alternatives/gtext}
-#+attr_latex: :options [x=69,y=150,s=15.9,l=22,ind=16.06,bf=arial,p=8]
+#+attr_latex: :options [x=80,y=145,s=24,l=34,ind=28,bf=arial,w=780,p=12]
 #+begin_tb
-- *QCG-PilotJob* and *HyperQueue*: many tasks inside one allocation. QCG-PilotJob is driven \\
-  from Python; HyperQueue from the command line, with a Python API as well.
+- *QCG-PilotJob* and *HyperQueue*: many tasks inside one allocation. QCG-PilotJob is driven from Python; HyperQueue from the command line, with a Python API as well.
 - *Snakemake*: rules on files; a rerun builds only what changed.
-- *FireWorks*: a database of workflows with states and reruns. Without a MongoDB server the \\
-  file LaunchPad allows one worker: 212 s for 1000 averages on one core on Snellius, against \\
-  Snakemake's 15 s on 16 cores; alike per core, but FireWorks cannot take more cores.
+- *FireWorks*: a database of workflows with states and reruns. Without a MongoDB server the file LaunchPad allows one worker: 212 s for 1000 averages on one core on Snellius, against Snakemake's 15 s on 16 cores; alike per core, but FireWorks cannot take more cores.
 #+end_tb
 
 * Have fun! :)
