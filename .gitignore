@@ -74,3 +74,6 @@ __pycache__/
 /course-module-qcg-pilotjob/slides/workflow-alternatives.pdf
 /course-module-snellius-fs/slides/snellius-fs.pdf
 /teaching/lesson.pdf
+
+# Renders for profiles other than Snellius (tools/render_profile.py).
+/build/
