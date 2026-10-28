@@ -145,3 +145,7 @@ One module per commit, each with `snellius --check` green:
    upstreaming?
 6. Should profiles describe one deployment (the Maastricht course) or a class of
    clusters (any SRC Magic Castle), with the node list filled from `sinfo`?
+7. `src.toml` writes the login host as `<manager>`, as the slides do, so the
+   course host name stays out of the repository. Should the renderer take the
+   real host from an untracked local file or an environment variable, or
+   should learners keep reading it from the trainer's setup link?
