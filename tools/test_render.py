@@ -31,6 +31,10 @@ class Engine(unittest.TestCase):
         self.assertEqual(self.r("{{#missing?}}x{{/missing?}}"), "")
         self.assertEqual(self.r("{{^missing?}}x{{/missing?}}"), "x")
 
+    def test_tag_after_an_opening_brace(self):
+        self.assertEqual(self.r(r"\texttt{{{a}}}", a="x"), r"\texttt{x}")
+        self.assertEqual(self.r(r"\textbf{\texttt{{{a}} to}}", a="x"), r"\textbf{\texttt{x to}}")
+
     def test_standalone_tag_lines_vanish(self):
         self.assertEqual(self.r("a\n{{#t}}\nb\n{{/t}}\nc\n", t=True), "a\nb\nc\n")
 

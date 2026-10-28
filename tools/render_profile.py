@@ -50,7 +50,8 @@ SBATCH_KEYS = [
 COURSE_GLOBS = ["README.md", "course-module-*/**/*"]
 COURSE_SUFFIXES = {".sh", ".md", ".org", ".py", ".slurm"}
 
-TAG = re.compile(r"\{\{([#^/]?)\s*([^}]+?)\s*\}\}")
+# A name holds no brace, so `\texttt{{{a}}}` reads as `\texttt{` and {{a}}.
+TAG = re.compile(r"\{\{([#^/]?)\s*([^{}]+?)\s*\}\}")
 STANDALONE = re.compile(r"^[ \t]*(\{\{[#^/][^}]+\}\})[ \t]*(?:\n|\Z)", re.M)
 MISSING = object()
 
