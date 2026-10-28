@@ -1,7 +1,7 @@
 # Cluster profiles
 
-Internal design note for ljos eessi-r2ag (parent eessi-2wmy). Branch
-`feat/cluster-profiles`, on the class branch at 389d29a.
+Design note for the cluster profiles. Branch `feat/cluster-profiles`, on
+the class branch at 389d29a.
 
 ## Problem
 
@@ -43,30 +43,33 @@ the fundamentals slide said 16 cores, while the cluster has four nodes and
 
 Every key is optional unless a template uses it; a template that names a
 missing key fails the render. A value that is not checked carries a
-`# unverified` comment.
+`# unverified` comment. Keys in *italics* are recorded, not rendered yet:
+no template or check reads them today.
 
 | Table | Keys | Meaning |
 |---|---|---|
-| `[profile]` | `name`, `description`, `verified` | identity, date the facts were checked |
+| `[profile]` | *`name`*, *`description`*, *`verified`* | identity, date the facts were checked |
 | `[render]` | `asides` | other profiles whose notes appear in this render (Snellius: `["src"]`) |
-| `[system]` | `name`, `login_host`, `login_nodes`, `ondemand_url`, `ondemand_apps`, `interconnect` | prose facts |
-| `[[system.nodes]]` | `name`, `cpus`, `mem_mb`, `gres` | one entry per node; renderer derives `system.node_count`, `system.total_cpus` |
-| `[[system.partition_info]]` | `name`, `nodes`, `cpus_per_node`, `gpus_per_node`, `gpu_model` | partition catalogue for large systems |
-| `[partitions]` | `cpu`, `cpu_alt`, `gpu`, ... | logical role to partition name |
-| `[slurm]` | `default_partition`, `def_mem_per_cpu_mb`, `oversubscribe`, `gpu_request`, `mail`, `constraints` | scheduler facts |
-| `[limits]` | `max_cpus_per_node`, `max_nodes` | course sizing rule; the renderer checks every job against it |
-| `[modules]` | `stack`, `toolchain`, `compiler`, `python`, `qcg`, `site_modulepath`, `stack_on_own_line` | module names; with `stack_on_own_line` the renderer rejects `module load 2025 X` |
-| `[paths]` | `home`, `scratch_shared`, `scratch_link`, `scratch_node`, `projects`, `archive`, `tmpdir` | file systems |
-| `[tools]` | `myquota`, `accinfo`, `ear`, `uprof`, `papi`, `perf`, `seff` | booleans for sections that only make sense where the tool exists |
-| `[accounting]` | `unit`, `sbu_per_core_hour` | SBU or core-hours |
-| `[jobs.MODULE.JOB]` | `nodes`, `ntasks`, `ntasks_per_node`, `cpus_per_task`, `script`, `example_n`, `sample_n` | job sizes; renderer derives `override`, `cmd`, `local_n` |
-| `[MODULE]` | free-form, e.g. `hybrid.table`, `hybrid.table_note`, `hybrid.aside_note` | module-specific text and tables |
+| `[system]` | `name`, `interconnect`, *`login_host`*, *`ondemand_url`*, *`ondemand_apps`*, *`peak_pflops`* | prose facts |
+| `[[system.nodes]]` | `cpus`, *`name`*, *`mem_mb`*, *`gres`* | one entry per node; renderer derives `system.node_count`, `system.total_cpus`, `system.node_shapes` |
+| `[[system.partition_info]]` | *`name`*, *`nodes`*, *`cpus_per_node`*, *`gpus_per_node`*, *`gpu_model`* | partition catalogue for large systems |
+| `[partitions]` | `cpu`, `gpu`, `real_gpu_node`, *`cpu_alt`*, *`gpu_alt`*, *`fat`*, *`staging`*, *`default`* | logical role to partition name |
+| `[slurm]` | `mail`, `def_mem_per_cpu_mb`, `constraints`, *`default_partition`*, *`oversubscribe`*, *`gpu_request`*, *`select`*, *`min_allocation_cpus`*, *`min_allocation_mem_gib`* | scheduler facts; `constraints` lists the `--constraint` values a job script may ask for |
+| `[limits]` | `max_cpus_per_node`, `max_nodes` | course sizing rule; the renderer checks every profile job and every rendered job script against it |
+| `[modules]` | `stack`, `toolchain`, `stack_on_own_line`, *`compiler`*, *`python`*, *`qcg`*, *`site_modulepath`*, *`uprof`* | module names; with `stack_on_own_line` the renderer rejects `module load 2025 X` |
+| `[paths]` | `home_link`, `scratch_node`, `scratch_user`, `shared_fs`, *`home`*, *`scratch_shared`*, *`scratch_link`*, *`scratch_local`*, *`scratch_local_real`*, *`projects`*, *`archive`*, *`tmpdir`* | file systems; the file systems README uses `scratch_user` in place of `/scratch-shared` where it is set, and shows the scratch-node constraint only where `scratch_node` is set |
+| `[tools]` | `myquota`, `accinfo`, *`ear`*, *`uprof`*, *`papi`*, *`perf`*, *`seff`*, *`mpifileutils`* | booleans for sections that only make sense where the tool exists |
+| `[accounting]` | *`unit`*, *`sbu_per_core_hour`* | SBU or core-hours |
+| `[jobs.MODULE.JOB]` | `nodes`, `ntasks`, `ntasks_per_node`, `cpus_per_task`, `script`, `example_n`, `sample_n` | job sizes; renderer derives `override`, `cmd`, `local_n`. `jobs.fundamentals` holds the hands-on jobs (`hello`, `pi`) and the slide jobs (`first`, `mpi`, `mpi_compare`, `firsttest`, `r`) |
+| `[MODULE]` | free-form, e.g. `hybrid.table`, `hybrid.aside_note`, `hybrid.example_source`, `fundamentals.mpi_compare_a`, `fundamentals.mpi_compare_b`, `fs.share` | module-specific text and tables; `mpi_compare_a` and `_b` are the slide's prompt to change the job size |
 
 Derived fields, computed before rendering:
 
 - `jobs.M.J.override`: the sbatch options that turn the rendering profile's
   job into this profile's job, in the order nodes, ntasks, ntasks-per-node,
-  cpus-per-task. Only meaningful inside an aside.
+  cpus-per-task. Templates use it only inside an aside. When the base job
+  sets an option this job leaves out, the render fails, since the override
+  cannot unset it.
 - `jobs.M.J.cmd`: `sbatch <override> <script> <example_n>`.
 - `jobs.M.J.local_n`: rank 0's share of `sample_n`, as the C codes print it.
 - `X.table.lines`: Markdown rows for any table with `columns` and `sizes`,
@@ -109,7 +112,19 @@ and reports missing files. Against a render tree (`--against build/src`) it
 also reports files no template produced. Against the repository it does not,
 since most published files have no template. Every run also lints the render
 and the untemplated course files (`README.md`, and `.sh`, `.md`, `.org`,
-`.py`, `.slurm` under `course-module-*`) against the profile's module rules.
+`.py`, `.slurm` and scripts with a shebang and no suffix under
+`course-module-*` and `teaching/`) against the profile's module rules.
+
+Every run checks the jobs twice. `validate()` checks each
+`[jobs.MODULE.JOB]` in the profile against `[limits]`, and rejects a
+multi-node job with more tasks than nodes and no `ntasks_per_node`, since
+Slurm may then pack it unevenly. `check_scripts()` reads every `#SBATCH`
+block in the rendered files and applies the same rules, plus
+`slurm.constraints`. A problem in either fails the render. The same check
+over untemplated course files prints a warning ending in "(no template
+yet)" and does not fail: those files reach every cluster as published
+until a template covers them. Today the SRC render warns about the QCG
+Pilot Job and workflow scripts, which ask for 16 or 128 CPUs per node.
 
 ## Slides
 
@@ -132,19 +147,20 @@ One module per commit, each with `snellius --check` green:
    Snellius) and the SBU text (`accounting`). The scripts now hard-code the
    SRC course CVMFS path, so they do not run on Snellius as published.
 3. `course-module-fundamentals-of-hpc`: templates cover `hands-on.md`
-   (hello and pi sizes, GPU partition, login note), `hands-on/pi.sh` and
-   the slide's mail boxes. Still open: the course cluster slide, the slide
-   job scripts and `hands-on/README.md`.
-4. `course-module-snellius-fs`: a template covers the cluster note. Still
-   open: paths and the scratch-node constraint. The recorded Snellius
-   output stays.
+   (hello and pi sizes, GPU partition, login note), `hands-on/pi.sh`, the
+   course cluster slide, the slide job scripts and the slide's mail boxes.
+   Still open: `hands-on/README.md`.
+4. `course-module-snellius-fs`: a template covers the cluster note, the
+   scratch-node constraint and the `/scratch-shared` commands, which the
+   SRC render replaces with `paths.scratch_user`. Still open: the other
+   paths. The recorded Snellius output stays.
 5. `course-module-performance-analysis`: `hwperf`, EAR and uProf sections
    behind `tools.*`.
 6. Top-level README note from `src.toml`.
 
-## SSH pass findings (eessi-2wmy)
+## SSH pass findings
 
-Findings from the SSH pass on 2026-10-28, in `ssh-pass-report.md`. A
+Findings from a pass over the SRC course cluster by SSH on 2026-10-28. A
 course bug gets a fix in the published source and is a candidate for a
 standalone upstream fix. A cluster fact moves into the profiles.
 
@@ -160,7 +176,7 @@ standalone upstream fix. A cluster fact moves into the profiles.
 | no mpifileutils | cluster fact | `tools.mpifileutils`; no course file uses it yet |
 | S1.12 timeout | neither | the slide asks "Can you solve the error?"; the 1-minute limit against `sleep 120` is the error to solve, as in the original deck |
 
-## Open questions for Rohit
+## Open questions
 
 1. The Snellius render carries the SRC asides because the published files
    do. Should upstream keep them, or should the Snellius render drop them

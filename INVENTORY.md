@@ -1,12 +1,11 @@
 # Cluster-specific values in the course
 
 Inventory for the cluster profiles (see DESIGN.md). Made on 2026-10-28 from
-`feat/cluster-profiles` at 7dcd0fe, by grepping job scripts, hands-on
+`feat/cluster-profiles` at 389d29a, by grepping job scripts, hands-on
 Markdown, READMEs and Org slide sources. The raw grep found 631 matching
 lines; they collapse into the 52 values below. Rows 9, 25, 30, 38 and 46
-follow the class branch at 389d29a. The SSH pass of 2026-10-28
-(ssh-pass-report.md, ljos eessi-2wmy) updated rows 18, 19, 37 and 50 and
-added row 53.
+follow the class branch at 389d29a. The SSH pass of 2026-10-28 over the
+SRC course cluster updated rows 18, 19, 37 and 50 and added row 53.
 
 Paths are shortened:
 FH = course-module-fundamentals-of-hpc, PA = course-module-performance-analysis,
