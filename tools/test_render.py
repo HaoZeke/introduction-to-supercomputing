@@ -129,6 +129,14 @@ class Profiles(unittest.TestCase):
                 key = "nodes" if jobs["mpi_compare"]["nodes"] != jobs["mpi"]["nodes"] else "ntasks"
                 self.assertIn(f"\\texttt{{{key}={jobs['mpi_compare'][key]}}}", text)
 
+    def test_fs_commands_use_the_profiles_scratch(self):
+        rel = "course-module-snellius-fs/README.md"
+        snel, src = rp.render_all("snellius")[rel], rp.render_all("src")[rel]
+        for line in ("#SBATCH --constraint=scratch-node\n", "mkdir /scratch-shared/"):
+            self.assertIn(line, snel)
+            self.assertNotIn(line, src)
+        self.assertIn(f"ls {self.profiles['src']['paths']['scratch_user']}/\n", src)
+
     def test_mail_options_only_where_slurm_sends_mail(self):
         rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
         for name, prof in self.profiles.items():

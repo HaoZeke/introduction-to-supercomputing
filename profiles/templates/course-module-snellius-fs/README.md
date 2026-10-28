@@ -62,9 +62,15 @@ The scratch-shared file system, denoted as `/scratch-shared`, is a shared worksp
 You can create your own directory using your `<username>`, or any other filename.
 
 ```
+{{^paths.scratch_user?}}
 [scur1448@int6 ~]$ mkdir /scratch-shared/scur1448
 [scur1448@int6 ~]$ touch /scratch-shared/scur1448/testfile-scratch-shared.foo
 [scur1448@int6 ~]$ ls /scratch-shared/scur1448/
+{{/paths.scratch_user?}}
+{{#paths.scratch_user?}}
+[scur1448@int6 ~]$ touch {{paths.scratch_user}}/testfile-scratch-shared.foo
+[scur1448@int6 ~]$ ls {{paths.scratch_user}}/
+{{/paths.scratch_user?}}
 testfile-scratch-shared.foo
 ```
 
@@ -86,7 +92,12 @@ Now, let's switch to the login node `int5` by using `ssh int5`. First, verify wh
 
 ```
 [scur1448@int6 scur1448]$ ssh int5
+{{^paths.scratch_user?}}
 [scur1448@int5 ~]$ ll /scratch-shared/scur1448/
+{{/paths.scratch_user?}}
+{{#paths.scratch_user?}}
+[scur1448@int5 ~]$ ll {{paths.scratch_user}}/
+{{/paths.scratch_user?}}
 total 0
 -rw-r----- 1 scur1448 scur1448 0 Nov  8 23:13 testfile-scratch-shared.foo
 ```
@@ -158,8 +169,14 @@ Please be aware that when requesting a shared node, you will only receive a port
 
 Scratch-node is available on all fat nodes and on a subset of the `rome`, `genoa` and GPU nodes. To secure a node with the scratch-node file system, you may use the `--constraint=scratch-node` flag in your job configuration.
 
+{{#paths.scratch_node?}}
 > [!NOTE]
 > Scratch-node and `--constraint=scratch-node` exist only on Snellius. On an SRC cluster, `$TMPDIR` already sits on the node's own disk, so drop the constraint and write to `$TMPDIR` in the exercise.
+{{/paths.scratch_node?}}
+{{^paths.scratch_node?}}
+> [!NOTE]
+> This cluster has no scratch-node file system and no `scratch-node` constraint. `$TMPDIR` already sits on the node's own disk, so the script below leaves the constraint out and writes to `$TMPDIR`.
+{{/paths.scratch_node?}}
 
 #### Exercise
 Modify the script above to launch a job that creates a file on scratch-node and displays the file's real path.
@@ -169,7 +186,9 @@ Modify the script above to launch a job that creates a file on scratch-node and 
 #SBATCH -J scratch-node-test
 #SBATCH -t 5
 #SBATCH -p rome
+{{#paths.scratch_node?}}
 #SBATCH --constraint=scratch-node
+{{/paths.scratch_node?}}
 
 touch "$TMPDIR/testfile-scratch-node.foo"
 echo "This is a file on scratch-node" > "$TMPDIR/testfile-scratch-node.foo"
