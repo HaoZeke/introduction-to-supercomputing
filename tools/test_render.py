@@ -189,6 +189,11 @@ class Profiles(unittest.TestCase):
         prof = self.profiles["src"]
         self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
         self.assertFalse(rp.lint(prof, {"x.sh": "module load 2025   # stack\n"}))
+        for line in ("[learner@int6 ~]$ module load 2025 foss/2025a", "$ module load 2025 foss/2025a",
+                     "module   load 2025 GCC/14.2.0"):
+            self.assertTrue(rp.lint(prof, {"x.sh": line + "\n"}), line)
+        for line in ("module load 2025 && module load foss/2025a", "module load 2025; module load foss/2025a"):
+            self.assertFalse(rp.lint(prof, {"x.sh": line + "\n"}), line)
 
     def test_lint_catches_one_line_stack_load_in_prose(self):
         prof = self.profiles["src"]
@@ -207,11 +212,14 @@ class LintCourseFiles(unittest.TestCase):
             (root / "course-module-x" / "hands-on" / "run.sh").write_text("module load 2025 foss/2025a\n")
             (root / "course-module-x" / "README.md").write_text("module load 2025\n")
             (root / "course-module-x" / "data.csv").write_text("module load 2025 x\n")
+            (root / "course-module-x" / "hands-on" / "build").write_text("#!/bin/bash\nmodule load 2025\n")
+            (root / "course-module-x" / "hands-on" / "notes").write_text("module load 2025 x\n")
             files = rp.course_files(root)
-            self.assertEqual(sorted(files), ["course-module-x/README.md", "course-module-x/hands-on/run.sh"])
+            self.assertEqual(sorted(files), ["course-module-x/README.md", "course-module-x/hands-on/build",
+                                             "course-module-x/hands-on/run.sh"])
             self.assertEqual(rp.lint(prof, files), ["course-module-x/hands-on/run.sh:1: module load 2025 foss/2025a"])
             self.assertEqual(rp.course_files(root, skip={"course-module-x/hands-on/run.sh"}).keys(),
-                             {"course-module-x/README.md"})
+                             {"course-module-x/README.md", "course-module-x/hands-on/build"})
 
     def test_published_course_files_pass_every_profile(self):
         for name, prof in rp.load_profiles().items():

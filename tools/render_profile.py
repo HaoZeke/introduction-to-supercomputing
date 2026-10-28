@@ -47,7 +47,7 @@ SBATCH_KEYS = [
 ]
 
 # Published files that learners read or run, for lint() beyond the templates.
-COURSE_GLOBS = ["README.md", "course-module-*/**/*"]
+COURSE_GLOBS = ["README.md", "course-module-*/**/*", "teaching/**/*"]
 COURSE_SUFFIXES = {".sh", ".md", ".org", ".py", ".slurm"}
 
 # A name holds no brace, so `\texttt{{{a}}}` reads as `\texttt{` and {{a}}.
@@ -312,7 +312,10 @@ def course_files(root: Path, skip=()) -> dict:
     for pattern in COURSE_GLOBS:
         for path in sorted(root.glob(pattern)):
             rel = str(path.relative_to(root))
-            if path.is_file() and path.suffix in COURSE_SUFFIXES and rel not in skip:
+            if not path.is_file() or rel in skip:
+                continue
+            # Scripts such as hands-on/compilepi have a shebang and no suffix.
+            if path.suffix in COURSE_SUFFIXES or (not path.suffix and path.read_bytes()[:2] == b"#!"):
                 found[rel] = path.read_text(errors="replace")
     return found
 
@@ -324,7 +327,9 @@ def lint(profile: dict, files: dict) -> list:
     if not mods.get("stack_on_own_line"):
         return []
     stack = re.escape(mods["stack"])
-    one_line = re.compile(rf"^\s*module load {stack}\s+[^\s#]")
+    # An optional shell prompt, then a second module on the same line; a
+    # `&&` or `;` starts a new command, which is fine.
+    one_line = re.compile(rf"^\s*(?:\[[^\]]*\]\$\s+|\S*\$\s+)?module\s+load\s+{stack}\s+(?![&;|#])\S")
     # Prose that names both in one code span, such as "Load =2025 foss/2025a="
     # on a slide, reads as one command too.
     in_prose = re.compile(rf"\bload\s+[=`~]{stack}\s+[\w/]", re.I)
