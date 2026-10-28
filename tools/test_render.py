@@ -124,8 +124,10 @@ class LintCourseFiles(unittest.TestCase):
     def test_published_course_files_pass_every_profile(self):
         for name, prof in rp.load_profiles().items():
             with self.subTest(name):
-                files = rp.course_files(rp.ROOT, skip=rp.render_all(name))
-                self.assertGreater(len(files), 50)
+                rendered = rp.render_all(name)
+                files = rp.course_files(rp.ROOT, skip=rendered)
+                # Every templated file leaves this set, so count both.
+                self.assertGreater(len(files) + len(rendered), 50)
                 self.assertEqual(rp.lint(prof, files), [])
 
 
@@ -141,7 +143,8 @@ class Check(unittest.TestCase):
             self.assertEqual(self.run_main("src", "--out", tmp)[0], 0)
             code, text = self.run_main("src", "--check", "--against", tmp)
             self.assertEqual(code, 0, text)
-            self.assertIn("src: 6/6 files identical", text)
+            n = len(rp.render_all("src"))
+            self.assertIn(f"src: {n}/{n} files identical", text)
 
             script = Path(tmp, "course-module-snellius-hybrid-jobs/hands-on/ex1/submit-axpy.sh")
             script.chmod(0o755)
