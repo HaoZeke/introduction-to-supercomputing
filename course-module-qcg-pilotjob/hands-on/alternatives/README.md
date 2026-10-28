@@ -42,7 +42,8 @@ cd snakemake
 Module: `snakemake/9.22.0-foss-2025b`, from EESSI on the SRC course cluster. Snellius has no Snakemake module (`module spider snakemake` finds nothing in the 2025 stack). Install it once in a virtual environment; the scripts activate `$HOME/venvs/snakemake` when the module is missing:
 
 ```
-module load 2025 Python/3.13.1-GCCcore-14.2.0
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
 python -m venv $HOME/venvs/snakemake
 source $HOME/venvs/snakemake/bin/activate
 pip install snakemake
@@ -66,7 +67,8 @@ cd fireworks
 Module: `FireWorks/2.1.4-gfbf-2025a`, a site installation on top of EESSI on the SRC course cluster only. Snellius has no FireWorks module (`module spider FireWorks` finds nothing in the 2025 stack). Install it once in a virtual environment; the scripts activate `$HOME/venvs/fireworks` when the module is missing:
 
 ```
-module load 2025 Python/3.13.1-GCCcore-14.2.0
+module load 2025
+module load Python/3.13.1-GCCcore-14.2.0
 python -m venv $HOME/venvs/fireworks
 source $HOME/venvs/fireworks/bin/activate
 pip install "fireworks[mongomock]"
@@ -95,7 +97,8 @@ the same helper's positional-file interface.
 The profile job scripts print `START`, `END` and one `TASK` line per task, in the same format as example 5. Plot each output file:
 
 ```
-module load 2025 SciPy-bundle/2025.06-gfbf-2025a matplotlib/3.10.3-gfbf-2025a
+module load 2025
+module load SciPy-bundle/2025.06-gfbf-2025a matplotlib/3.10.3-gfbf-2025a
 python ../../example_05/plot_profile.py ../hyperqueue/hq.<jobid>.out
 python ../../example_05/plot_profile.py ../snakemake/snakemake.<jobid>.out
 python ../../example_05/plot_profile.py ../fireworks/fw.<jobid>.out
