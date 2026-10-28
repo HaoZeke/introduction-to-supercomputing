@@ -74,6 +74,7 @@ stack_on_own_line = true
 
 [paths]
 home = "/home/$USER"
+home_link = true                      # /home/$USER links to a per-user directory; pwd prints that
 scratch_shared = "/scratch"           # shared BeeGFS, like /home and /project
 scratch_link = "~/scratch"            # points to /scratch/$USER
 projects = "/project"                 # no ~/projects link
@@ -211,8 +212,8 @@ self_note = '''
 # Shown in other profiles' renders of course-module-snellius-fs/README.md.
 aside_note = '''
 > [!NOTE]
-> On an SRC cluster with EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage. The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
+> On an SRC cluster with EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage.{{#paths.home_link?}} Your home `/home/<username>` is a link, so `pwd` right after login prints the directory it points to, and `du -sh ~` measures only the link; run `du -sh ~/` for the files in it.{{/paths.home_link?}} The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
 # Shown in this profile's own render.
 self_note = '''
 > [!NOTE]
-> These files are rendered for {{system.name}}. With EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage. The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
+> These files are rendered for {{system.name}}. With EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage.{{#paths.home_link?}} Your home `/home/<username>` is a link, so `pwd` right after login prints the directory it points to, and `du -sh ~` measures only the link; run `du -sh ~/` for the files in it.{{/paths.home_link?}} The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
