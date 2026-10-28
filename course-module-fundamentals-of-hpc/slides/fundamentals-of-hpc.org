@@ -23,6 +23,10 @@ General online course
 #+begin_tb
 6 March, 2026
 #+end_tb
+#+attr_latex: :options [x=56.61,y=276,s=14,l=16.8]
+#+begin_tb
+Adapted and updated by Rohit Goswami
+#+end_tb
 
 * Agenda
 :PROPERTIES:
@@ -915,7 +919,7 @@ hence *heavy tasks must be avoided*.
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-1,256 thin rome/genoa nodes + fat/high-memory nodes + 600 GPUs.
+1,258 thin rome/genoa nodes + fat/high-memory nodes + 604 GPUs.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
@@ -979,7 +983,7 @@ rome
 #+end_tb
 #+attr_latex: :options [x=149.96,y=160.64,s=12,l=14.4]
 #+begin_tb
-520
+521
 #+end_tb
 #+attr_latex: :options [x=226.16,y=160.64,s=12,l=14.4]
 #+begin_tb
@@ -1091,7 +1095,7 @@ genoa
 #+end_tb
 #+attr_latex: :options [x=149.97,y=285.1,s=12,l=14.4]
 #+begin_tb
-736
+737
 #+end_tb
 #+attr_latex: :options [x=226.17,y=285.1,s=12,l=14.4]
 #+begin_tb
@@ -1147,7 +1151,7 @@ gpu_a100
 #+end_tb
 #+attr_latex: :options [x=153.21,y=352.32,s=12,l=14.4]
 #+begin_tb
-62
+63
 #+end_tb
 #+attr_latex: :options [x=226.17,y=352.32,s=12,l=14.4]
 #+begin_tb
@@ -1175,7 +1179,7 @@ NVIDIA A100 40 GB
 #+end_tb
 #+attr_latex: :options [x=832.94,y=352.32,s=12,l=14.4]
 #+begin_tb
-1/8
+1/4
 #+end_tb
 #+attr_latex: :options [x=68.48,y=385.94,s=12,l=14.4]
 #+begin_tb
@@ -1568,7 +1572,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+end_tb
 #+attr_latex: :options [x=62.48,y=470.51,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- Slow, especially to retrieve "old" data, and not available on compute nodes.
+- Slow, especially to retrieve ``old'' data, and not available on compute nodes.
 #+end_tb
 
 * Connecting to Snellius
@@ -1586,8 +1590,8 @@ Before first access to the system, login into the SURF user portal, CUA!
 #+end_tb
 #+attr_latex: :options [x=64.38,y=150.26,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- You should have received an email from SURFcua ([[mailto:no-reply@surf.nl][@@beamer:\uline{\textcolor{c177ABF}{@@no-reply@surf.nl@@beamer:}}@@]]) with the subject "@@beamer:\textbf{@@SURFcua new@@beamer:}@@ \\
-  *login <username> created*."
+- You should have received an email from SURFcua ([[mailto:no-reply@surf.nl][@@beamer:\uline{\textcolor{c177ABF}{@@no-reply@surf.nl@@beamer:}}@@]]) with the subject ``@@beamer:\textbf{@@SURFcua new@@beamer:}@@ \\
+  *login <username> created*.''
 #+end_tb
 
 * Connecting to Snellius via terminal
@@ -1713,6 +1717,21 @@ Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting
 - run applications with graphical user interfaces.
 #+end_tb
 
+* This course runs on a course cluster built like Snellius
+:PROPERTIES:
+:BEAMER_opt: ts=28,tw=820
+:END:
+#+beamer: \slidegraphics{figures/fundamentals-of-hpc/g-cluster}
+#+attr_latex: :options [x=78,y=148,s=16,l=19,ind=22,bc=cEE7628,bf=arial,w=800,p=4]
+#+begin_tb
+- The hands-on of this course run on a *course cluster* built from SURF Research Cloud workspaces with the same parts as Snellius: Slurm, the EESSI software stack, a shared file system, a web portal. What you type here works on Snellius; the numbers are smaller.
+- *Login*: =ssh <name>@<manager>= or the web portal; your trainer's setup link makes your password. There is one login node and no SURFcua account.
+- *Software*: =module load 2025= loads EESSI 2025.06, the names Snellius' 2025 stack uses. Old names in published scripts (=2024=, =foss/2023a=) load the same stack. QCG-PilotJob is a site build here, and the course scripts' own lines (=module load 2024=, =QCG-PilotJob/0.14.1-gfbf-2024a=) load it, as on Snellius.
+- *Nodes*: two cores each, ten on the GPU node, 16 in all, Ethernet in place of InfiniBand. =rome= and =thin_course= are names for the same nodes, =gpu= holds the two cards. Shrink =--ntasks= and =--cpus-per-task= on the =sbatch= line; the scripts stay as published.
+- *File systems*: =/home= and =/project= on one shared file system, =/scratch= over the nodes' disks, =$TMPDIR= on the node. No =/scratch-shared=, =/scratch-node=, =/archive=, no =myquota=: use =df -h= and =du -sh=.
+- *Budget*: none. The collaboration's wallet pays; =accinfo= and system billing units do not exist; =sacct= reports core-seconds in =CPUTimeRAW=.
+#+end_tb
+
 * LUMI, a European flagship supercomputer
 :PROPERTIES:
 :BEAMER_opt: pg=26
@@ -1824,11 +1843,11 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 1380 CPU nodes, including fat and high-memory nodes
+- 1382 CPU nodes, including fat and high-memory nodes
 #+end_tb
 #+attr_latex: :options [x=66.07,y=363.14,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
-- 150 GPU nodes with NVIDIA GPUs
+- 151 GPU nodes with NVIDIA GPUs
 #+end_tb
 #+attr_latex: :options [x=66.07,y=392.42,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -2078,7 +2097,7 @@ Displays job information, including estimated start time
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
 - Create a text file with the lines in the example; name the file \\
-  "job.sh."
+  ``job.sh.''
 #+end_tb
 #+attr_latex: :options [x=410.87,y=185.57,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2165,7 +2184,7 @@ echo "DONE"
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
 - Copy exactly the lines of the example into a new file, \\
-  "mpi_job.sh."
+  ``mpi_job.sh.''
 #+end_tb
 #+attr_latex: :options [x=410.87,y=185.57,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2216,7 +2235,7 @@ echo "DONE"
 #+attr_latex: :options [x=410.87,y=134.93,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
 - Put the lines of the two examples in two text files, \\
-  "first-job.sh" and "second-job.sh."
+  ``first-job.sh'' and ``second-job.sh.''
 #+end_tb
 #+attr_latex: :options [x=410.87,y=185.57,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2286,8 +2305,8 @@ Don't use =/home= as work dir
 #+begin_tb
 Your home directory has limited \\
 performance for high-throughput \\
-tasks; use =/scratch-shared= storage for \\
-faster I/O.
+tasks; use =/scratch-shared= \\
+storage for faster I/O.
 #+end_tb
 #+attr_latex: :options [x=55.76,y=176.84,s=18,l=21.6,b]
 #+begin_tb
@@ -2334,7 +2353,7 @@ Job scripts consist of:
 #+end_tb
 #+attr_latex: :options [x=491.03,y=166.13,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- the "shebang" line: =#!/bin/bash=,
+- the ``shebang'' line: =#!/bin/bash=,
 #+end_tb
 #+attr_latex: :options [x=491.03,y=197.81,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2824,11 +2843,11 @@ Shows information about =<modulename>=.
 #+attr_latex: :options [x=424.91,y=184.13,s=16,l=17.28,ind=21,bc=c070809,bf=arial]
 #+begin_tb
 - You will need to add the needed modules and also include the call \\
-  to the command "Rscript"
+  to the command ``Rscript''
 #+end_tb
 #+attr_latex: :options [x=438.83,y=230.69,s=16,l=19.2,ind=21,bc=c070809,bf=apt,bs=−]
 #+begin_tb
-- Sample hint: Rscript -e "rnorm(1)"
+- Sample hint: Rscript -e ``rnorm(1)''
 #+end_tb
 #+attr_latex: :options [x=410.87,y=261.65,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2837,8 +2856,8 @@ Shows information about =<modulename>=.
 #+end_tb
 #+attr_latex: :options [x=410.87,y=312.53,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Remember that you can submit this job with "@@beamer:\textbf{@@sbatch@@beamer:}@@ job.sh" \\
-  and check the status with "@@beamer:\textbf{@@squeue -u @@beamer:\textit{@@login_id@@beamer:}}@@"
+- Remember that you can submit this job with ``@@beamer:\textbf{@@sbatch@@beamer:}@@ job.sh'' \\
+  and check the status with ``@@beamer:\textbf{@@squeue -u @@beamer:\textit{@@login_id@@beamer:}}@@''
 #+end_tb
 #+attr_latex: :options [x=410.87,y=363.41,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2865,36 +2884,40 @@ echo "DONE"
 #+end_example
 #+end_tb
 
-* Parallel computation with threads (OpenMP)
+* Batch jobs: Python, then OpenMP
 :PROPERTIES:
 :BEAMER_opt: pg=47
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g47}
-#+attr_latex: :options [x=410.87,y=134.93,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
+#+attr_latex: :options [x=410.87,y=134.93,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial,w=490]
 #+begin_tb
-- Open =python.sh= in the course's =hands-on= directory:
+- Open the course terminal in Open OnDemand. \\
+  Download the audited fork, then open =python.sh=:
 #+end_tb
-#+attr_latex: :options [x=424.91,y=164.69,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
+#+attr_latex: :options [x=424.91,y=188.69,s=15,l=18,ind=21,bc=c070809,bf=arial,w=500]
 #+begin_tb
-- =course-module-fundamentals-of-hpc/hands-on=
+- Use the classroom checkout from the browser setup guide: \\
+  =https://supersurf.rgoswami.me/setup= \\
+  Fork: =HaoZeke/introduction-to-supercomputing= \\
+  Branch: =course/maastricht-20261028=
 #+end_tb
-#+attr_latex: :options [x=410.87,y=195.65,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
+#+attr_latex: :options [x=410.87,y=274,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial,w=500]
 #+begin_tb
-- Run it through "@@beamer:\textbf{@@sbatch@@beamer:}@@ python.sh" and follow it in the queue \\
-  with "@@beamer:\textbf{@@squeue -u @@beamer:\textit{@@login_id@@beamer:}}@@"
+- Run it through ``@@beamer:\textbf{@@sbatch@@beamer:}@@ python.sh'' and follow it in the queue \\
+  with ``@@beamer:\textbf{@@squeue -u @@beamer:\textit{@@login_id@@beamer:}}@@''
 #+end_tb
-#+attr_latex: :options [x=410.87,y=246.53,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
+#+attr_latex: :options [x=410.87,y=334,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial,w=500]
 #+begin_tb
 - If you needed to use some input file or you would generate an \\
   output file, where would you put the copy commands for \\
   scratch?
 #+end_tb
-#+attr_latex: :options [x=410.87,y=316.85,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
+#+attr_latex: :options [x=410.87,y=396,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial,w=500]
 #+begin_tb
-- Now try the same with "pi.sh", but first compile the code! \\
+- Now try the same with ``pi.sh'', but first compile the code! \\
   (you may run the script ./compilepi in the login node directly)
 #+end_tb
-#+attr_latex: :options [x=410.87,y=367.73,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
+#+attr_latex: :options [x=410.87,y=446,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial,w=500]
 #+begin_tb
 - Can you play around with the variable 'ncores' and see some \\
   parallel efficiency?

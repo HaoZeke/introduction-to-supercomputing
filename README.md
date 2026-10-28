@@ -28,3 +28,17 @@ We hope you find the training useful, and we welcome any feedback to help us imp
 
 > [!NOTE]
 > The course uses Snellius, but the hands-on sessions also run on a small Slurm cluster built from SURF Research Cloud (SRC) workspaces with the European Environment for Scientific Software Installations (EESSI) 2025.06. Notes like this one in each module list the differences. The cluster accepts the Snellius job scripts as they are: `module load 2025` loads EESSI 2025.06, the partition `rome` exists, `$TMPDIR` points at node-local scratch, and `sacct` and `seff` work. The performance analysis slides use `--constraint=hwperf`, the Energy Aware Runtime and AMD uProf, which exist only on Snellius; on the SRC cluster, PAPI and `perf` read the hardware counters instead. Your trainer gives you the cluster's address and an enrolment link that sets your password and SSH key.
+
+## Classroom source
+
+Use the audited fork while upstream changes are under review:
+
+```bash
+git clone --branch course/maastricht-20261028 --single-branch \
+  https://github.com/HaoZeke/introduction-to-supercomputing.git \
+  "$HOME/introduction-to-supercomputing-class"
+```
+
+Open the course Open OnDemand portal from the welcome note and use Clusters
+for a terminal. The [browser setup guide](https://supersurf.rgoswami.me/setup)
+explains sign-in, Files, the shell and optional interactive applications.
