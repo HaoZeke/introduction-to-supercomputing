@@ -3,6 +3,7 @@
 Run: python3 tools/test_render.py
 """
 import contextlib
+import copy
 import io
 import math
 import re
@@ -128,6 +129,16 @@ class Profiles(unittest.TestCase):
         self.assertTrue(any("7 tasks on 3 nodes" in p for p in rp.validate("x", prof)))
         prof["jobs"]["m"]["j"]["ntasks"] = 6
         self.assertEqual(rp.validate("x", prof), [])
+
+    def test_validate_rejects_unpinned_multi_node_jobs(self):
+        prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 6}}}}
+        self.assertTrue(any("without --ntasks-per-node" in p for p in rp.validate("x", prof)))
+        prof["jobs"]["m"]["j"]["ntasks"] = 3
+        self.assertEqual(rp.validate("x", prof), [])
+        src = copy.deepcopy(self.profiles["src"])
+        del src["jobs"]["hybrid"]["ex4"]["ntasks_per_node"]
+        self.assertEqual(rp.validate("src", src),
+                         ["src: jobs.hybrid.ex4 spreads 6 tasks over 3 nodes without --ntasks-per-node"])
 
     def test_lint_catches_one_line_stack_load(self):
         prof = self.profiles["src"]

@@ -222,27 +222,39 @@ def context(name: str, profiles: dict) -> dict:
 # ---------------------------------------------------------------- checks
 
 
-def validate(name: str, profile: dict) -> list:
-    """Problems with a profile's job sizes, against Slurm and its own limits."""
+def job_problems(where: str, job: dict, limits: dict) -> list:
+    """Problems with one job's size against Slurm and the profile's limits.
+    `job` has any of nodes, ntasks, ntasks_per_node and cpus_per_task."""
     problems = []
-    limits = profile.get("limits", {})
     per_node = limits.get("max_cpus_per_node")
     max_nodes = limits.get("max_nodes")
-    for module, jobs in profile.get("jobs", {}).items():
-        for job_name, job in jobs.items():
-            nodes = job.get("nodes", 1)
-            ntasks = job.get("ntasks", 1)
-            where = f"{name}: jobs.{module}.{job_name}"
-            if "ntasks_per_node" in job and ntasks > nodes * job["ntasks_per_node"]:
-                problems.append(
-                    f"{where} asks {ntasks} tasks on {nodes} nodes at {job['ntasks_per_node']} per node")
-            tasks = job.get("ntasks_per_node") or math.ceil(ntasks / nodes)
-            cpus = tasks * job.get("cpus_per_task", 1)
-            if per_node and cpus > per_node:
-                problems.append(f"{where} asks {cpus} CPUs per node, limit {per_node}")
-            if max_nodes and nodes > max_nodes:
-                problems.append(f"{where} asks {nodes} nodes, limit {max_nodes}")
+    nodes = job.get("nodes", 1)
+    ntasks = job.get("ntasks", 1)
+    pinned = job.get("ntasks_per_node")
+    if pinned and ntasks > nodes * pinned:
+        problems.append(f"{where} asks {ntasks} tasks on {nodes} nodes at {pinned} per node")
+    if nodes > 1 and ntasks > nodes and not pinned:
+        # Slurm may fill one large node first, so the per-node count below
+        # holds only when the job pins it.
+        problems.append(f"{where} spreads {ntasks} tasks over {nodes} nodes without --ntasks-per-node")
+    tasks = pinned or math.ceil(ntasks / nodes)
+    cpus = tasks * job.get("cpus_per_task", 1)
+    if per_node and cpus > per_node:
+        problems.append(f"{where} asks {cpus} CPUs per node, limit {per_node}")
+    if max_nodes and nodes > max_nodes:
+        problems.append(f"{where} asks {nodes} nodes, limit {max_nodes}")
     return problems
+
+
+def validate(name: str, profile: dict) -> list:
+    """Problems with a profile's job sizes, against Slurm and its own limits."""
+    limits = profile.get("limits", {})
+    return [
+        problem
+        for module, jobs in profile.get("jobs", {}).items()
+        for job_name, job in jobs.items()
+        for problem in job_problems(f"{name}: jobs.{module}.{job_name}", job, limits)
+    ]
 
 
 def course_files(root: Path, skip=()) -> dict:
