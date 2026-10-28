@@ -2122,6 +2122,7 @@ Displays job information, including estimated start time
 #+begin_tb
 - Can you solve the error?
 #+end_tb
+{{#slurm.mail}}
 #+attr_latex: :options [x=410.87,y=399.17,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
 - Try to set email notifications: add the following two lines in \\
@@ -2135,6 +2136,14 @@ Displays job information, including estimated start time
 #+begin_tb
 - @@beamer:\texttt{\#SBATCH --mail-user=<your\_email\_address>}@@
 #+end_tb
+{{/slurm.mail}}
+{{^slurm.mail}}
+#+attr_latex: :options [x=410.87,y=399.17,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
+#+begin_tb
+- This cluster has no mail service: Slurm accepts \\
+  =--mail-type= and =--mail-user= but sends nothing.
+#+end_tb
+{{/slurm.mail}}
 #+attr_latex: :options [x=54.28,y=135.99,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
 #+begin_example

@@ -112,6 +112,13 @@ class Profiles(unittest.TestCase):
                 self.assertEqual(parts[-1], prof["partitions"]["gpu"])
         self.assertNotIn("gpu_a100", rp.render_all("src")[rel])
 
+    def test_mail_options_only_where_slurm_sends_mail(self):
+        rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
+        for name, prof in self.profiles.items():
+            with self.subTest(name):
+                text = rp.render_all(name)[rel]
+                self.assertEqual("--mail-type=BEGIN,END" in text, prof["slurm"]["mail"])
+
     def test_validate_rejects_more_tasks_than_nodes_hold(self):
         prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 7, "ntasks_per_node": 2}}}}
         self.assertTrue(any("7 tasks on 3 nodes" in p for p in rp.validate("x", prof)))
