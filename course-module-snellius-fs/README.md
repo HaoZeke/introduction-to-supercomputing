@@ -15,7 +15,7 @@ On the login node, we will identify the different file systems:
 4. `/archive`
 
 > [!NOTE]
-> On an SRC cluster with EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS or BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`, ; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage. The job scripts run as they are: the cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06.
+> On an SRC cluster with EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage. The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.
 
 ## Home
 The home file system, often denoted as `/home`, is the storage space dedicated to individual user accounts on Snellius. It serves as a personal workspace where users can store their important files, configuration files, scripts, and other data. **Each user on Snellius has their own dedicated home directory** within the `/home` file system, which is found at `/home/<username>`. The home directory is usually private and can only be accessed by the user who owns it. Other users typically don't have access to your home directory. Although you can change its access permissions, you should be very restrictive in using this capability.
