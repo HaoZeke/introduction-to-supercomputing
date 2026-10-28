@@ -218,7 +218,7 @@ def context(name: str, profiles: dict) -> dict:
 
 
 def validate(name: str, profile: dict) -> list:
-    """Problems with a profile's job sizes against its own limits."""
+    """Problems with a profile's job sizes, against Slurm and its own limits."""
     problems = []
     limits = profile.get("limits", {})
     per_node = limits.get("max_cpus_per_node")
@@ -226,9 +226,13 @@ def validate(name: str, profile: dict) -> list:
     for module, jobs in profile.get("jobs", {}).items():
         for job_name, job in jobs.items():
             nodes = job.get("nodes", 1)
-            tasks = job.get("ntasks_per_node") or math.ceil(job.get("ntasks", 1) / nodes)
-            cpus = tasks * job.get("cpus_per_task", 1)
+            ntasks = job.get("ntasks", 1)
             where = f"{name}: jobs.{module}.{job_name}"
+            if "ntasks_per_node" in job and ntasks > nodes * job["ntasks_per_node"]:
+                problems.append(
+                    f"{where} asks {ntasks} tasks on {nodes} nodes at {job['ntasks_per_node']} per node")
+            tasks = job.get("ntasks_per_node") or math.ceil(ntasks / nodes)
+            cpus = tasks * job.get("cpus_per_task", 1)
             if per_node and cpus > per_node:
                 problems.append(f"{where} asks {cpus} CPUs per node, limit {per_node}")
             if max_nodes and nodes > max_nodes:

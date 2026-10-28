@@ -84,6 +84,12 @@ class Profiles(unittest.TestCase):
                 self.assertRegex(text, rf"(?m)^module load {stack}\s*(#.*)?$")
         self.assertEqual(seen, len(scripts))
 
+    def test_validate_rejects_more_tasks_than_nodes_hold(self):
+        prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 7, "ntasks_per_node": 2}}}}
+        self.assertTrue(any("7 tasks on 3 nodes" in p for p in rp.validate("x", prof)))
+        prof["jobs"]["m"]["j"]["ntasks"] = 6
+        self.assertEqual(rp.validate("x", prof), [])
+
     def test_lint_catches_one_line_stack_load(self):
         prof = self.profiles["src"]
         self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
