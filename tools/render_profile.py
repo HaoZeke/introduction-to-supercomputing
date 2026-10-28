@@ -257,6 +257,52 @@ def validate(name: str, profile: dict) -> list:
     ]
 
 
+# One #SBATCH line: the option and its value, as --opt=v, --opt v or -o v.
+SBATCH_LINE = re.compile(r"^#SBATCH\s+(--?[A-Za-z-]+)(?:[=\s]\s*([^\s#]+))?")
+SBATCH_OPTS = {
+    "-N": "nodes", "--nodes": "nodes",
+    "-n": "ntasks", "--ntasks": "ntasks",
+    "--ntasks-per-node": "ntasks_per_node",
+    "-c": "cpus_per_task", "--cpus-per-task": "cpus_per_task",
+    "-C": "constraint", "--constraint": "constraint",
+}
+
+
+def sbatch_blocks(text: str) -> list:
+    """Each run of consecutive #SBATCH lines, as (first line number,
+    options). Sizes are ints; a placeholder such as `--nodes=#` is left out."""
+    blocks, start, opts = [], None, {}
+    for i, line in enumerate(text.splitlines() + [""], 1):
+        m = SBATCH_LINE.match(line)
+        if not m:
+            if start is not None:
+                blocks.append((start, opts))
+                start = None
+            continue
+        if start is None:
+            start, opts = i, {}
+        key, value = SBATCH_OPTS.get(m.group(1)), m.group(2)
+        if key and value:
+            opts[key] = value if key == "constraint" else int(value) if value.isdigit() else None
+    return blocks
+
+
+def check_scripts(name: str, profile: dict, files: dict) -> list:
+    """Problems with the #SBATCH blocks in rendered files: the same size
+    rules as validate(), and constraints the profile does not list."""
+    limits = profile.get("limits", {})
+    allowed = set(profile.get("slurm", {}).get("constraints", []))
+    problems = []
+    for path, text in files.items():
+        for line, opts in sbatch_blocks(text):
+            where = f"{name}: {path}:{line}"
+            size = {k: v for k, v in opts.items() if k != "constraint" and v is not None}
+            problems += job_problems(where, size, limits)
+            if "constraint" in opts and opts["constraint"] not in allowed:
+                problems.append(f"{where} asks for constraint {opts['constraint']}, which {name} lacks")
+    return problems
+
+
 def course_files(root: Path, skip=()) -> dict:
     """Published course files under `root` that no template produces.
 
@@ -355,11 +401,17 @@ def main(argv: list | None = None) -> int:
     profiles = load_profiles()
     problems = validate(args.profile, profiles.get(args.profile, {}))
     rendered = render_all(args.profile)
+    problems += check_scripts(args.profile, profiles[args.profile], rendered)
     files = course_files(ROOT, skip=rendered)
     files.update(rendered)
     problems += lint(profiles[args.profile], files)
     for p in problems:
         print(f"error: {p}", file=sys.stderr)
+    # Published files that no template covers yet go to every cluster as
+    # they are; report their oversized jobs without failing the render.
+    untemplated = {k: v for k, v in files.items() if k not in rendered}
+    for w in check_scripts(args.profile, profiles[args.profile], untemplated):
+        print(f"warning: {w} (no template yet)", file=sys.stderr)
 
     if args.check:
         # The repository also holds files no template produces, so only a

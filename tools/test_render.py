@@ -150,6 +150,31 @@ class Profiles(unittest.TestCase):
         prof["jobs"]["m"]["j"]["ntasks"] = 6
         self.assertEqual(rp.validate("x", prof), [])
 
+    def test_rendered_job_scripts_fit_each_profile(self):
+        for name, prof in self.profiles.items():
+            with self.subTest(name):
+                self.assertEqual(rp.check_scripts(name, prof, rp.render_all(name)), [])
+
+    def test_check_scripts_reads_every_sbatch_block(self):
+        prof = self.profiles["src"]
+        text = ("#!/bin/bash\n#SBATCH --nodes=1\n#SBATCH --ntasks=10\n#SBATCH --time=00:01:00\n"
+                "echo\n#SBATCH -N 3\n#SBATCH -n 6\n"
+                "\n#SBATCH --nodes 2  # comment\n#SBATCH --ntasks=2\n#SBATCH --constraint=scratch-node\n"
+                "\n#SBATCH --nodes=#\n#SBATCH --ntasks=#\n")
+        self.assertEqual(rp.sbatch_blocks(text), [
+            (2, {"nodes": 1, "ntasks": 10}),
+            (6, {"nodes": 3, "ntasks": 6}),
+            (9, {"nodes": 2, "ntasks": 2, "constraint": "scratch-node"}),
+            (13, {}),
+        ])
+        self.assertEqual(rp.check_scripts("src", prof, {"j.sh": text}), [
+            "src: j.sh:2 asks 10 CPUs per node, limit 2",
+            "src: j.sh:6 spreads 6 tasks over 3 nodes without --ntasks-per-node",
+            "src: j.sh:9 asks for constraint scratch-node, which src lacks",
+        ])
+        self.assertEqual(rp.check_scripts("snellius", self.profiles["snellius"], {"j.sh": text}),
+                         ["snellius: j.sh:6 spreads 6 tasks over 3 nodes without --ntasks-per-node"])
+
     def test_validate_rejects_unpinned_multi_node_jobs(self):
         prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 6}}}}
         self.assertTrue(any("without --ntasks-per-node" in p for p in rp.validate("x", prof)))
