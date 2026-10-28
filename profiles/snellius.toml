@@ -169,3 +169,4 @@ cpus_per_task = 32
 
 [fundamentals]
 hello_why = "the smallest allocation on that partition"
+gpu_result = "The output lists the one A100 GPU the job received. A GPU hour costs more budget than a CPU core hour, so keep GPU test jobs short."

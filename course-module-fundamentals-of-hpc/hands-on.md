@@ -248,3 +248,6 @@ nvidia-smi
 ```
 
 Submit it with `sbatch gpu.sh`. The output lists the one A100 GPU the job received. A GPU hour costs more budget than a CPU core hour, so keep GPU test jobs short.
+
+> [!NOTE]
+> On a Research Cloud course cluster, the GPUs are in the `gpu` partition: submit with `sbatch --partition=gpu gpu.sh`.

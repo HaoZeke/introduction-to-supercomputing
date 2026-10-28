@@ -243,7 +243,7 @@ GPU nodes have their own partitions, and a job has to ask for GPUs explicitly. S
 ```bash
 #!/bin/bash
 #SBATCH --job-name=gpu-hello
-#SBATCH --partition=gpu_a100
+#SBATCH --partition={{partitions.gpu}}
 #SBATCH --nodes=1
 #SBATCH --gpus-per-node=1
 #SBATCH --time=00:05:00
@@ -252,4 +252,8 @@ GPU nodes have their own partitions, and a job has to ask for GPUs explicitly. S
 nvidia-smi
 ```
 
-Submit it with `sbatch gpu.sh`. The output lists the one A100 GPU the job received. A GPU hour costs more budget than a CPU core hour, so keep GPU test jobs short.
+Submit it with `sbatch gpu.sh`. {{fundamentals.gpu_result}}
+{{#asides}}
+
+{{fundamentals.gpu_aside}}
+{{/asides}}

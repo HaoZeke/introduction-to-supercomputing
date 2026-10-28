@@ -103,6 +103,15 @@ class Profiles(unittest.TestCase):
                 self.assertLessEqual(want, limit)
                 self.assertIn(f"--partition={prof['partitions']['cpu']}\n", rendered[rel])
 
+    def test_gpu_job_uses_each_profiles_gpu_partition(self):
+        rel = "course-module-fundamentals-of-hpc/hands-on.md"
+        for name, prof in self.profiles.items():
+            with self.subTest(name):
+                text = rp.render_all(name)[rel]
+                parts = re.findall(r"(?m)^#SBATCH --partition=(\S+)", text)
+                self.assertEqual(parts[-1], prof["partitions"]["gpu"])
+        self.assertNotIn("gpu_a100", rp.render_all("src")[rel])
+
     def test_validate_rejects_more_tasks_than_nodes_hold(self):
         prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 7, "ntasks_per_node": 2}}}}
         self.assertTrue(any("7 tasks on 3 nodes" in p for p in rp.validate("x", prof)))

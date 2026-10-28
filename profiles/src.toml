@@ -191,6 +191,11 @@ cpus_per_task = 2
 
 [fundamentals]
 hello_why = "the most a course job uses on one node"
+gpu_result = "On `{{partitions.real_gpu_node}}`, `nvidia-smi` lists two NVIDIA Blackwell cards. The partition also has a node with emulated GPUs, so submit with `sbatch --nodelist={{partitions.real_gpu_node}} gpu.sh` to reach the real cards. The whole class shares those two cards, so keep GPU test jobs short."
+# Shown in other profiles' renders, after the GPU job.
+gpu_aside = '''
+> [!NOTE]
+> On a Research Cloud course cluster, the GPUs are in the `{{partitions.gpu}}` partition: submit with `sbatch --partition={{partitions.gpu}} gpu.sh`.'''
 # Shown in other profiles' renders of hands-on.md, under "Connecting to Snellius".
 aside_note = '''
 > [!NOTE]
