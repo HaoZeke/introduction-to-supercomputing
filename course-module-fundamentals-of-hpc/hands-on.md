@@ -32,7 +32,7 @@ $ ssh <username>@snellius.surf.nl
 ```
 
 > [!NOTE]
-> On an SRC cluster, log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. `myquota` and `accinfo` exist only on Snellius: use `df -h /home /scratch` for question 6, and skip question 7, because SRC charges the collaboration's wallet instead of a compute budget.
+> On an SRC cluster, log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. For question 6, `myquota` prints the capacity of the shared file system under `/home`. Skip question 7: only Snellius has `accinfo`, and the collaboration's wallet pays for this cluster.
 
 When you log in, you are placed on a login node (for example int4 or int6), and **interact with the system through a shell**. The shell interprets your **commands**, executes **programs**, and provides access to your **environment** variables: named values that configure your session.
 
