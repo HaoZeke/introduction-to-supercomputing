@@ -104,6 +104,13 @@ python3 tools/test_render.py                       # round trip, limits, lint
 To change a published file that has a template: edit the template, render
 with `--out .` for Snellius, commit both. CI can run `--check` and the tests.
 
+`--check` compares content and the executable bit (the only mode Git keeps)
+and reports missing files. Against a render tree (`--against build/src`) it
+also reports files no template produced. Against the repository it does not,
+since most published files have no template. Every run also lints the render
+and the untemplated course files (`README.md`, and `.sh`, `.md`, `.org`,
+`.py`, `.slurm` under `course-module-*`) against the profile's module rules.
+
 ## Slides
 
 The Org sources render the same way as Markdown. The SRC slide in

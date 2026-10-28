@@ -273,13 +273,50 @@ def lint(profile: dict, files: dict) -> list:
     ]
 
 
+def check(name: str, rendered: dict, against: Path, whole_tree: bool) -> int:
+    """Compare a render with a tree: content, executable bit, missing files,
+    and with `whole_tree` files the render does not produce. Returns the
+    number of problems and prints a diff and a summary."""
+    bad = 0
+    for rel, text in rendered.items():
+        target = against / rel
+        if not target.is_file():
+            bad += 1
+            print(f"missing: {rel}")
+            continue
+        have = target.read_text()
+        if have != text:
+            bad += 1
+            sys.stdout.writelines(difflib.unified_diff(
+                have.splitlines(True), text.splitlines(True), f"a/{rel}", f"b/{rel}"))
+            continue
+        # Git keeps only the executable bit, so compare that.
+        want_x = bool((TEMPLATES / rel).stat().st_mode & 0o100)
+        have_x = bool(target.stat().st_mode & 0o100)
+        if want_x != have_x:
+            bad += 1
+            print(f"mode: {rel} executable={have_x}, template executable={want_x}")
+    extra = []
+    if whole_tree:
+        extra = sorted(
+            str(p.relative_to(against)) for p in against.rglob("*")
+            if p.is_file() and str(p.relative_to(against)) not in rendered)
+        for rel in extra:
+            print(f"extra: {rel}")
+    summary = f"{name}: {len(rendered) - bad}/{len(rendered)} files identical"
+    if extra:
+        summary += f", {len(extra)} extra"
+    print(summary, file=sys.stderr)
+    return bad + len(extra)
+
+
 # ---------------------------------------------------------------- driver
 
 
 def render_all(name: str) -> dict:
     profiles = load_profiles()
     if name not in profiles:
-        sys.exit(f"no profile {name!r}; have {', '.join(profiles)}")
+        sys.exit(f"no profile {name!r}; have " + ", ".join(profiles))
     ctx = context(name, profiles)
     return {
         str(t.relative_to(TEMPLATES)): render(t.read_text(), [ctx])
@@ -293,7 +330,9 @@ def main(argv: list | None = None) -> int:
     ap.add_argument("profile")
     ap.add_argument("--out", type=Path, help="output root (default build/PROFILE)")
     ap.add_argument("--check", action="store_true", help="diff against --against instead of writing")
-    ap.add_argument("--against", type=Path, default=ROOT, help="tree --check compares with (default: repo)")
+    ap.add_argument("--against", type=Path, default=ROOT,
+                    help="tree --check compares with (default: repo); any other tree "
+                         "must hold only rendered files")
     args = ap.parse_args(argv)
 
     profiles = load_profiles()
@@ -306,15 +345,10 @@ def main(argv: list | None = None) -> int:
         print(f"error: {p}", file=sys.stderr)
 
     if args.check:
-        bad = 0
-        for rel, text in rendered.items():
-            target = args.against / rel
-            have = target.read_text() if target.exists() else ""
-            if have != text:
-                bad += 1
-                sys.stdout.writelines(difflib.unified_diff(
-                    have.splitlines(True), text.splitlines(True), f"a/{rel}", f"b/{rel}"))
-        print(f"{args.profile}: {len(rendered) - bad}/{len(rendered)} files identical", file=sys.stderr)
+        # The repository also holds files no template produces, so only a
+        # render tree is checked for extra files.
+        whole_tree = args.against.resolve() != ROOT
+        bad = check(args.profile, rendered, args.against, whole_tree)
         return 1 if bad or problems else 0
 
     out = args.out or ROOT / "build" / args.profile

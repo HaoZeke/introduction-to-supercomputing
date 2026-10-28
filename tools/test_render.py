@@ -2,6 +2,8 @@
 
 Run: python3 tools/test_render.py
 """
+import contextlib
+import io
 import math
 import re
 import sys
@@ -118,6 +120,40 @@ class LintCourseFiles(unittest.TestCase):
                 files = rp.course_files(rp.ROOT, skip=rp.render_all(name))
                 self.assertGreater(len(files), 50)
                 self.assertEqual(rp.lint(prof, files), [])
+
+
+class Check(unittest.TestCase):
+    def run_main(self, *argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = rp.main(list(argv))
+        return code, out.getvalue() + err.getvalue()
+
+    def test_check_flags_extra_missing_and_mode(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(self.run_main("src", "--out", tmp)[0], 0)
+            code, text = self.run_main("src", "--check", "--against", tmp)
+            self.assertEqual(code, 0, text)
+            self.assertIn("src: 6/6 files identical", text)
+
+            script = Path(tmp, "course-module-snellius-hybrid-jobs/hands-on/ex1/submit-axpy.sh")
+            script.chmod(0o755)
+            code, text = self.run_main("src", "--check", "--against", tmp)
+            self.assertEqual(code, 1)
+            self.assertIn("mode: course-module-snellius-hybrid-jobs/hands-on/ex1/submit-axpy.sh", text)
+            script.chmod(0o644)
+
+            Path(tmp, "stale.md").write_text("old render\n")
+            code, text = self.run_main("src", "--check", "--against", tmp)
+            self.assertEqual(code, 1)
+            self.assertIn("extra: stale.md", text)
+            self.assertIn("1 extra", text)
+            Path(tmp, "stale.md").unlink()
+
+            script.unlink()
+            code, text = self.run_main("src", "--check", "--against", tmp)
+            self.assertEqual(code, 1)
+            self.assertIn("missing: course-module-snellius-hybrid-jobs/hands-on/ex1/submit-axpy.sh", text)
 
 
 if __name__ == "__main__":
