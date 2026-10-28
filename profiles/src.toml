@@ -226,22 +226,27 @@ gpu_aside = '''
 > [!NOTE]
 > On a Research Cloud course cluster, the GPUs are in the `{{partitions.gpu}}` partition: submit with `sbatch --partition={{partitions.gpu}} gpu.sh`.'''
 # Shown in other profiles' renders of hands-on.md, under "Connecting to Snellius".
+# Shared by aside_note and self_note.
+login_body = '''the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. {{#tools.myquota}}For question 6, `myquota` prints the capacity of the shared file system under `/home`.{{/tools.myquota}}{{^tools.myquota}}`myquota` exists only on Snellius: use `df -h /home /scratch` for question 6.{{/tools.myquota}}{{^tools.accinfo}} Skip question 7: only Snellius has `accinfo`, and the collaboration's wallet pays for this cluster.{{/tools.accinfo}}'''
 aside_note = '''
 > [!NOTE]
-> On an SRC cluster, log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. {{#tools.myquota}}For question 6, `myquota` prints the capacity of the shared file system under `/home`.{{/tools.myquota}}{{^tools.myquota}}`myquota` exists only on Snellius: use `df -h /home /scratch` for question 6.{{/tools.myquota}}{{^tools.accinfo}} Skip question 7: only Snellius has `accinfo`, and the collaboration's wallet pays for this cluster.{{/tools.accinfo}}'''
+> On an SRC cluster, log in to {{fundamentals.login_body}}'''
 # Shown in this profile's own render of hands-on.md.
 self_note = '''
 > [!NOTE]
-> These files are rendered for {{system.name}}. Log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. {{#tools.myquota}}For question 6, `myquota` prints the capacity of the shared file system under `/home`.{{/tools.myquota}}{{^tools.myquota}}`myquota` exists only on Snellius: use `df -h /home /scratch` for question 6.{{/tools.myquota}}{{^tools.accinfo}} Skip question 7: only Snellius has `accinfo`, and the collaboration's wallet pays for this cluster.{{/tools.accinfo}}'''
+> These files are rendered for {{system.name}}. Log in to {{fundamentals.login_body}}'''
 
 # ---------------------------------------------------------------- file systems
 
 [fs]
 # Shown in other profiles' renders of course-module-snellius-fs/README.md.
+# Shared by aside_note and self_note, around the storage name.
+share = '''the workspaces share `/home`, `/scratch` and `/project` through the configured'''
+body = '''service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage.{{#paths.home_link?}} Your home `/home/<username>` is a link, so `pwd` right after login prints the directory it points to, and `du -sh ~` measures only the link; run `du -sh ~/` for the files in it.{{/paths.home_link?}} The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
 aside_note = '''
 > [!NOTE]
-> On an SRC cluster with EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage.{{#paths.home_link?}} Your home `/home/<username>` is a link, so `pwd` right after login prints the directory it points to, and `du -sh ~` measures only the link; run `du -sh ~/` for the files in it.{{/paths.home_link?}} The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
+> On an SRC cluster with EESSI 2025.06, {{fs.share}} NFS/BeeGFS {{fs.body}}'''
 # Shown in this profile's own render.
 self_note = '''
 > [!NOTE]
-> These files are rendered for {{system.name}}. With EESSI 2025.06, the workspaces share `/home`, `/scratch` and `/project` through the configured NFS/BeeGFS service, and each job gets space on the node's own disk as `$TMPDIR`. The cluster has no `/scratch-shared`, `/scratch-node` or `/archive`; `myquota` reports the filesystem containing home, and `df -h` and `du -sh` show capacity and directory usage.{{#paths.home_link?}} Your home `/home/<username>` is a link, so `pwd` right after login prints the directory it points to, and `du -sh ~` measures only the link; run `du -sh ~/` for the files in it.{{/paths.home_link?}} The cluster has a partition named `rome`, and `module load 2025` loads EESSI 2025.06. Use the SRC resource overrides given with each exercise.'''
+> These files are rendered for {{system.name}}. With EESSI 2025.06, {{fs.share}} {{paths.shared_fs}} {{fs.body}}'''
