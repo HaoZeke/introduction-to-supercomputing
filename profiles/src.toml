@@ -1,0 +1,175 @@
+# The SURF Research Cloud (SRC) Magic Castle course cluster,
+# reached as <manager>; the real host name stays out of the repository.
+# Checked live on 2026-10-28 with sinfo, scontrol show config and module
+# spider. Lines marked "# unverified" were not. Schema: see DESIGN.md.
+
+[profile]
+name = "src"
+description = "SRC course cluster (Magic Castle on SURF Research Cloud)"
+verified = "2026-10-28"
+
+[render]
+asides = []
+
+[system]
+name = "the SRC course cluster"
+login_host = "<manager>"              # course manager host, given by the trainer
+login_nodes = ["<manager>"]           # unverified: the manager is the login node
+ondemand_url = "https://<manager>/"   # unverified path
+ondemand_apps = ["shell", "files", "jupyter", "vscode", "bc_desktop"]
+interconnect = "Ethernet"
+
+[[system.nodes]]
+name = "coursenode1"
+cpus = 2
+mem_mb = 14713
+[[system.nodes]]
+name = "coursenode2"
+cpus = 2
+mem_mb = 14713
+[[system.nodes]]
+name = "coursenode3"
+cpus = 2
+mem_mb = 14713
+gres = "gpu:emulated:2"
+[[system.nodes]]
+name = "coursenode4r600"
+cpus = 60
+mem_mb = 333549
+gres = "gpu:nvidia_rtx_pro_6000_blackwell_server_edition:2,shard:28"
+
+[partitions]
+# Logical role -> partition name. rome and thin_course alias the default.
+cpu = "rome"
+cpu_alt = "thin_course"
+default = "cpubase_bycore_b1"
+gpu = "gpu"                           # coursenode3 (emulated) + coursenode4r600
+real_gpu_node = "coursenode4r600"     # add -w to skip the emulated GPUs
+
+[slurm]
+default_partition = "cpubase_bycore_b1"
+select = "cons_tres CR_CORE_MEMORY"
+oversubscribe = "YES:4"
+def_mem_per_cpu_mb = 5559
+gpu_request = "--gpus-per-node=1"
+mail = false                          # MailProg=/bin/mail, but no mail service
+constraints = []
+
+[limits]
+# Course decision: at most 2 tasks or threads per node, more across nodes.
+max_cpus_per_node = 2
+max_nodes = 4
+
+[modules]
+stack = "2025"                        # EESSI 2025.06; 2023.06 and 2026.06 exist
+eessi_versions = ["2023.06", "2025.06", "2026.06"]
+toolchain = "foss/2025a"
+compiler = "GCC/14.2.0"
+python = "Python/3.13.1-GCCcore-14.2.0"
+r = ["R/4.5.1-gfbf-2025a", "R/4.5.2-gfbf-2025b"]
+qcg = "QCG-PilotJob/0.14.1-GCCcore-14.2.0"   # site build on top of EESSI
+site_modulepath = "/cvmfs/course.surf-src.cvmfs/eessi/versions/2025.06/software/linux/x86_64/amd/zen2/modules/all"
+# `module load 2025 X` on one line fails here; two lines work.
+stack_on_own_line = true
+
+[paths]
+home = "/home/$USER"
+scratch_shared = "/scratch"           # NFS/BeeGFS; no ~/scratch link
+projects = "/project"                 # no ~/projects link
+tmpdir = "/localscratch/$USER.$SLURM_JOB_ID.0"
+shared_fs = "NFS/BeeGFS"
+# Absent: /scratch-shared, /scratch-node, /scratch-local, /archive.
+
+[tools]
+myquota = false                       # use df -h and du -sh
+accinfo = false
+ear = false
+uprof = false
+papi = true                           # unverified module name
+perf = true                           # unverified counter access
+seff = true
+
+[accounting]
+unit = "core-hour"                    # sacct CPUTimeRAW, core-seconds
+
+# ---------------------------------------------------------------- hybrid jobs
+
+[jobs.hybrid.ex1]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 1
+script = "submit-axpy.sh"
+example_n = 10000000
+
+[jobs.hybrid.ex2]
+nodes = 1
+ntasks = 2
+cpus_per_task = 1
+script = "submit-axpy-hybrid.sh"
+example_n = 10000000
+sample_n = 10000000
+
+[jobs.hybrid.ex3]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 1
+script = "submit-dot.sh"
+example_n = 10000000
+
+[jobs.hybrid.ex4]
+nodes = 3
+ntasks = 6
+cpus_per_task = 1
+script = "submit-dot-hybrid.sh"
+example_n = 30000000
+sample_n = 10000000
+
+[jobs.hybrid.ex5]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 1
+script = "submit-matmul.sh"
+example_n = 500
+
+[jobs.hybrid.hostname]
+nodes = 3
+ntasks = 6
+ntasks_per_node = 2
+
+[hybrid]
+threads_example = 2
+# Shown in this profile's own render, above "Connecting to Snellius".
+self_note = '''
+> [!NOTE]
+> These files are rendered for {{system.name}}: {{system.node_count}} nodes with {{system.total_cpus}} CPUs in all, connected by {{system.interconnect}}. The job scripts in `hands-on/` already ask for at most {{limits.max_cpus_per_node}} tasks or threads per node and spread larger runs across nodes, so submit them as they are. On Snellius, use the published scripts.'''
+# Shown in other profiles' renders (render.asides). {{jobs.*.cmd}} is the
+# sbatch line that turns that profile's job into this one's.
+aside_note = '''
+> [!NOTE]
+> On an SRC cluster, the compute nodes are three cloud workspaces with a few cores each (`sinfo -o '%n %c %m'`), connected by {{system.interconnect}} instead of InfiniBand. `module load {{modules.stack}}` and `module load {{modules.toolchain}}` work as on Snellius. Options given to `sbatch` override the `#SBATCH` lines, so shrink a job on the command line instead of editing the script, for example `{{jobs.hybrid.ex4.cmd}}`. In the tables, drop the columns with 128 or 256 tasks, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.'''
+aside_overrides = '''
+For a two-core SRC workspace, use these overrides from each exercise's
+`hands-on/exN` directory. Check the actual core count with `sinfo` first:
+
+| Exercise | Submission on two-core nodes |
+| --- | --- |
+| 1, sequential AXPY | `{{jobs.hybrid.ex1.cmd}}` |
+| 2, AXPY MPI | `{{jobs.hybrid.ex2.cmd}}` |
+| 3, sequential dot product | `{{jobs.hybrid.ex3.cmd}}` |
+| 4, dot product MPI | `{{jobs.hybrid.ex4.cmd}}` |
+| 5, sequential matrix multiplication | `{{jobs.hybrid.ex5.cmd}}` |
+
+For the hostname exercise use `{{jobs.hybrid.hostname.override}}`.
+These are SRC resource overrides; retain the Snellius requests on Snellius.'''
+table_note = '''
+>
+> The table stops at 100,000,000: a job gets {{slurm.def_mem_per_cpu_mb}} MB per CPU by default, and the two larger sizes need 16 GB and more. `Hyb-6-1` and `Hyb-3-2` spread over three nodes with at most {{limits.max_cpus_per_node}} cores busy on each, for example `sbatch --nodes=3 --ntasks=6 --ntasks-per-node=2 --cpus-per-task=1 {{script}} <N>` and `sbatch --nodes=3 --ntasks=3 --ntasks-per-node=1 --cpus-per-task=2 {{script}} <N>`.'''
+
+[hybrid.table]
+first_col = "Vector Size"
+first_col_width = 13
+columns = ["Sequential", "Hyb-2-1", "Hyb-6-1", "Hyb-1-2", "Hyb-3-2"]
+sizes = ["1,000,000", "10,000,000", "100,000,000"]

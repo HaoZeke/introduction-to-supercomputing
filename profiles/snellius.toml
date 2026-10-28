@@ -1,0 +1,152 @@
+# Snellius, the Dutch national supercomputer at SURF.
+# Values come from the published course text; lines marked "# unverified" were
+# not checked on the machine for this file. Schema: see DESIGN.md.
+
+[profile]
+name = "snellius"
+description = "SURF Snellius, as the published course text describes it"
+
+[render]
+# Other profiles whose notes appear in this profile's files. The published
+# files carry SRC asides, so the Snellius render includes the src profile's.
+asides = ["src"]
+
+[system]
+name = "Snellius"
+login_host = "snellius.surf.nl"
+login_nodes = ["int4", "int5", "int6"]
+ondemand_url = "https://ondemand.snellius.surf.nl/"
+interconnect = "InfiniBand"           # fat-tree; generation unverified
+peak_pflops = 37.9
+
+[[system.partition_info]]
+name = "rome"
+nodes = 520
+cpus_per_node = 128
+[[system.partition_info]]
+name = "genoa"
+nodes = 736
+cpus_per_node = 192
+[[system.partition_info]]
+name = "gpu_a100"
+nodes = 62
+gpus_per_node = 4
+gpu_model = "NVIDIA A100 40 GB"
+[[system.partition_info]]
+name = "gpu_h100"
+nodes = 88
+gpus_per_node = 4
+gpu_model = "NVIDIA H100 (SXM5) 94 GB"
+
+[partitions]
+# Logical role -> partition name used in job scripts.
+cpu = "rome"
+cpu_alt = "genoa"
+gpu = "gpu_a100"
+gpu_alt = "gpu_h100"
+fat = "fat_rome"
+staging = "staging"
+
+[slurm]
+default_partition = "rome"            # unverified: scripts always name it
+min_allocation_cpus = 16              # 1/8 rome node
+min_allocation_mem_gib = 28           # per 1/8 rome node, from the QCG slides
+gpu_request = "--gpus-per-node=1"
+mail = true                           # unverified: slides teach --mail-type
+constraints = ["scratch-node", "hwperf"]
+
+[limits]
+max_cpus_per_node = 128
+max_nodes = 520
+
+[modules]
+stack = "2025"
+toolchain = "foss/2025a"
+compiler = "GCC/14.2.0"
+python = "Python/3.13.1-GCCcore-14.2.0"
+qcg = "QCG-PilotJob/0.14.1-GCCcore-14.2.0"   # unverified on Snellius
+uprof = "AMD-uProf/5.1.701"
+# Course style: the stack goes on its own `module load` line.
+stack_on_own_line = true
+
+[paths]
+home = "/home/$USER"
+scratch_shared = "/scratch-shared/$USER"
+scratch_local = "/scratch-local"      # $TMPDIR outside scratch-node jobs
+scratch_local_real = "/gpfs/scratch1/nodespecific/<node>/<user>.<jobid>"
+scratch_node = "/scratch-node"
+projects = "/projects"
+archive = "/archive"
+tmpdir = "/scratch-local/$USER.$SLURM_JOB_ID"
+
+[tools]
+myquota = true
+accinfo = true
+ear = true                            # eacct -j <jobid>
+uprof = true
+papi = true                           # unverified as a module
+perf = true                           # unverified; needs --constraint=hwperf
+seff = true
+
+[accounting]
+unit = "SBU"
+sbu_per_core_hour = 1                 # rome; GPU rates differ
+
+# ---------------------------------------------------------------- hybrid jobs
+# course-module-snellius-hybrid-jobs
+
+[jobs.hybrid.ex1]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 16
+script = "submit-axpy.sh"
+
+[jobs.hybrid.ex2]
+nodes = 1
+ntasks = 128
+cpus_per_task = 1
+script = "submit-axpy-hybrid.sh"
+sample_n = 10000000
+
+[jobs.hybrid.ex3]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 16
+script = "submit-dot.sh"
+
+[jobs.hybrid.ex4]
+nodes = 1
+ntasks = 128
+cpus_per_task = 1
+script = "submit-dot-hybrid.sh"
+sample_n = 10000000
+
+[jobs.hybrid.ex5]
+nodes = 1
+ntasks = 1
+ntasks_per_node = 1
+cpus_per_task = 16
+script = "submit-matmul.sh"
+
+[jobs.hybrid.hostname]
+# The README's sample solution to the hostname exercise.
+nodes = 2
+ntasks = 8
+ntasks_per_node = 4
+
+[hybrid]
+threads_example = 16
+# Text under each results table. {{script}} is the exercise's job script.
+table_note = '''
+>
+> The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.
+>
+> `Hyb-256-1` and `Hyb-2-128` need 256 cores, two `rome` nodes, while the script asks for one node. Add `--nodes=2` for those columns, for example `sbatch --nodes=2 --ntasks=256 --cpus-per-task=1 {{script}} <N>` and `sbatch --nodes=2 --ntasks=2 --cpus-per-task=128 {{script}} <N>`.'''
+
+[hybrid.table]
+first_col = "Vector Size"
+first_col_width = 13
+columns = ["Sequential", "Hyb-16-1", "Hyb-128-1", "Hyb-256-1", "Hyb-1-16", "Hyb-1-128", "Hyb-2-128"]
+sizes = ["1,000,000", "10,000,000", "100,000,000", "1,000,000,000", "10,000,000,000"]

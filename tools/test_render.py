@@ -2,12 +2,17 @@
 
 Run: python3 tools/test_render.py
 """
+import math
+import re
 import sys
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import render_profile as rp  # noqa: E402
+
+SBATCH = re.compile(r"^#SBATCH --([a-z-]+)=(\d+)", re.M)
+
 
 class Engine(unittest.TestCase):
     def r(self, text, **ctx):
@@ -31,6 +36,46 @@ class Engine(unittest.TestCase):
     def test_missing_value_is_an_error(self):
         with self.assertRaises(KeyError):
             self.r("{{nope}}")
+
+
+class Profiles(unittest.TestCase):
+    profiles = rp.load_profiles()
+
+    def test_snellius_reproduces_published_files(self):
+        for rel, text in rp.render_all("snellius").items():
+            with self.subTest(rel):
+                self.assertEqual(text, (rp.ROOT / rel).read_text())
+
+    def test_profiles_pass_their_own_limits(self):
+        for name, prof in self.profiles.items():
+            self.assertEqual(rp.validate(name, prof), [])
+
+    def test_src_scripts_match_profile_and_keep_stack_on_own_line(self):
+        prof = self.profiles["src"]
+        rendered = rp.render_all("src")
+        self.assertEqual(rp.lint(prof, rendered), [])
+        limit = prof["limits"]["max_cpus_per_node"]
+        scripts = {job["script"]: job for job in prof["jobs"]["hybrid"].values() if "script" in job}
+        seen = 0
+        for rel, text in rendered.items():
+            job = scripts.get(Path(rel).name)
+            if not job:
+                continue
+            seen += 1
+            got = {k.replace("-", "_"): int(v) for k, v in SBATCH.findall(text)}
+            with self.subTest(rel):
+                for key, _ in rp.SBATCH_KEYS:
+                    self.assertEqual(got.get(key), job.get(key))
+                per_node = got.get("ntasks_per_node") or math.ceil(got["ntasks"] / got["nodes"])
+                self.assertLessEqual(per_node * got["cpus_per_task"], limit)
+                stack = re.escape(prof["modules"]["stack"])
+                self.assertRegex(text, rf"(?m)^module load {stack}\s*(#.*)?$")
+        self.assertEqual(seen, len(scripts))
+
+    def test_lint_catches_one_line_stack_load(self):
+        prof = self.profiles["src"]
+        self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
+        self.assertFalse(rp.lint(prof, {"x.sh": "module load 2025   # stack\n"}))
 
 
 if __name__ == "__main__":
