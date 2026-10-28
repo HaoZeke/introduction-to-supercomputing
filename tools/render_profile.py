@@ -154,8 +154,13 @@ def load_profiles() -> dict:
 
 
 def override(job: dict, base: dict | None) -> str:
-    """The sbatch options that turn the base profile's job into this one."""
+    """The sbatch options that turn the base profile's job into this one.
+    A base option this job leaves out would survive the override, so that
+    is an error."""
     base = base or {}
+    dropped = [flag for key, flag in SBATCH_KEYS if key in base and key not in job]
+    if dropped:
+        raise ValueError(f"override cannot unset {', '.join(dropped)}; give the job a value")
     return " ".join(
         f"{flag}={job[key]}"
         for key, flag in SBATCH_KEYS

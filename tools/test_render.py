@@ -175,6 +175,13 @@ class Profiles(unittest.TestCase):
         self.assertEqual(rp.check_scripts("snellius", self.profiles["snellius"], {"j.sh": text}),
                          ["snellius: j.sh:6 spreads 6 tasks over 3 nodes without --ntasks-per-node"])
 
+    def test_override_cannot_unset_a_base_option(self):
+        base = {"nodes": 2, "ntasks": 8, "ntasks_per_node": 4}
+        self.assertEqual(rp.override({"nodes": 1, "ntasks": 2, "ntasks_per_node": 2}, base),
+                         "--nodes=1 --ntasks=2 --ntasks-per-node=2")
+        with self.assertRaisesRegex(ValueError, "--ntasks-per-node"):
+            rp.override({"nodes": 1, "ntasks": 2}, base)
+
     def test_validate_rejects_unpinned_multi_node_jobs(self):
         prof = {"jobs": {"m": {"j": {"nodes": 3, "ntasks": 6}}}}
         self.assertTrue(any("without --ntasks-per-node" in p for p in rp.validate("x", prof)))
