@@ -3,7 +3,8 @@
 Inventory for the cluster profiles (see DESIGN.md). Made on 2026-10-28 from
 `feat/cluster-profiles` at 7dcd0fe, by grepping job scripts, hands-on
 Markdown, READMEs and Org slide sources. The raw grep found 631 matching
-lines; they collapse into the 52 values below.
+lines; they collapse into the 52 values below. Rows 9, 25, 30, 38 and 46
+follow the class branch at 389d29a.
 
 Paths are shortened:
 FH = course-module-fundamentals-of-hpc, PA = course-module-performance-analysis,
@@ -26,7 +27,7 @@ on Snellius for this inventory.
 | 6 | Partition catalogue | HJ/README.md:33-36, FH .org:982-1222 (rome, fat_rome, himem_4tb, himem_8tb, genoa, fat_genoa, gpu_a100, gpu_h100, staging) | as listed | not present | `system.partition_info` |
 | 7 | Cores per node | HJ/README.md:33, QC/hands-on/README.md:43, QC .org:1272 | 128 (rome), 192 (genoa) | 2, 2, 2, 60 | `system.nodes[].cpus` |
 | 8 | Node counts | HJ/README.md:29-36, FH .org:922 | 520 rome, 736 genoa, 1,500+ total | 4 | `system.partition_info`, derived `system.node_count` |
-| 9 | SRC node summary | FH .org:1730 ("two cores each, ten on the GPU node, 16 in all"), HJ/README.md:41 ("three cloud workspaces") | n/a | **stale**: 4 nodes, 66 CPUs | `system.nodes` |
+| 9 | SRC node summary | FH .org:1730, HJ/README.md:41 | n/a | 4 nodes, 66 CPUs; the slide since 9e7a90f, the README on this branch | `system.nodes` |
 | 10 | Minimum allocation | QC/hands-on/README.md:43, QC .org:234,285 | 16 cores, 28 GiB (1/8 rome node) | 1 core, 5559 MB (`DefMemPerCPU`) | `slurm.min_allocation_*`, `slurm.def_mem_per_cpu_mb` |
 | 11 | Memory per node | HJ/README.md:34-35,275,345 ("160 GB", `--exclusive`) | 256 GiB rome *unverified*; 1/1.5/4/8 TiB fat/himem | 14713 MB; 333549 MB on coursenode4r600 | `system.nodes[].mem_mb` |
 | 12 | Oversubscription | (not in text) | *unverified* | `OverSubscribe=YES:4`, `cons_tres` + `CR_CORE_MEMORY` | `slurm.oversubscribe`, `slurm.select` |
@@ -52,12 +53,12 @@ on Snellius for this inventory.
 | # | Value | Where | Snellius | SRC | Profile key |
 |---|---|---|---|---|---|
 | 24 | Stack module | every `module load 2025` (HJ scripts :18 or :17, FH/hands-on.md:176,198, FH/hands-on/*.sh, FS/ex1/run.sh:8, QC example_02, example_05, alternatives, FH .org:2398, QC .org:748, PA .org:1643) | `2025` | `2025` → EESSI 2025.06 | `modules.stack` |
-| 25 | Stack on its own line | QC/alternatives/README.md:45,70,100 (fixed in 7dcd0fe) | works either way *unverified* | **required**: `module load 2025 X` fails | `modules.stack_on_own_line` |
+| 25 | Stack on its own line | QC/alternatives/README.md:45,70,100 (split in 6bc1630) | works either way *unverified* | **required**: `module load 2025 X` fails | `modules.stack_on_own_line` |
 | 26 | Toolchain | HJ scripts :19 or :18, HJ/README.md:105, FH .org:2399,2208 | `foss/2025a` | same | `modules.toolchain` |
 | 27 | Compiler | FH/hands-on.md:177,199, FH/hands-on/pi.sh:9, FS/ex1/run.sh:9 | `GCC/14.2.0` | same | `modules.compiler` |
 | 28 | Python | FH/hands-on/python.sh:8, QC examples, alternatives, QC .org:598 | `Python/3.13.1-GCCcore-14.2.0` | same | `modules.python` |
 | 29 | QCG-PilotJob | QC/example_03..05/qcg_job.sh:14-16, QC/hands-on/README.md:37-40, QC .org:749,841 | `QCG-PilotJob/0.14.1-GCCcore-14.2.0` *unverified* | site build, same name | `modules.qcg` |
-| 30 | QCG names on the SRC slide | FH .org:1729 (`module load 2024`, `QCG-PilotJob/0.14.1-gfbf-2024a`) | n/a | **stale**: scripts now use the GCCcore-14.2.0 name | `modules.qcg` |
+| 30 | QCG names on the SRC slide | FH .org:1729 | n/a | since 9e7a90f the slide points to the course commands page; scripts use the GCCcore-14.2.0 name | `modules.qcg` |
 | 31 | Site module path | QC/example_03:13, example_04:13, example_05:15, alternatives/hyperqueue/*.sh:15-16, fireworks/*.sh:16-18 | does not exist | `/cvmfs/course.surf-src.cvmfs/…/amd/zen2/modules/all` | `modules.site_modulepath` |
 | 32 | EESSI init path | same 7 scripts, `source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash` | EESSI on Snellius *unverified* | works | not templated yet |
 | 33 | Workflow tools | QC/alternatives/README.md:25,42,67, alternatives/*/*.sh | no Snakemake, no FireWorks | HyperQueue/0.24.0, snakemake/9.22.0-foss-2025b, FireWorks/2.1.4-gfbf-2025a (site) | not templated yet |

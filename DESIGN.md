@@ -1,14 +1,14 @@
 # Cluster profiles
 
 Internal design note for ljos eessi-r2ag (parent eessi-2wmy). Branch
-`feat/cluster-profiles`, off the class branch at 7dcd0fe.
+`feat/cluster-profiles`, on the class branch at 389d29a.
 
 ## Problem
 
 The course is written for Snellius. For the SRC course cluster we added
 hand-written notes ("On an SRC cluster, ...") and override tables to every
-module. Those notes drift: the hybrid README still says three workspaces and
-the fundamentals slide says 16 cores, while the cluster now has four nodes and
+module. Those notes drift: the hybrid README said three workspaces and
+the fundamentals slide said 16 cores, while the cluster has four nodes and
 66 CPUs. INVENTORY.md lists the 52 values that differ between clusters.
 
 ## Decision
@@ -146,10 +146,11 @@ One module per commit, each with `snellius --check` green:
    (`render.asides = []`) and SRC learners get the `build/src` copy instead?
 2. Where do SRC learners get the SRC render: a generated branch, a release
    archive, or a `make src` in the class checkout?
-3. The SRC aside still says three workspaces, and ex4's override has no
+3. The SRC aside said three workspaces, and ex4's override had no
    `--ntasks-per-node=2`, so with coursenode4r600 in the partition Slurm may
-   put four of the six tasks on that node. The last commit on this branch
-   fixes both in `src.toml` and regenerates the README. Keep it or drop it?
+   put four of the six tasks on that node. The commit "pin two tasks per node
+   in the SRC dot product override" fixes both in `src.toml` and regenerates
+   the README. Keep it or drop it?
 4. `[limits]` encodes today's course rule (two per node). Should the 60-core
    node count as a separate shape, so a profile can offer a "big node"
    variant (for example 16 tasks on coursenode4r600)?
