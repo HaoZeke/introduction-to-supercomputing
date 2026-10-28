@@ -70,7 +70,7 @@ on Snellius for this inventory.
 | # | Value | Where | Snellius | SRC | Profile key |
 |---|---|---|---|---|---|
 | 37 | Home | FH/hands-on.md:47,73-105, FS/README.md:21-27, FH .org:1387 | `/home/<user>` | same | `paths.home` |
-| 38 | Shared scratch | FS/README.md:13,55-62,84, FS .org:108,147-148, FH .org:1443,2308 | `/scratch-shared/$USER` | none; `/scratch` (NFS/BeeGFS), no `~/scratch` | `paths.scratch_shared` |
+| 38 | Shared scratch | FS/README.md:13,55-62,84, FS .org:108,147-148, FH .org:1443,2308 | `/scratch-shared/$USER` | none; `/scratch` on shared BeeGFS, `~/scratch` points to `/scratch/$USER` | `paths.scratch_shared`, `paths.scratch_link` |
 | 39 | Local scratch / `$TMPDIR` | FS/README.md:67-72,97-143, FH .org:1480,2405-2418, QC example_01,02,04,05, alternatives | `/scratch-local/<user>.<jobid>` → `/gpfs/scratch1/nodespecific/<node>/…` | `/localscratch/$USER.<jobid>.0` | `paths.tmpdir` |
 | 40 | Scratch-node | FS/README.md:147-171, FS .org:110, FH .org:1495,1516 | `/scratch-node` with `--constraint=scratch-node` | none | `paths.scratch_node`, `slurm.constraints` |
 | 41 | Projects | FS/README.md:14, FS .org:111, FH .org:1528 | `/projects` | `/project`, no `~/projects` | `paths.projects` |
@@ -83,7 +83,7 @@ on Snellius for this inventory.
 |---|---|---|---|---|---|
 | 44 | `--constraint=hwperf` | PA .org:468, README.md:30 | needed for counters | absent | `slurm.constraints` |
 | 45 | Mail notifications | FH .org:2132,2136 (`--mail-type`, `--mail-user`) | works *unverified* | `MailProg=/bin/mail`, no mail service: accepted, never sent | `slurm.mail` |
-| 46 | `myquota` | FH/hands-on.md:23,136, FH .org:1731 | yes | no; `df -h`, `du -sh` | `tools.myquota` |
+| 46 | `myquota` | FH/hands-on.md:23,136, FH .org:1731 | yes | yes; reports the shared home file system | `tools.myquota` |
 | 47 | `accinfo`, SBU | FH/hands-on.md:24,142, QC/example_02/README.md:23, example_04/README.md:22-44, example_05/README.md:55, QC .org:583,1425, FH .org:2992 | SBU, 1 per rome core-hour | none; `sacct` `CPUTimeRAW` in core-seconds | `tools.accinfo`, `accounting.unit` |
 | 48 | EAR | PA .org:1691,1710-1714,1899 | `eacct -j <jobid>` | none | `tools.ear` |
 | 49 | AMD uProf | PA .org:154,1608,1638-1645 | `AMD-uProf/5.1.701` | none | `tools.uprof`, `modules.uprof` |

@@ -74,14 +74,15 @@ stack_on_own_line = true
 
 [paths]
 home = "/home/$USER"
-scratch_shared = "/scratch"           # NFS/BeeGFS; no ~/scratch link
+scratch_shared = "/scratch"           # shared BeeGFS, like /home and /project
+scratch_link = "~/scratch"            # points to /scratch/$USER
 projects = "/project"                 # no ~/projects link
 tmpdir = "/localscratch/$USER.$SLURM_JOB_ID.0"
-shared_fs = "NFS/BeeGFS"
+shared_fs = "BeeGFS"                  # this course; SRC clusters use NFS or BeeGFS
 # Absent: /scratch-shared, /scratch-node, /scratch-local, /archive.
 
 [tools]
-myquota = false                       # use df -h and du -sh
+myquota = true                        # reports the shared home file system
 accinfo = false
 ear = false
 uprof = false

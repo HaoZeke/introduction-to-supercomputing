@@ -56,7 +56,7 @@ missing key fails the render. A value that is not checked carries a
 | `[slurm]` | `default_partition`, `def_mem_per_cpu_mb`, `oversubscribe`, `gpu_request`, `mail`, `constraints` | scheduler facts |
 | `[limits]` | `max_cpus_per_node`, `max_nodes` | course sizing rule; the renderer checks every job against it |
 | `[modules]` | `stack`, `toolchain`, `compiler`, `python`, `qcg`, `site_modulepath`, `stack_on_own_line` | module names; with `stack_on_own_line` the renderer rejects `module load 2025 X` |
-| `[paths]` | `home`, `scratch_shared`, `scratch_node`, `projects`, `archive`, `tmpdir` | file systems |
+| `[paths]` | `home`, `scratch_shared`, `scratch_link`, `scratch_node`, `projects`, `archive`, `tmpdir` | file systems |
 | `[tools]` | `myquota`, `accinfo`, `ear`, `uprof`, `papi`, `perf`, `seff` | booleans for sections that only make sense where the tool exists |
 | `[accounting]` | `unit`, `sbu_per_core_hour` | SBU or core-hours |
 | `[jobs.MODULE.JOB]` | `nodes`, `ntasks`, `ntasks_per_node`, `cpus_per_task`, `script`, `example_n`, `sample_n` | job sizes; renderer derives `override`, `cmd`, `local_n` |
