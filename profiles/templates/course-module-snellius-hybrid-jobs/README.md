@@ -177,9 +177,11 @@ Here is a sample solution for the exercise:
 #!/bin/bash
 #SBATCH -J name                # Job name
 #SBATCH -o name.out            # Output file
-#SBATCH --nodes 2              # Number of nodes
-#SBATCH --ntasks 8             # Total number of tasks
-#SBATCH --ntasks-per-node=4    # Tasks per node
+{{#jobs.hybrid.hostname}}
+#SBATCH --nodes {{nodes:<15}}# Number of nodes
+#SBATCH --ntasks {{ntasks:<14}}# Total number of tasks
+#SBATCH --ntasks-per-node={{ntasks_per_node:<5}}# Tasks per node
+{{/jobs.hybrid.hostname}}
 #SBATCH -t 01:00:00            # Time limit
 
 srun hostname                  # Execute the hostname command
