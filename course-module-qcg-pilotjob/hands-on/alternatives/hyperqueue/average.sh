@@ -7,7 +7,11 @@
 # Example 4 with HyperQueue: the averages of the CSV files, then one result.csv.
 # QCG_MAX_INPUTS (or MAX_INPUTS) selects 100 files by default; 0 selects all.
 set -euo pipefail
+_course_restore_nounset=0
+case $- in *u*) _course_restore_nounset=1; set +u ;; esac
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
+if [ "$_course_restore_nounset" = 1 ]; then set -u; fi
+unset _course_restore_nounset
 module use /cvmfs/course.surf-src.cvmfs/eessi/versions/2025.06/software/linux/x86_64/amd/zen2/modules/all
 # HyperQueue/0.24.0 exists on the SRC course cluster and on Snellius (2025)
 module load Python/3.13.1-GCCcore-14.2.0 2>/dev/null || true

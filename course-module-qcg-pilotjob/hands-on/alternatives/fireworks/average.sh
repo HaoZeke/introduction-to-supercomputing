@@ -10,7 +10,11 @@
 # One worker takes about 9 s for 100 files and 212 s for 1000 on Snellius, so 100 files by
 # default; QCG_MAX_INPUTS=0 runs all of them.
 set -euo pipefail
+_course_restore_nounset=0
+case $- in *u*) _course_restore_nounset=1; set +u ;; esac
 source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash
+if [ "$_course_restore_nounset" = 1 ]; then set -u; fi
+unset _course_restore_nounset
 module use /cvmfs/course.surf-src.cvmfs/eessi/versions/2025.06/software/linux/x86_64/amd/zen2/modules/all
 # SRC course cluster: module. Snellius has no FireWorks module: use the venv from the README.
 module load FireWorks/2.1.4-gfbf-2025a 2>/dev/null || { module load Python/3.13.1-GCCcore-14.2.0; source "$HOME/venvs/fireworks/bin/activate"; }
