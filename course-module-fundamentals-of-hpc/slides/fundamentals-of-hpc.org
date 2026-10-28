@@ -1726,9 +1726,9 @@ Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting
 #+begin_tb
 - The hands-on of this course run on a *course cluster* built from SURF Research Cloud workspaces with the same parts as Snellius: Slurm, the EESSI software stack, a shared file system, a web portal. What you type here works on Snellius; the numbers are smaller.
 - *Login*: =ssh <name>@<manager>= or the web portal; your trainer's setup link makes your password. There is one login node and no SURFcua account.
-- *Software*: =module load 2025= loads EESSI 2025.06, the names Snellius' 2025 stack uses. Old names in published scripts (=2024=, =foss/2023a=) load the same stack. QCG-PilotJob is a site build here, and the course scripts' own lines (=module load 2024=, =QCG-PilotJob/0.14.1-gfbf-2024a=) load it, as on Snellius.
-- *Nodes*: two cores each, ten on the GPU node, 16 in all, Ethernet in place of InfiniBand. =rome= and =thin_course= are names for the same nodes, =gpu= holds the two cards. Shrink =--ntasks= and =--cpus-per-task= on the =sbatch= line; the scripts stay as published.
-- *File systems*: =/home= and =/project= on one shared file system, =/scratch= over the nodes' disks, =$TMPDIR= on the node. No =/scratch-shared=, =/scratch-node=, =/archive=, no =myquota=: use =df -h= and =du -sh=.
+- *Software*: =module load 2025= selects EESSI 2025.06. QCG-PilotJob and HyperQueue are installed in the course CernVM-FS repository. Use the exact module commands at =https://supersurf.rgoswami.me/commands=.
+- *Nodes*: three nodes with 2 CPUs each and one GPU node with 60 CPUs: *66 CPUs in total*. The GPU node has two RTX PRO 6000 Blackwell cards. =rome= and =thin_course= share the CPU nodes, including that GPU node. Use 1 core for VS Code and 1-2 cores for the small exercises.
+- *File systems*: shared BeeGFS supplies =/home=, =/project= and =/scratch=. =~/scratch= points to =/scratch/$USER=. Each Slurm job has node-local =$TMPDIR=. Omit the Snellius-only =--constraint=scratch-node=. =myquota= reports shared home capacity.
 - *Budget*: none. The collaboration's wallet pays; =accinfo= and system billing units do not exist; =sacct= reports core-seconds in =CPUTimeRAW=.
 #+end_tb
 
