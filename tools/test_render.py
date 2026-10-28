@@ -5,6 +5,7 @@ Run: python3 tools/test_render.py
 import math
 import re
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -94,6 +95,29 @@ class Profiles(unittest.TestCase):
         prof = self.profiles["src"]
         self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
         self.assertFalse(rp.lint(prof, {"x.sh": "module load 2025   # stack\n"}))
+
+
+class LintCourseFiles(unittest.TestCase):
+    def test_lint_reads_files_without_a_template(self):
+        prof = rp.load_profiles()["src"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "course-module-x" / "hands-on").mkdir(parents=True)
+            (root / "course-module-x" / "hands-on" / "run.sh").write_text("module load 2025 foss/2025a\n")
+            (root / "course-module-x" / "README.md").write_text("module load 2025\n")
+            (root / "course-module-x" / "data.csv").write_text("module load 2025 x\n")
+            files = rp.course_files(root)
+            self.assertEqual(sorted(files), ["course-module-x/README.md", "course-module-x/hands-on/run.sh"])
+            self.assertEqual(rp.lint(prof, files), ["course-module-x/hands-on/run.sh:1: module load 2025 foss/2025a"])
+            self.assertEqual(rp.course_files(root, skip={"course-module-x/hands-on/run.sh"}).keys(),
+                             {"course-module-x/README.md"})
+
+    def test_published_course_files_pass_every_profile(self):
+        for name, prof in rp.load_profiles().items():
+            with self.subTest(name):
+                files = rp.course_files(rp.ROOT, skip=rp.render_all(name))
+                self.assertGreater(len(files), 50)
+                self.assertEqual(rp.lint(prof, files), [])
 
 
 if __name__ == "__main__":

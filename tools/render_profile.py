@@ -46,6 +46,10 @@ SBATCH_KEYS = [
     ("cpus_per_task", "--cpus-per-task"),
 ]
 
+# Published files that learners read or run, for lint() beyond the templates.
+COURSE_GLOBS = ["README.md", "course-module-*/**/*"]
+COURSE_SUFFIXES = {".sh", ".md", ".org", ".py", ".slurm"}
+
 TAG = re.compile(r"\{\{([#^/]?)\s*([^}]+?)\s*\}\}")
 STANDALONE = re.compile(r"^[ \t]*(\{\{[#^/][^}]+\}\})[ \t]*(?:\n|\Z)", re.M)
 MISSING = object()
@@ -240,15 +244,30 @@ def validate(name: str, profile: dict) -> list:
     return problems
 
 
-def lint(profile: dict, rendered: dict) -> list:
-    """Lines the profile's module rules forbid, as 'path:line: text'."""
+def course_files(root: Path, skip=()) -> dict:
+    """Published course files under `root` that no template produces.
+
+    Learners on every cluster get these files as they are, so a profile's
+    module rules have to hold for them too."""
+    found = {}
+    for pattern in COURSE_GLOBS:
+        for path in sorted(root.glob(pattern)):
+            rel = str(path.relative_to(root))
+            if path.is_file() and path.suffix in COURSE_SUFFIXES and rel not in skip:
+                found[rel] = path.read_text(errors="replace")
+    return found
+
+
+def lint(profile: dict, files: dict) -> list:
+    """Lines the profile's module rules forbid, as 'path:line: text'.
+    Pass the rendered templates and course_files() for the rest."""
     mods = profile.get("modules", {})
     if not mods.get("stack_on_own_line"):
         return []
     one_line = re.compile(rf"^\s*module load {re.escape(mods['stack'])}\s+[^\s#]")
     return [
         f"{path}:{i}: {line.strip()}"
-        for path, text in rendered.items()
+        for path, text in files.items()
         for i, line in enumerate(text.splitlines(), 1)
         if one_line.match(line)
     ]
@@ -280,7 +299,9 @@ def main(argv: list | None = None) -> int:
     profiles = load_profiles()
     problems = validate(args.profile, profiles.get(args.profile, {}))
     rendered = render_all(args.profile)
-    problems += lint(profiles[args.profile], rendered)
+    files = course_files(ROOT, skip=rendered)
+    files.update(rendered)
+    problems += lint(profiles[args.profile], files)
     for p in problems:
         print(f"error: {p}", file=sys.stderr)
 
