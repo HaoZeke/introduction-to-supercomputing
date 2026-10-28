@@ -4,7 +4,9 @@ Inventory for the cluster profiles (see DESIGN.md). Made on 2026-10-28 from
 `feat/cluster-profiles` at 7dcd0fe, by grepping job scripts, hands-on
 Markdown, READMEs and Org slide sources. The raw grep found 631 matching
 lines; they collapse into the 52 values below. Rows 9, 25, 30, 38 and 46
-follow the class branch at 389d29a.
+follow the class branch at 389d29a. The SSH pass of 2026-10-28
+(ssh-pass-report.md, ljos eessi-2wmy) updated rows 18, 19, 37 and 50 and
+added row 53.
 
 Paths are shortened:
 FH = course-module-fundamentals-of-hpc, PA = course-module-performance-analysis,
@@ -41,8 +43,8 @@ on Snellius for this inventory.
 | 15 | HJ README hostname solution | HJ/README.md:185-187, :56 | 2 nodes, 8 tasks, 4 per node | 3 nodes, 6 tasks, 2 per node | `jobs.hybrid.hostname` |
 | 16 | HJ results-table columns and sizes | HJ/README.md:267-277, 337-347 | Hyb-16-1 … Hyb-2-128, up to 1e10 | Hyb-2-1, Hyb-6-1, Hyb-1-2, Hyb-3-2, up to 1e8 | `hybrid.table` |
 | 17 | HJ sample output local length | HJ/README.md:240,330 | 78125 (128 tasks) | 5000000 / 1666667 | derived from `jobs.hybrid.exN.sample_n` |
-| 18 | FH hello.sh | FH/hands-on.md:185,193 | 16 cores on 1 rome node | 2 | not templated yet |
-| 19 | FH pi.sh | FH/hands-on/pi.sh:4, FH/hands-on/README.md:16 | 32 | 2 (README override) | not templated yet |
+| 18 | FH hello.sh | FH/hands-on.md:185,193,219 | 16 cores on 1 rome node | 2 | `jobs.fundamentals.hello`, `fundamentals.hello_why` |
+| 19 | FH pi.sh | FH/hands-on/pi.sh:4, FH/hands-on/README.md:16 | 32 | 2 (README override) | `jobs.fundamentals.pi` (pi.sh); README not templated yet |
 | 20 | FH slide job scripts | FH .org:2144 (10 tasks), 2216 (4), 2390, 2872 (10) | as written | ≤2 per node | not templated yet |
 | 21 | QC example 3 | QC/example_03/qcg_job.sh:2-3, README.md:3 | 2 nodes × 128 tasks | 3 × 2 (README override) | not templated yet |
 | 22 | QC examples 4/5, pipeline, alternatives | QC/example_04,05/*.sh:3, alternatives/*/*.sh:3, alternatives/README.md:11-14, hands-on/README.md:43-48 | 16 tasks (FireWorks 1) | 2 | not templated yet |
@@ -70,7 +72,7 @@ on Snellius for this inventory.
 
 | # | Value | Where | Snellius | SRC | Profile key |
 |---|---|---|---|---|---|
-| 37 | Home | FH/hands-on.md:47,73-105, FS/README.md:21-27, FH .org:1387 | `/home/<user>` | same | `paths.home` |
+| 37 | Home | FH/hands-on.md:47,73-105, FS/README.md:21-27, FH .org:1387 | `/home/<user>` | `/home/<user>` is a symlink: `pwd` after login prints the target, `du -sh ~` prints 512 | `paths.home`, `paths.home_link` |
 | 38 | Shared scratch | FS/README.md:13,55-62,84, FS .org:108,147-148, FH .org:1443,2308 | `/scratch-shared/$USER` | none; `/scratch` on shared BeeGFS, `~/scratch` points to `/scratch/$USER` | `paths.scratch_shared`, `paths.scratch_link` |
 | 39 | Local scratch / `$TMPDIR` | FS/README.md:67-72,97-143, FH .org:1480,2405-2418, QC example_01,02,04,05, alternatives | `/scratch-local/<user>.<jobid>` → `/gpfs/scratch1/nodespecific/<node>/…` | `/localscratch/$USER.<jobid>.0` | `paths.tmpdir` |
 | 40 | Scratch-node | FS/README.md:147-171, FS .org:110, FH .org:1495,1516 | `/scratch-node` with `--constraint=scratch-node` | none | `paths.scratch_node`, `slurm.constraints` |
@@ -88,7 +90,7 @@ on Snellius for this inventory.
 | 47 | `accinfo`, SBU | FH/hands-on.md:24,142, QC/example_02/README.md:23, example_04/README.md:22-44, example_05/README.md:55, QC .org:583,1425, FH .org:2992 | SBU, 1 per rome core-hour | none; `sacct` `CPUTimeRAW` in core-seconds | `tools.accinfo`, `accounting.unit` |
 | 48 | EAR | PA .org:1691,1710-1714,1899 | `eacct -j <jobid>` | none | `tools.ear` |
 | 49 | AMD uProf | PA .org:154,1608,1638-1645 | `AMD-uProf/5.1.701` | none | `tools.uprof`, `modules.uprof` |
-| 50 | PAPI, perf, likwid | PA .org:1512,1524,1909, README.md:30 | with `hwperf` | PAPI and `perf` named as the SRC route *unverified* | `tools.papi`, `tools.perf` |
+| 50 | PAPI, perf, likwid | PA .org:1512,1524,1909, README.md:30 | with `hwperf` | PAPI module resolves; `perf stat` counts on a compute node | `tools.papi`, `tools.perf` |
 
 ## Network and access
 
@@ -96,3 +98,4 @@ on Snellius for this inventory.
 |---|---|---|---|---|---|
 | 51 | Interconnect | HJ/README.md:29,41, FH .org:926,1730,1854 | InfiniBand, fat tree | Ethernet | `system.interconnect` |
 | 52 | Login host, login nodes, portal | FH/hands-on.md:31,35,37,106,120, FS/README.md:6,80, HJ/README.md:38, FH .org:1704,1728,2894, README.md:42 | `snellius.surf.nl`, `int4`–`int6`, `ondemand.snellius.surf.nl` | `<manager>`; OOD apps shell, files, jupyter, vscode, bc_desktop | `system.login_host`, `system.ondemand_*` |
+| 53 | mpifileutils | data-movement deck (not on this branch) | *unverified* | no module | `tools.mpifileutils` |

@@ -131,13 +131,34 @@ One module per commit, each with `snellius --check` green:
    arrays, the `module use` site path (`modules.site_modulepath`, empty on
    Snellius) and the SBU text (`accounting`). The scripts now hard-code the
    SRC course CVMFS path, so they do not run on Snellius as published.
-3. `course-module-fundamentals-of-hpc`: `hands-on.md` partitions, GPU job,
-   `myquota`/`accinfo` rows, the SRC slide and slide job scripts.
-4. `course-module-snellius-fs`: paths and the scratch-node constraint; the
-   recorded Snellius output stays as it is.
+3. `course-module-fundamentals-of-hpc`: templates cover `hands-on.md`
+   (hello and pi sizes, GPU partition, login note), `hands-on/pi.sh` and
+   the slide's mail boxes. Still open: the course cluster slide, the slide
+   job scripts and `hands-on/README.md`.
+4. `course-module-snellius-fs`: a template covers the cluster note. Still
+   open: paths and the scratch-node constraint. The recorded Snellius
+   output stays.
 5. `course-module-performance-analysis`: `hwperf`, EAR and uProf sections
    behind `tools.*`.
 6. Top-level README note from `src.toml`.
+
+## SSH pass findings (eessi-2wmy)
+
+Findings from the SSH pass on 2026-10-28, in `ssh-pass-report.md`. A
+course bug gets a fix in the published source and is a candidate for a
+standalone upstream fix. A cluster fact moves into the profiles.
+
+| Finding | Kind | Where it went |
+|---|---|---|
+| U+00A0 in QC example_01/array_job.sh | course bug | published file |
+| `Load =2025 foss/2025a=` on the mpirun slide | course bug | published slide; lint catches the pattern |
+| `myquota` called Snellius-only | cluster fact | `tools.myquota` in the SRC login note |
+| `gpu_a100` partition | cluster fact | `partitions.gpu`, `fundamentals.gpu_result`, `fundamentals.gpu_aside` |
+| 16 and 32 CPU requests | cluster fact | `jobs.fundamentals.hello`, `.pi` |
+| Slurm mail options | cluster fact | `slurm.mail` drops the slide's mail boxes |
+| home symlink, `du -sh ~` prints 512 | cluster fact | `paths.home_link` in the file systems note |
+| no mpifileutils | cluster fact | `tools.mpifileutils`; no course file uses it yet |
+| S1.12 timeout | neither | the slide asks "Can you solve the error?"; the 1-minute limit against `sleep 120` is the error to solve, as in the original deck |
 
 ## Open questions for Rohit
 
