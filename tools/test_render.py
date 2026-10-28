@@ -137,6 +137,12 @@ class Profiles(unittest.TestCase):
             self.assertNotIn(line, src)
         self.assertIn(f"ls {self.profiles['src']['paths']['scratch_user']}/\n", src)
 
+    def test_src_example_outputs_name_their_source(self):
+        rel = "course-module-snellius-hybrid-jobs/README.md"
+        note = "(the job ID and the time are from a Snellius run)"
+        self.assertEqual(rp.render_all("src")[rel].count(note), 2)
+        self.assertNotIn(note, rp.render_all("snellius")[rel])
+
     def test_mail_options_only_where_slurm_sends_mail(self):
         rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
         for name, prof in self.profiles.items():

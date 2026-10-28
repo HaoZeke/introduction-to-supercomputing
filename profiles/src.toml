@@ -146,6 +146,8 @@ ntasks_per_node = 2
 
 [hybrid]
 threads_example = 2
+# The example outputs keep the job IDs and timings of a Snellius run.
+example_source = " (the job ID and the time are from a Snellius run)"
 # Shown in this profile's own render, above "Connecting to Snellius".
 self_note = '''
 > [!NOTE]

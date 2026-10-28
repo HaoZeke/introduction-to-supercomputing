@@ -229,7 +229,7 @@ We will follow by executing a shared- and distributed-memory parallel version of
 ```bash
 sbatch submit-axpy-hybrid.sh <N>
 ```
-Example of output for `N` = 10000000 with the script's {{jobs.hybrid.ex2.ntasks}} tasks:
+Example of output for `N` = 10000000 with the script's {{jobs.hybrid.ex2.ntasks}} tasks{{#hybrid.example_source?}}{{hybrid.example_source}}{{/hybrid.example_source?}}:
 
 ```bash
 $ cat axpy-hybrid-28085117.out
@@ -312,7 +312,7 @@ To submit the parallel job, run the following command:
 sbatch submit-dot-hybrid.sh <N>
 ```
 
-Example of output for `N` = 10000000 with the script's {{jobs.hybrid.ex4.ntasks}} tasks. The result matches the sequential run to the printed digits; the order of the additions differs, so later digits can differ:
+Example of output for `N` = 10000000 with the script's {{jobs.hybrid.ex4.ntasks}} tasks{{#hybrid.example_source?}}{{hybrid.example_source}}{{/hybrid.example_source?}}. The result matches the sequential run to the printed digits; the order of the additions differs, so later digits can differ:
 
 ```bash
 $ cat dot-hybrid-28085121.out
