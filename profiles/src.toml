@@ -176,3 +176,26 @@ first_col = "Vector Size"
 first_col_width = 13
 columns = ["Sequential", "Hyb-2-1", "Hyb-6-1", "Hyb-1-2", "Hyb-3-2"]
 sizes = ["1,000,000", "10,000,000", "100,000,000"]
+
+# ---------------------------------------------------------------- fundamentals
+
+[jobs.fundamentals.hello]
+nodes = 1
+ntasks = 1
+cpus_per_task = 2
+
+[jobs.fundamentals.pi]
+nodes = 1
+ntasks = 1
+cpus_per_task = 2
+
+[fundamentals]
+hello_why = "the most a course job uses on one node"
+# Shown in other profiles' renders of hands-on.md, under "Connecting to Snellius".
+aside_note = '''
+> [!NOTE]
+> On an SRC cluster, log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. `myquota` and `accinfo` exist only on Snellius: use `df -h /home /scratch` for question 6, and skip question 7, because SRC charges the collaboration's wallet instead of a compute budget.'''
+# Shown in this profile's own render of hands-on.md.
+self_note = '''
+> [!NOTE]
+> These files are rendered for {{system.name}}. Log in to the manager workspace with the address your trainer gives you, using the password or SSH key that you set with your enrolment link. The prompt shows the manager's hostname instead of `int6`. `myquota` and `accinfo` exist only on Snellius: use `df -h /home /scratch` for question 6, and skip question 7, because SRC charges the collaboration's wallet instead of a compute budget.'''

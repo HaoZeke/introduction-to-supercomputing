@@ -151,3 +151,21 @@ first_col = "Vector Size"
 first_col_width = 13
 columns = ["Sequential", "Hyb-16-1", "Hyb-128-1", "Hyb-256-1", "Hyb-1-16", "Hyb-1-128", "Hyb-2-128"]
 sizes = ["1,000,000", "10,000,000", "100,000,000", "1,000,000,000", "10,000,000,000"]
+
+# ---------------------------------------------------------------- fundamentals
+# course-module-fundamentals-of-hpc
+
+[jobs.fundamentals.hello]
+# hands-on.md 2.2, the OpenMP hello job.
+nodes = 1
+ntasks = 1
+cpus_per_task = 16
+
+[jobs.fundamentals.pi]
+# hands-on/pi.sh, which runs 1, 2, 4, ... threads up to cpus_per_task.
+nodes = 1
+ntasks = 1
+cpus_per_task = 32
+
+[fundamentals]
+hello_why = "the smallest allocation on that partition"
