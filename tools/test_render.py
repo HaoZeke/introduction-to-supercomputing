@@ -25,17 +25,29 @@ class Engine(unittest.TestCase):
         self.assertEqual(self.r("{{#xs}}<{{.}}>{{/xs}}", xs=[1, 2]), "<1><2>")
         self.assertEqual(self.r("{{#d}}{{k}}{{/d}}", d={"k": "v"}), "v")
         self.assertEqual(self.r("{{^xs}}none{{/xs}}", xs=[]), "none")
-        self.assertEqual(self.r("{{#missing}}x{{/missing}}"), "")
+        self.assertEqual(self.r("{{#missing?}}x{{/missing?}}"), "")
+        self.assertEqual(self.r("{{^missing?}}x{{/missing?}}"), "x")
 
     def test_standalone_tag_lines_vanish(self):
         self.assertEqual(self.r("a\n{{#t}}\nb\n{{/t}}\nc\n", t=True), "a\nb\nc\n")
 
     def test_nested_value_renders_in_context(self):
-        self.assertEqual(self.r("{{#j}}{{note}}{{/j}}", note="run {{script}}", j={"script": "x.sh"}), "run x.sh")
+        self.assertEqual(self.r("{{#j}}{{../note}}{{/j}}", note="run {{script}}", j={"script": "x.sh"}), "run x.sh")
 
     def test_missing_value_is_an_error(self):
         with self.assertRaises(KeyError):
             self.r("{{nope}}")
+        with self.assertRaises(KeyError):
+            self.r("{{#nope}}x{{/nope}}")
+
+    def test_names_do_not_fall_back_to_outer_contexts(self):
+        with self.assertRaises(KeyError):
+            self.r("{{#j}}{{top}}{{/j}}", top="t", j={"k": 1})
+        with self.assertRaises(KeyError):
+            self.r("{{#j}}{{#top}}x{{/top}}{{/j}}", top=True, j={"k": 1})
+        self.assertEqual(self.r("{{#j}}{{../top}}{{k}}{{/j}}", top="t", j={"k": 1}), "t1")
+        with self.assertRaises(KeyError):
+            self.r("{{../../top}}", top="t")
 
 
 class Profiles(unittest.TestCase):

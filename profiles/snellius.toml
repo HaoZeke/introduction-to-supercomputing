@@ -138,7 +138,8 @@ ntasks_per_node = 4
 
 [hybrid]
 threads_example = 16
-# Text under each results table. {{script}} is the exercise's job script.
+# Text under each results table. It renders inside the job's section, so
+# {{script}} is the exercise's job script and {{../x}} reaches the profile.
 table_note = '''
 >
 > The last row needs about 160 GB for `x` and `y`. Add `--exclusive` to the job script so that the job gets the memory of a full node.

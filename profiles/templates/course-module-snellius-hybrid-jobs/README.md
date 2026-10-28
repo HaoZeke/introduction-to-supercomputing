@@ -264,7 +264,7 @@ sacct -j <jobid> --format=JobID,AllocCPUS,Elapsed,TotalCPU,MaxRSS,State
 {{#hybrid.table.lines}}
 > {{line}}
 {{/hybrid.table.lines}}
-{{#jobs.hybrid.ex2}}{{hybrid.table_note}}{{/jobs.hybrid.ex2}}
+{{#jobs.hybrid.ex2}}{{../hybrid.table_note}}{{/jobs.hybrid.ex2}}
 
 ### Scalar product
 
@@ -327,4 +327,4 @@ Time taken for dot product execution: 0.039711 seconds
 {{#hybrid.table.lines}}
 >{{line}}
 {{/hybrid.table.lines}}
-{{#jobs.hybrid.ex4}}{{hybrid.table_note}}{{/jobs.hybrid.ex4}}
+{{#jobs.hybrid.ex4}}{{../hybrid.table_note}}{{/jobs.hybrid.ex4}}

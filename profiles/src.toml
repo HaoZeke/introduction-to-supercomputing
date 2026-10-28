@@ -166,9 +166,10 @@ For a two-core SRC workspace, use these overrides from each exercise's
 
 For the hostname exercise use `{{jobs.hybrid.hostname.override}}`.
 These are SRC resource overrides; retain the Snellius requests on Snellius.'''
+# Renders inside the job's section: {{script}} is the job's, {{../x}} the profile's.
 table_note = '''
 >
-> The table stops at 100,000,000: a job gets {{slurm.def_mem_per_cpu_mb}} MB per CPU by default, and the two larger sizes need 16 GB and more. `Hyb-6-1` and `Hyb-3-2` spread over three nodes with at most {{limits.max_cpus_per_node}} cores busy on each, for example `sbatch --nodes=3 --ntasks=6 --ntasks-per-node=2 --cpus-per-task=1 {{script}} <N>` and `sbatch --nodes=3 --ntasks=3 --ntasks-per-node=1 --cpus-per-task=2 {{script}} <N>`.'''
+> The table stops at 100,000,000: a job gets {{../slurm.def_mem_per_cpu_mb}} MB per CPU by default, and the two larger sizes need 16 GB and more. `Hyb-6-1` and `Hyb-3-2` spread over three nodes with at most {{../limits.max_cpus_per_node}} cores busy on each, for example `sbatch --nodes=3 --ntasks=6 --ntasks-per-node=2 --cpus-per-task=1 {{script}} <N>` and `sbatch --nodes=3 --ntasks=3 --ntasks-per-node=1 --cpus-per-task=2 {{script}} <N>`.'''
 
 [hybrid.table]
 first_col = "Vector Size"

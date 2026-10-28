@@ -5,9 +5,9 @@
 {{#jobs.hybrid.ex2}}
 #SBATCH --nodes={{nodes:<15}}# Number of nodes
 #SBATCH --ntasks={{ntasks:<14}}# Total number of tasks (parallel processes)
-{{#ntasks_per_node}}
+{{#ntasks_per_node?}}
 #SBATCH --ntasks-per-node={{ntasks_per_node:<5}}# Number of tasks per node
-{{/ntasks_per_node}}
+{{/ntasks_per_node?}}
 #SBATCH --cpus-per-task={{cpus_per_task:<7}}# Number of OpenMP threads per MPI task
 {{/jobs.hybrid.ex2}}
 #SBATCH --time=01:00:00        # Time limit (hh:mm:ss)

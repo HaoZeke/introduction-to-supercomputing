@@ -77,11 +77,17 @@ Derived fields, computed before rendering:
 - `{{a.b}}` inserts a value; `{{a.b:<15}}` passes it through a Python format
   spec, which keeps the `#SBATCH ... # comment` columns aligned.
 - `{{#a.b}}...{{/a.b}}` repeats over a list, scopes into a table, or renders
-  once for a true value. `{{^a.b}}...{{/a.b}}` renders when the value is false,
-  empty or missing.
+  once for a true value. `{{^a.b}}...{{/a.b}}` renders when the value is false
+  or empty.
+- Names resolve in the innermost scope only. Inside `{{#jobs.hybrid.ex2}}`,
+  `{{ntasks}}` is the job's and `{{../modules.stack}}` is the profile's. A
+  name that is not there is an error; nothing falls back to an outer scope.
+- A section on an optional key ends in `?`: `{{#ntasks_per_node?}}` drops its
+  block when the job has no such key. Without `?` a missing key is an error.
 - A section tag alone on a line removes that line.
-- A string value that contains `{{` is rendered in the current scope, so
-  profile prose can say `{{limits.max_cpus_per_node}}` or `{{script}}`.
+- A string value that contains `{{` is rendered where it is used, so
+  profile prose can say `{{limits.max_cpus_per_node}}` or `{{script}}`. The
+  `../` depth then depends on the tag that inserts it.
 - Templates exist only for files that vary. No published file contains `{{`
   today; `.tex` files could, so check before templating one.
 - Keep cluster names out of `if` logic. Prefer a fact (`tools.myquota`) over

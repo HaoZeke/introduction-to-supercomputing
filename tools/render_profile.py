@@ -6,14 +6,18 @@ Each profile is a TOML file under profiles/. Rendering with the snellius
 profile reproduces the published files byte for byte; `--check` proves it.
 
 Template syntax, a small subset of Mustache:
-  {{a.b}}          value at dotted path a.b
-  {{a.b:<15}}      the same, through a Python format spec
-  {{#a.b}}..{{/a.b}}  a list repeats the block per item, a true value
-                   renders it once, a false or missing value drops it
-  {{^a.b}}..{{/a.b}}  rendered only when a.b is false, empty or missing
-A section tag alone on its line takes the whole line with it. A string value
-that itself holds {{...}} is rendered in the current context, so profile
-prose can use profile values.
+  {{a.b}}          value at dotted path a.b in the innermost context
+  {{../a.b}}       the same, one context out (repeat ../ to go further)
+  {{a.b:<15}}      a value through a Python format spec
+  {{#a.b}}..{{/a.b}}  a list repeats the block per item, a table becomes the
+                   innermost context, a true value renders the block once,
+                   a false or empty value drops it
+  {{^a.b}}..{{/a.b}}  rendered only when a.b is false or empty
+  {{#a.b?}}, {{^a.b?}}  the same, but a missing a.b counts as false
+Names never fall back to outer contexts: a missing name is an error unless
+the section tag ends in `?`. A section tag alone on its line takes the whole
+line with it. A string value that holds {{...}} is rendered where it is
+used, so profile prose can use profile values.
 
 Usage:
   tools/render_profile.py src                 # writes build/src/
@@ -52,7 +56,7 @@ MISSING = object()
 
 def parse(text: str) -> list:
     """Turn template text into a tree of str, ("var", name, spec) and
-    ("sec", inverted, name, children)."""
+    ("sec", inverted, optional, name, children)."""
     text = STANDALONE.sub(r"\1", text)
     root: list = []
     stack = [(None, root)]
@@ -61,12 +65,13 @@ def parse(text: str) -> list:
         if m.start() > pos:
             stack[-1][1].append(text[pos : m.start()])
         kind, body = m.group(1), m.group(2)
-        if kind in "#^" and kind:
-            node = ("sec", kind == "^", body, [])
+        if kind in ("#", "^"):
+            name = body.removesuffix("?")
+            node = ("sec", kind == "^", body.endswith("?"), name, [])
             stack[-1][1].append(node)
-            stack.append((body, node[3]))
+            stack.append((name, node[4]))
         elif kind == "/":
-            if stack[-1][0] != body:
+            if stack[-1][0] != body.removesuffix("?"):
                 raise ValueError(f"{{{{/{body}}}}} closes {stack[-1][0]!r}")
             stack.pop()
         else:
@@ -81,18 +86,21 @@ def parse(text: str) -> list:
 
 
 def lookup(stack: list, name: str):
+    """The value of `name` in the innermost context, or `../` contexts out.
+    Returns MISSING instead of searching outer contexts."""
+    depth = 0
+    while name.startswith("../"):
+        depth, name = depth + 1, name[3:]
+    if depth >= len(stack):
+        raise KeyError(f"{'../' * depth}{name} goes past the outermost context")
+    value = stack[-1 - depth]
     if name == ".":
-        return stack[-1]
-    first, *rest = name.split(".")
-    for frame in reversed(stack):
-        if isinstance(frame, dict) and first in frame:
-            value = frame[first]
-            for part in rest:
-                if not isinstance(value, dict) or part not in value:
-                    return MISSING
-                value = value[part]
-            return value
-    return MISSING
+        return value
+    for part in name.split("."):
+        if not isinstance(value, dict) or part not in value:
+            return MISSING
+        value = value[part]
+    return value
 
 
 def render_tree(tree: list, stack: list) -> str:
@@ -109,8 +117,10 @@ def render_tree(tree: list, stack: list) -> str:
                 value = render(value, stack)
             out.append(format(value, spec))
         else:
-            _, inverted, name, children = node
+            _, inverted, optional, name, children = node
             value = lookup(stack, name)
+            if value is MISSING and not optional:
+                raise KeyError(f"no value for section {name!r}; end the tag in ? if it is optional")
             empty = value is MISSING or not value
             if inverted:
                 if empty:
