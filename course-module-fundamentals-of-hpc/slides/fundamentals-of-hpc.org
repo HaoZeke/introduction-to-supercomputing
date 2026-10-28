@@ -2205,7 +2205,7 @@ echo "DONE"
 #+end_tb
 #+attr_latex: :options [x=410.87,y=330.77,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Load =2025 foss/2025a= before trying =mpirun hostname=.
+- Load =2025=, then =foss/2025a=, and try =mpirun hostname=.
 #+end_tb
 #+attr_latex: :options [x=54.52,y=136.23,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
