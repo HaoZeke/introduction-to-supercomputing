@@ -2149,8 +2149,8 @@ Displays job information, including estimated start time
 #+begin_example
 #!/bin/bash
 #SBATCH --job-name="job-test"
-#SBATCH --nodes=1
-#SBATCH --ntasks=10
+#SBATCH --nodes={{jobs.fundamentals.first.nodes}}
+#SBATCH --ntasks={{jobs.fundamentals.first.ntasks}}
 #SBATCH --time=00:01:00
 #SBATCH --partition=rome
 #+end_example
@@ -2205,8 +2205,8 @@ echo "DONE"
 #+end_tb
 #+attr_latex: :options [x=410.87,y=248.45,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Compare the output when changing @@beamer:\textbf{\texttt{--ntasks=4 to --}}@@ \\
-  @@beamer:\textbf{\texttt{ntasks=8}}@@.
+- Compare the output when changing @@beamer:\textbf{\texttt{{{fundamentals.mpi_compare_a}}}}@@ \\
+  @@beamer:\textbf{\texttt{{{fundamentals.mpi_compare_b}}}}@@.
 #+end_tb
 #+attr_latex: :options [x=410.87,y=299.33,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -2221,8 +2221,8 @@ echo "DONE"
 #+begin_example
 #!/bin/bash
 #SBATCH --job-name="mpi-test"
-#SBATCH --nodes=1
-#SBATCH --ntasks=4
+#SBATCH --nodes={{jobs.fundamentals.mpi.nodes}}
+#SBATCH --ntasks={{jobs.fundamentals.mpi.ntasks}}
 #SBATCH --time=00:02:00
 #SBATCH --partition=rome
 #+end_example
@@ -2395,8 +2395,8 @@ Job scripts consist of:
 #+begin_tb
 #+begin_example
 #SBATCH --job-name="firsttest"
-#SBATCH --nodes=1
-#SBATCH --ntasks=10
+#SBATCH --nodes={{jobs.fundamentals.firsttest.nodes}}
+#SBATCH --ntasks={{jobs.fundamentals.firsttest.ntasks}}
 #SBATCH --time=00:01:00
 #SBATCH --partition=rome
 #+end_example
@@ -2877,8 +2877,8 @@ Shows information about =<modulename>=.
 #+begin_example
 #!/bin/bash
 #SBATCH --job-name="r_test"
-#SBATCH --nodes=1
-#SBATCH --ntasks=10
+#SBATCH --nodes={{jobs.fundamentals.r.nodes}}
+#SBATCH --ntasks={{jobs.fundamentals.r.ntasks}}
 #SBATCH --time=00:01:00
 #SBATCH --partition=rome
 #+end_example

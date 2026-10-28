@@ -191,7 +191,31 @@ nodes = 1
 ntasks = 1
 cpus_per_task = 2
 
+# The slide jobs fit one two-core node. The second example spreads its
+# two tasks over two nodes instead of asking for more tasks.
+[jobs.fundamentals.first]
+nodes = 1
+ntasks = 2
+
+[jobs.fundamentals.mpi]
+nodes = 1
+ntasks = 2
+
+[jobs.fundamentals.mpi_compare]
+nodes = 2
+ntasks = 2
+
+[jobs.fundamentals.firsttest]
+nodes = 1
+ntasks = 2
+
+[jobs.fundamentals.r]
+nodes = 1
+ntasks = 2
+
 [fundamentals]
+mpi_compare_a = "--nodes={{jobs.fundamentals.mpi.nodes}} to --"
+mpi_compare_b = "nodes={{jobs.fundamentals.mpi_compare.nodes}}"
 hello_why = "the most a course job uses on one node"
 gpu_result = "On `{{partitions.real_gpu_node}}`, `nvidia-smi` lists two NVIDIA Blackwell cards. The partition also has a node with emulated GPUs, so submit with `sbatch --nodelist={{partitions.real_gpu_node}} gpu.sh` to reach the real cards. The whole class shares those two cards, so keep GPU test jobs short."
 # Shown in other profiles' renders, after the GPU job.

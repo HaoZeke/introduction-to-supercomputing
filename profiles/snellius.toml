@@ -167,6 +167,33 @@ nodes = 1
 ntasks = 1
 cpus_per_task = 32
 
+# The job scripts on the slides. first is "Running jobs, first example",
+# whose one-minute limit against `sleep 120` is the planted error.
+[jobs.fundamentals.first]
+nodes = 1
+ntasks = 10
+
+[jobs.fundamentals.mpi]
+nodes = 1
+ntasks = 4
+
+# What the second example asks learners to change mpi into.
+[jobs.fundamentals.mpi_compare]
+nodes = 1
+ntasks = 8
+
+[jobs.fundamentals.firsttest]
+nodes = 1
+ntasks = 10
+
+[jobs.fundamentals.r]
+nodes = 1
+ntasks = 10
+
 [fundamentals]
+# The slide's "Compare the output when changing A B" prompt, split where
+# the slide breaks the line.
+mpi_compare_a = "--ntasks={{jobs.fundamentals.mpi.ntasks}} to --"
+mpi_compare_b = "ntasks={{jobs.fundamentals.mpi_compare.ntasks}}"
 hello_why = "the smallest allocation on that partition"
 gpu_result = "The output lists the one A100 GPU the job received. A GPU hour costs more budget than a CPU core hour, so keep GPU test jobs short."

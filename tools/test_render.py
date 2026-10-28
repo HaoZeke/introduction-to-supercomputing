@@ -117,6 +117,18 @@ class Profiles(unittest.TestCase):
                 self.assertEqual(parts[-1], prof["partitions"]["gpu"])
         self.assertNotIn("gpu_a100", rp.render_all("src")[rel])
 
+    def test_slide_jobs_follow_the_profile(self):
+        rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
+        for name, prof in self.profiles.items():
+            with self.subTest(name):
+                text = rp.render_all(name)[rel]
+                jobs = prof["jobs"]["fundamentals"]
+                want = [jobs[j]["ntasks"] for j in ("first", "mpi", "firsttest", "r")]
+                got = [int(v) for k, v in SBATCH.findall(text) if k == "ntasks"]
+                self.assertEqual(got, want)
+                key = "nodes" if jobs["mpi_compare"]["nodes"] != jobs["mpi"]["nodes"] else "ntasks"
+                self.assertIn(f"\\texttt{{{key}={jobs['mpi_compare'][key]}}}", text)
+
     def test_mail_options_only_where_slurm_sends_mail(self):
         rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
         for name, prof in self.profiles.items():
