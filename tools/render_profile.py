@@ -183,6 +183,11 @@ def derive(profile: dict, base: dict | None) -> dict:
     if nodes:
         prof["system"]["node_count"] = len(nodes)
         prof["system"]["total_cpus"] = sum(n["cpus"] for n in nodes)
+        shapes = {}
+        for n in nodes:
+            shapes[n["cpus"]] = shapes.get(n["cpus"], 0) + 1
+        prof["system"]["node_shapes"] = " and ".join(
+            f"{count} with {cpus} cores" for cpus, count in shapes.items())
     for section in prof.values():
         if isinstance(section, dict):
             for value in section.values():

@@ -121,6 +121,7 @@ example_n = 10000000
 [jobs.hybrid.ex4]
 nodes = 3
 ntasks = 6
+ntasks_per_node = 2
 cpus_per_task = 1
 script = "submit-dot-hybrid.sh"
 example_n = 30000000
@@ -149,7 +150,7 @@ self_note = '''
 # sbatch line that turns that profile's job into this one's.
 aside_note = '''
 > [!NOTE]
-> On an SRC cluster, the compute nodes are three cloud workspaces with a few cores each (`sinfo -o '%n %c %m'`), connected by {{system.interconnect}} instead of InfiniBand. `module load {{modules.stack}}` and `module load {{modules.toolchain}}` work as on Snellius. Options given to `sbatch` override the `#SBATCH` lines, so shrink a job on the command line instead of editing the script, for example `{{jobs.hybrid.ex4.cmd}}`. In the tables, drop the columns with 128 or 256 tasks, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.'''
+> On an SRC cluster, the compute nodes are {{system.node_count}} cloud workspaces, {{system.node_shapes}} (`sinfo -o '%n %c %m'`), connected by {{system.interconnect}} instead of InfiniBand. `module load {{modules.stack}}` and `module load {{modules.toolchain}}` work as on Snellius. Options given to `sbatch` override the `#SBATCH` lines, so shrink a job on the command line instead of editing the script, for example `{{jobs.hybrid.ex4.cmd}}`. In the tables, drop the columns with 128 or 256 tasks, and leave out the two largest vector sizes, which need more memory than a workspace has. Expect weaker scaling across nodes than on Snellius.'''
 aside_overrides = '''
 For a two-core SRC workspace, use these overrides from each exercise's
 `hands-on/exN` directory. Check the actual core count with `sinfo` first:
