@@ -87,9 +87,10 @@ myquota = true                        # reports the shared home file system
 accinfo = false
 ear = false
 uprof = false
-papi = true                           # unverified module name
-perf = true                           # unverified counter access
+papi = true                           # PAPI module resolves (SSH pass S0.7)
+perf = true                           # perf stat counts cycles on a compute node (S5.1)
 seff = true
+mpifileutils = false                  # no module (S0.7); the data-movement deck needs it
 
 [accounting]
 unit = "core-hour"                    # sacct CPUTimeRAW, core-seconds
