@@ -264,12 +264,16 @@ def lint(profile: dict, files: dict) -> list:
     mods = profile.get("modules", {})
     if not mods.get("stack_on_own_line"):
         return []
-    one_line = re.compile(rf"^\s*module load {re.escape(mods['stack'])}\s+[^\s#]")
+    stack = re.escape(mods["stack"])
+    one_line = re.compile(rf"^\s*module load {stack}\s+[^\s#]")
+    # Prose that names both in one code span, such as "Load =2025 foss/2025a="
+    # on a slide, reads as one command too.
+    in_prose = re.compile(rf"\bload\s+[=`~]{stack}\s+[\w/]", re.I)
     return [
         f"{path}:{i}: {line.strip()}"
         for path, text in files.items()
         for i, line in enumerate(text.splitlines(), 1)
-        if one_line.match(line)
+        if one_line.match(line) or in_prose.search(line)
     ]
 
 

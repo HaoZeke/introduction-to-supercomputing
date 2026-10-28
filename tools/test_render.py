@@ -98,6 +98,13 @@ class Profiles(unittest.TestCase):
         self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
         self.assertFalse(rp.lint(prof, {"x.sh": "module load 2025   # stack\n"}))
 
+    def test_lint_catches_one_line_stack_load_in_prose(self):
+        prof = self.profiles["src"]
+        self.assertTrue(rp.lint(prof, {"s.org": "- Load =2025 foss/2025a= before =mpirun=.\n"}))
+        self.assertTrue(rp.lint(prof, {"r.md": "First load `2025 GCC/14.2.0`.\n"}))
+        self.assertFalse(rp.lint(prof, {"s.org": "- Load =2025=, then =foss/2025a=.\n"}))
+        self.assertFalse(rp.lint(prof, {"s.org": "@@beamer:\\$@@ module load 2025 \\\\\n"}))
+
 
 class LintCourseFiles(unittest.TestCase):
     def test_lint_reads_files_without_a_template(self):
