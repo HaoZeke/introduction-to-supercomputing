@@ -44,7 +44,7 @@ on Snellius for this inventory.
 | 17 | HJ sample output local length | HJ/README.md:240,330 | 78125 (128 tasks) | 5000000 / 1666667 | derived from `jobs.hybrid.exN.sample_n` |
 | 18 | FH hello.sh | FH/hands-on.md:185,193,219 | 16 cores on 1 rome node | 2 | `jobs.fundamentals.hello`, `fundamentals.hello_why` |
 | 19 | FH pi.sh | FH/hands-on/pi.sh:4, FH/hands-on/README.md:16 | 32 | 2 (README override) | `jobs.fundamentals.pi` (pi.sh); README not templated yet |
-| 20 | FH slide job scripts | FH .org:2144 (10 tasks), 2216 (4), 2390, 2872 (10) | as written | ≤2 per node | not templated yet |
+| 20 | FH slide job scripts | FH .org:2144 (10 tasks), 2216 (4), 2390, 2872 (10) | as written | ≤2 per node | `jobs.fundamentals.first`, `.mpi`, `.firsttest`, `.r` |
 | 21 | QC example 3 | QC/example_03/qcg_job.sh:2-3, README.md:3 | 2 nodes × 128 tasks | 3 × 2 (README override) | not templated yet |
 | 22 | QC examples 4/5, pipeline, alternatives | QC/example_04,05/*.sh:3, alternatives/*/*.sh:3, alternatives/README.md:11-14, hands-on/README.md:43-48 | 16 tasks (FireWorks 1) | 2 | not templated yet |
 | 23 | QC arrays | QC/example_01/array_job.sh:6, example_02/array_job.sh:6, hands-on/README.md:45 | `0-11%3`, `0-999%10` | `0-99%10` for ex2 | not templated yet |
