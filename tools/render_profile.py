@@ -108,7 +108,9 @@ def lookup(stack: list, name: str):
     return value
 
 
-def render_tree(tree: list, stack: list) -> str:
+def render_tree(tree: list, stack: list, expanding: tuple = ()) -> str:
+    """`expanding` holds the (name, value) pairs whose string values are being
+    rendered, so a value that names itself fails instead of recursing."""
     out = []
     for node in tree:
         if isinstance(node, str):
@@ -119,7 +121,10 @@ def render_tree(tree: list, stack: list) -> str:
             if value is MISSING:
                 raise KeyError(f"no value for {{{{{name}}}}}")
             if isinstance(value, str) and "{{" in value:
-                value = render(value, stack)
+                if (name, value) in expanding:
+                    chain = " -> ".join(n for n, _ in expanding) + f" -> {name}"
+                    raise ValueError(f"{{{{{name}}}}} refers to itself through {chain}")
+                value = render(value, stack, expanding + ((name, value),))
             out.append(format(value, spec))
         else:
             _, inverted, optional, name, children = node
@@ -129,21 +134,21 @@ def render_tree(tree: list, stack: list) -> str:
             empty = value is MISSING or not value
             if inverted:
                 if empty:
-                    out.append(render_tree(children, stack))
+                    out.append(render_tree(children, stack, expanding))
             elif empty:
                 continue
             elif isinstance(value, list):
                 for item in value:
-                    out.append(render_tree(children, stack + [item]))
+                    out.append(render_tree(children, stack + [item], expanding))
             elif isinstance(value, dict):
-                out.append(render_tree(children, stack + [value]))
+                out.append(render_tree(children, stack + [value], expanding))
             else:
-                out.append(render_tree(children, stack))
+                out.append(render_tree(children, stack, expanding))
     return "".join(out)
 
 
-def render(text: str, stack: list) -> str:
-    return render_tree(parse(text), stack)
+def render(text: str, stack: list, expanding: tuple = ()) -> str:
+    return render_tree(parse(text), stack, expanding)
 
 
 # ---------------------------------------------------------------- profiles

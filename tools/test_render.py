@@ -49,6 +49,13 @@ class Engine(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.r("{{#nope}}x{{/nope}}")
 
+    def test_self_referencing_value_is_an_error(self):
+        with self.assertRaisesRegex(ValueError, r"\{\{a\}\} refers to itself through a -> a"):
+            self.r("{{a}}", a="x{{a}}")
+        with self.assertRaisesRegex(ValueError, "a -> b -> a"):
+            self.r("{{a}}", a="{{b}}", b="{{a}}")
+        self.assertEqual(self.r("{{a}} {{a}}", a="{{b}}", b="v"), "v v")
+
     def test_names_do_not_fall_back_to_outer_contexts(self):
         with self.assertRaises(KeyError):
             self.r("{{#j}}{{top}}{{/j}}", top="t", j={"k": 1})
