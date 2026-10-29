@@ -50,13 +50,13 @@ no template or check reads them today.
 |---|---|---|
 | `[profile]` | *`name`*, *`description`*, *`verified`* | identity, date the facts were checked |
 | `[render]` | `asides` | other profiles whose notes appear in this render (Snellius: `["src"]`) |
-| `[system]` | `name`, `interconnect`, *`login_host`*, *`ondemand_url`*, *`ondemand_apps`*, *`peak_pflops`* | prose facts |
+| `[system]` | `name`, `interconnect`, *`login_host`*, *`login_nodes`*, *`ondemand_url`*, *`ondemand_apps`*, *`peak_pflops`* | prose facts |
 | `[[system.nodes]]` | `cpus`, *`name`*, *`mem_mb`*, *`gres`* | one entry per node; renderer derives `system.node_count`, `system.total_cpus`, `system.node_shapes` |
 | `[[system.partition_info]]` | *`name`*, *`nodes`*, *`cpus_per_node`*, *`gpus_per_node`*, *`gpu_model`* | partition catalogue for large systems |
 | `[partitions]` | `cpu`, `gpu`, `real_gpu_node`, *`cpu_alt`*, *`gpu_alt`*, *`fat`*, *`staging`*, *`default`* | logical role to partition name |
 | `[slurm]` | `mail`, `def_mem_per_cpu_mb`, `constraints`, *`default_partition`*, *`oversubscribe`*, *`gpu_request`*, *`select`*, *`min_allocation_cpus`*, *`min_allocation_mem_gib`* | scheduler facts; `constraints` lists the `--constraint` values a job script may ask for |
 | `[limits]` | `max_cpus_per_node`, `max_nodes` | course sizing rule; the renderer checks every profile job and every rendered job script against it |
-| `[modules]` | `stack`, `toolchain`, `stack_on_own_line`, *`compiler`*, *`python`*, *`qcg`*, *`site_modulepath`*, *`uprof`* | module names; with `stack_on_own_line` the renderer rejects `module load 2025 X` |
+| `[modules]` | `stack`, `toolchain`, `stack_on_own_line`, *`compiler`*, *`python`*, *`qcg`*, *`site_modulepath`*, *`uprof`*, *`eessi_versions`*, *`r`* | module names; with `stack_on_own_line` the renderer rejects `module load 2025 X` |
 | `[paths]` | `home_link`, `scratch_node`, `scratch_user`, `shared_fs`, *`home`*, *`scratch_shared`*, *`scratch_link`*, *`scratch_local`*, *`scratch_local_real`*, *`projects`*, *`archive`*, *`tmpdir`* | file systems; the file systems README uses `scratch_user` in place of `/scratch-shared` where it is set, and shows the scratch-node constraint only where `scratch_node` is set |
 | `[tools]` | `myquota`, `accinfo`, *`ear`*, *`uprof`*, *`papi`*, *`perf`*, *`seff`*, *`mpifileutils`* | booleans for sections that only make sense where the tool exists |
 | `[accounting]` | *`unit`*, *`sbu_per_core_hour`* | SBU or core-hours |
