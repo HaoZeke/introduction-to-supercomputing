@@ -175,7 +175,7 @@ standalone upstream fix. A cluster fact moves into the profiles.
 | Slurm mail options | cluster fact | `slurm.mail` drops the slide's mail boxes |
 | home symlink, `du -sh ~` prints 512 | cluster fact | `paths.home_link` in the file systems note |
 | no mpifileutils | cluster fact | `tools.mpifileutils`; no course file uses it yet |
-| S1.12 timeout | neither | the slide asks "Can you solve the error?"; the 1-minute limit against `sleep 120` is the error to solve, as in the original deck |
+| one-minute limit on the `sleep 120` slide job | neither | the slide asks "Can you solve the error?"; the 1-minute limit against `sleep 120` is the error to solve, as in the original deck |
 
 ## Open questions
 
