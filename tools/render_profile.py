@@ -234,6 +234,9 @@ def job_problems(where: str, job: dict, limits: dict) -> list:
     per_node = limits.get("max_cpus_per_node")
     max_nodes = limits.get("max_nodes")
     nodes = job.get("nodes", 1)
+    if nodes < 1:
+        # Slurm refuses such a job, and the per-node sums below divide by it.
+        return [f"{where} asks {nodes} nodes; a job needs at least 1"]
     ntasks = job.get("ntasks", 1)
     pinned = job.get("ntasks_per_node")
     if pinned and ntasks > nodes * pinned:

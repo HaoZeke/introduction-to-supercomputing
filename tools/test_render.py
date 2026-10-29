@@ -244,6 +244,13 @@ class Profiles(unittest.TestCase):
         self.assertEqual(rp.validate("src", src),
                          ["src: jobs.hybrid.ex4 spreads 6 tasks over 3 nodes without --ntasks-per-node"])
 
+    def test_zero_nodes_is_a_problem_not_a_crash(self):
+        prof = {"jobs": {"m": {"j": {"nodes": 0, "ntasks": 2}}}}
+        self.assertEqual(rp.validate("x", prof), ["x: jobs.m.j asks 0 nodes; a job needs at least 1"])
+        text = "#!/bin/bash\n#SBATCH --nodes=0 --ntasks=2\n"
+        self.assertEqual(rp.check_scripts("src", self.profiles["src"], {"j.sh": text}),
+                         ["src: j.sh:2 asks 0 nodes; a job needs at least 1"])
+
     def test_lint_catches_one_line_stack_load(self):
         prof = self.profiles["src"]
         self.assertTrue(rp.lint(prof, {"x.sh": "module load 2025 foss/2025a\n"}))
