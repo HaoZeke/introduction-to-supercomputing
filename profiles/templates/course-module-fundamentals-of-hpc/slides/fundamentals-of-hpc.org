@@ -2314,7 +2314,7 @@ Don't use =/home= as work dir
 #+begin_tb
 Your home directory has limited \\
 performance for high-throughput \\
-tasks; use =/scratch-shared= \\
+tasks; use ={{#paths.scratch_user?}}{{paths.scratch_user}}{{/paths.scratch_user?}}{{^paths.scratch_user?}}/scratch-shared{{/paths.scratch_user?}}= \\
 storage for faster I/O.
 #+end_tb
 #+attr_latex: :options [x=55.76,y=176.84,s=18,l=21.6,b]

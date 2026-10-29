@@ -57,9 +57,14 @@ Snellius offers three distinct scratch file systems to meet various storage and 
 * Node.
 
 ### Scratch-shared
+{{^paths.scratch_user?}}
 The scratch-shared file system, denoted as `/scratch-shared`, is a shared workspace accessible from all compute nodes on Snellius. It is designed for temporary and high-performance storage, making it suitable for parallel and distributed computing tasks.
 
 You can create your own directory using your `<username>`, or any other filename.
+{{/paths.scratch_user?}}
+{{#paths.scratch_user?}}
+This cluster has no `/scratch-shared`. Its shared scratch is `{{paths.scratch_shared}}` on {{paths.shared_fs}}, and your directory `{{paths.scratch_user}}` already exists, so the commands below use it.
+{{/paths.scratch_user?}}
 
 ```
 {{^paths.scratch_user?}}

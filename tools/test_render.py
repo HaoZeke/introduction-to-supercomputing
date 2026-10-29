@@ -146,6 +146,18 @@ class Profiles(unittest.TestCase):
             self.assertNotIn(line, src)
         self.assertIn(f"ls {self.profiles['src']['paths']['scratch_user']}/\n", src)
 
+    def test_src_prose_points_at_the_profiles_scratch(self):
+        user = self.profiles["src"]["paths"]["scratch_user"]
+        readme = "course-module-snellius-fs/README.md"
+        deck = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
+        snel, src = rp.render_all("snellius"), rp.render_all("src")
+        for line in ("You can create your own directory", "denoted as `/scratch-shared`"):
+            self.assertIn(line, snel[readme])
+            self.assertNotIn(line, src[readme])
+        self.assertIn(f"your directory `{user}` already exists", src[readme])
+        self.assertIn("tasks; use =/scratch-shared= \\\\", snel[deck])
+        self.assertIn(f"tasks; use ={user}= \\\\", src[deck])
+
     def test_src_example_outputs_name_their_source(self):
         rel = "course-module-snellius-hybrid-jobs/README.md"
         note = "(the job ID and the time are from a Snellius run)"
