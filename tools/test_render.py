@@ -219,6 +219,14 @@ class Profiles(unittest.TestCase):
             "src: j.sh:6 asks for constraint scratch-node, which src lacks",
         ])
 
+    def test_check_scripts_reads_joined_short_options(self):
+        self.assertEqual(rp.sbatch_options("-n4 -N2 -c8"), [("-n", "4"), ("-N", "2"), ("-c", "8")])
+        self.assertEqual(rp.sbatch_options("-N 2 -n=4 -Cgpu"), [("-N", "2"), ("-n", "4"), ("-C", "gpu")])
+        text = "#!/bin/bash\n#SBATCH -N1 -n4\n#SBATCH -c2\n"
+        self.assertEqual(rp.sbatch_blocks(text), [(2, {"nodes": 1, "ntasks": 4, "cpus_per_task": 2})])
+        self.assertEqual(rp.check_scripts("src", self.profiles["src"], {"j.sh": text}),
+                         ["src: j.sh:2 asks 8 CPUs per node, limit 2"])
+
     def test_override_cannot_unset_a_base_option(self):
         base = {"nodes": 2, "ntasks": 8, "ntasks_per_node": 4}
         self.assertEqual(rp.override({"nodes": 1, "ntasks": 2, "ntasks_per_node": 2}, base),

@@ -263,7 +263,7 @@ def validate(name: str, profile: dict) -> list:
 
 
 # One #SBATCH line, up to a `#` comment. It can hold more than one option,
-# each as --opt=v, --opt v or -o v.
+# each as --opt=v, --opt v, -o v or -ov.
 SBATCH_LINE = re.compile(r"^#SBATCH\s+([^#]*)")
 SBATCH_OPTS = {
     "-N": "nodes", "--nodes": "nodes",
@@ -286,6 +286,8 @@ def sbatch_options(rest: str) -> list:
             continue
         if "=" in word:
             opt, value = word.split("=", 1)
+        elif not word.startswith("--") and len(word) > 2:
+            opt, value = word[:2], word[2:]
         elif i < len(words) and not words[i].startswith("-"):
             opt, value = word, words[i]
             i += 1
