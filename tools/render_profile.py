@@ -262,8 +262,9 @@ def validate(name: str, profile: dict) -> list:
     ]
 
 
-# One #SBATCH line: the option and its value, as --opt=v, --opt v or -o v.
-SBATCH_LINE = re.compile(r"^#SBATCH\s+(--?[A-Za-z-]+)(?:[=\s]\s*([^\s#]+))?")
+# One #SBATCH line, up to a `#` comment. It can hold more than one option,
+# each as --opt=v, --opt v or -o v.
+SBATCH_LINE = re.compile(r"^#SBATCH\s+([^#]*)")
 SBATCH_OPTS = {
     "-N": "nodes", "--nodes": "nodes",
     "-n": "ntasks", "--ntasks": "ntasks",
@@ -271,6 +272,27 @@ SBATCH_OPTS = {
     "-c": "cpus_per_task", "--cpus-per-task": "cpus_per_task",
     "-C": "constraint", "--constraint": "constraint",
 }
+
+
+def sbatch_options(rest: str) -> list:
+    """The (option, value) pairs on one #SBATCH line. A flag with no value,
+    or an empty `--opt=`, has value None."""
+    pairs, words = [], rest.split()
+    i = 0
+    while i < len(words):
+        word = words[i]
+        i += 1
+        if not word.startswith("-"):
+            continue
+        if "=" in word:
+            opt, value = word.split("=", 1)
+        elif i < len(words) and not words[i].startswith("-"):
+            opt, value = word, words[i]
+            i += 1
+        else:
+            opt, value = word, None
+        pairs.append((opt, value or None))
+    return pairs
 
 
 def sbatch_blocks(text: str) -> list:
@@ -286,9 +308,10 @@ def sbatch_blocks(text: str) -> list:
             continue
         if start is None:
             start, opts = i, {}
-        key, value = SBATCH_OPTS.get(m.group(1)), m.group(2)
-        if key and value:
-            opts[key] = value if key == "constraint" else int(value) if value.isdigit() else None
+        for opt, value in sbatch_options(m.group(1)):
+            key = SBATCH_OPTS.get(opt)
+            if key and value:
+                opts[key] = value if key == "constraint" else int(value) if value.isdigit() else None
     return blocks
 
 

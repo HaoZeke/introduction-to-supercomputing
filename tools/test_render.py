@@ -181,6 +181,23 @@ class Profiles(unittest.TestCase):
         self.assertEqual(rp.check_scripts("snellius", self.profiles["snellius"], {"j.sh": text}),
                          ["snellius: j.sh:6 spreads 6 tasks over 3 nodes without --ntasks-per-node"])
 
+    def test_check_scripts_reads_every_option_on_a_line(self):
+        prof = self.profiles["src"]
+        text = ("#!/bin/bash\n#SBATCH --nodes=1 --ntasks=10\n\n"
+                "#SBATCH -N 3 -n 6 --exclusive\n\n"
+                "#SBATCH --exclusive --nodes 2 --ntasks=4 -C scratch-node  # comment\n")
+        self.assertEqual(rp.sbatch_blocks(text), [
+            (2, {"nodes": 1, "ntasks": 10}),
+            (4, {"nodes": 3, "ntasks": 6}),
+            (6, {"nodes": 2, "ntasks": 4, "constraint": "scratch-node"}),
+        ])
+        self.assertEqual(rp.check_scripts("src", prof, {"j.sh": text}), [
+            "src: j.sh:2 asks 10 CPUs per node, limit 2",
+            "src: j.sh:4 spreads 6 tasks over 3 nodes without --ntasks-per-node",
+            "src: j.sh:6 spreads 4 tasks over 2 nodes without --ntasks-per-node",
+            "src: j.sh:6 asks for constraint scratch-node, which src lacks",
+        ])
+
     def test_override_cannot_unset_a_base_option(self):
         base = {"nodes": 2, "ntasks": 8, "ntasks_per_node": 4}
         self.assertEqual(rp.override({"nodes": 1, "ntasks": 2, "ntasks_per_node": 2}, base),
