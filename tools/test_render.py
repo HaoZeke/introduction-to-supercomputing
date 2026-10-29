@@ -10,6 +10,7 @@ import re
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -128,6 +129,14 @@ class Profiles(unittest.TestCase):
                 self.assertEqual(got, want)
                 key = "nodes" if jobs["mpi_compare"]["nodes"] != jobs["mpi"]["nodes"] else "ntasks"
                 self.assertIn(f"\\texttt{{{key}={jobs['mpi_compare'][key]}}}", text)
+
+    def test_slide_jobs_take_the_cpu_partition(self):
+        rel = "course-module-fundamentals-of-hpc/slides/fundamentals-of-hpc.org"
+        profiles = copy.deepcopy(self.profiles)
+        profiles["src"]["partitions"]["cpu"] = "cpu_test"
+        with unittest.mock.patch.object(rp, "load_profiles", return_value=profiles):
+            text = rp.render_all("src")[rel]
+        self.assertEqual(re.findall(r"^#SBATCH --partition=(\S+)", text, re.M), ["cpu_test"] * 6)
 
     def test_fs_commands_use_the_profiles_scratch(self):
         rel = "course-module-snellius-fs/README.md"

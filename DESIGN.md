@@ -132,8 +132,9 @@ The Org sources render the same way as Markdown. The SRC slide in
 fundamentals (`fundamentals-of-hpc.org:1727-1732`) becomes a block filled from
 `src.toml` (`system.nodes`, `paths`, `tools`), shown in the Snellius render as
 an aside and in the SRC render as the cluster description. Job-script slides
-(`:2143`, `:2215`, `:2389`, `:2871`) take `partitions.cpu` and per-slide
-`jobs.fundamentals.*` sizes. The compile step reads the rendered `.org`
+(`:2144`, `:2216`, `:2390`, `:2872`) take `partitions.cpu` and per-slide
+`jobs.fundamentals.*` sizes, and the two dependency jobs (`:2267`, `:2284`)
+take `partitions.cpu`. The compile step reads the rendered `.org`
 (`build/src/.../slides/`) instead of the source. Slide geometry (`#+attr_latex`
 positions) does not change, so text length matters: keep SRC values short.
 

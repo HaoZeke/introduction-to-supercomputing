@@ -2152,7 +2152,7 @@ Displays job information, including estimated start time
 #SBATCH --nodes={{jobs.fundamentals.first.nodes}}
 #SBATCH --ntasks={{jobs.fundamentals.first.ntasks}}
 #SBATCH --time=00:01:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=54.28,y=253.61,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2224,7 +2224,7 @@ echo "DONE"
 #SBATCH --nodes={{jobs.fundamentals.mpi.nodes}}
 #SBATCH --ntasks={{jobs.fundamentals.mpi.ntasks}}
 #SBATCH --time=00:02:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=54.52,y=253.85,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2273,7 +2273,7 @@ echo "DONE"
 #!/bin/bash
 #SBATCH --job-name="first-job"
 #SBATCH --time=00:01:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=55.2,y=220.93,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2290,7 +2290,7 @@ echo "First job finished."
 #!/bin/bash
 #SBATCH --job-name="second-job"
 #SBATCH --time=00:01:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=55.21,y=391.17,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2398,7 +2398,7 @@ Job scripts consist of:
 #SBATCH --nodes={{jobs.fundamentals.firsttest.nodes}}
 #SBATCH --ntasks={{jobs.fundamentals.firsttest.ntasks}}
 #SBATCH --time=00:01:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=65.94,y=288.16,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2880,7 +2880,7 @@ Shows information about =<modulename>=.
 #SBATCH --nodes={{jobs.fundamentals.r.nodes}}
 #SBATCH --ntasks={{jobs.fundamentals.r.ntasks}}
 #SBATCH --time=00:01:00
-#SBATCH --partition=rome
+#SBATCH --partition={{partitions.cpu}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=56.7,y=254.21,s=14,l=16.2,c=cFFFFFF,f=mono,v]
