@@ -38,6 +38,7 @@ The module keeps the original's layout: `README.md` for the hands-on,
 - The advanced exercise replaces `/path/to/scratch/` with `/scratch/$USER/`, adds a `pigz` variant from EESSI, and adds a node-local scratch step.
 - Correction not specific to Snellius: data from `/dev/urandom` does not compress, so the text no longer says the archive saves disk space; it explains the gain as fewer file operations.
 - `ex1/print-n.c` labelled the buffer size as megabytes and printed the byte count. It now prints the megabyte value the transfer rate already uses.
+- The `print-n` usage line listed the file name before the length, and it had a stray quote. The program and `run.sh` both take the length first.
 - Added a modification notice at the top, as GPL-3.0 section 5(a) requires.
 
 ## Job scripts

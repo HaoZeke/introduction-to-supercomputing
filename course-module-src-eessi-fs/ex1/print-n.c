@@ -39,8 +39,8 @@ void print_to_file_binary(const char *filename, double *array, int n){
 
 int main(int argc, char** argv){
     if(argc!=4){
-        printf("Usage: %s <file> <n> <format>\n", argv[0]);
-        printf("  <n> must be a positive integer'\n");
+        printf("Usage: %s <n> <file> <format>\n", argv[0]);
+        printf("  <n> must be a positive integer\n");
         printf("  <file> must be a valid file name\n");
         printf("  <format> must be either 'ascii' or 'binary'\n");
         return 1;
