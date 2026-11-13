@@ -1,0 +1,112 @@
+name: mc-local-test
+
+services:
+  mgmt1:
+    build: .
+    image: mc-local-test:latest
+    hostname: mgmt1
+    privileged: true
+    init: true
+    command: ["nfs"]
+    volumes:
+      - exports:/export
+      - ./etc:/opt/mc/etc:ro
+      - ./entrypoint.sh:/opt/mc/entrypoint.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/2049'"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 10s
+    networks:
+      cluster:
+        ipv4_address: 172.30.13.2
+
+  login1:
+    image: mc-local-test:latest
+    hostname: login1
+    privileged: true
+    init: true
+    command: ["login"]
+    depends_on:
+      mgmt1:
+        condition: service_healthy
+    volumes:
+      - ./secrets/munge.key:/run/munge.key:ro
+      - ./etc:/opt/mc/etc:ro
+      - ./entrypoint.sh:/opt/mc/entrypoint.sh:ro
+      - ../../course-module-src-eessi-fs:/opt/course:ro
+      - cvmfs-login:/var/lib/cvmfs
+    healthcheck:
+      test: ["CMD-SHELL", "scontrol ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 30s
+    networks:
+      cluster:
+        ipv4_address: 172.30.13.3
+
+  node1:
+    image: mc-local-test:latest
+    hostname: node1
+    privileged: true
+    init: true
+    command: ["slurmd"]
+    depends_on:
+      mgmt1:
+        condition: service_healthy
+      login1:
+        condition: service_healthy
+    volumes:
+      - ./secrets/munge.key:/run/munge.key:ro
+      - ./etc:/opt/mc/etc:ro
+      - ./entrypoint.sh:/opt/mc/entrypoint.sh:ro
+      - cvmfs-node1:/var/lib/cvmfs
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -x slurmd"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 40s
+    networks:
+      cluster:
+        ipv4_address: 172.30.13.4
+
+  node2:
+    image: mc-local-test:latest
+    hostname: node2
+    privileged: true
+    init: true
+    command: ["slurmd"]
+    depends_on:
+      mgmt1:
+        condition: service_healthy
+      login1:
+        condition: service_healthy
+    volumes:
+      - ./secrets/munge.key:/run/munge.key:ro
+      - ./etc:/opt/mc/etc:ro
+      - ./entrypoint.sh:/opt/mc/entrypoint.sh:ro
+      - cvmfs-node2:/var/lib/cvmfs
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -x slurmd"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 40s
+    networks:
+      cluster:
+        ipv4_address: 172.30.13.5
+
+networks:
+  cluster:
+    ipam:
+      config:
+        - subnet: 172.30.13.0/24
+
+volumes:
+  exports:
+  cvmfs-login:
+  cvmfs-node1:
+  cvmfs-node2:
