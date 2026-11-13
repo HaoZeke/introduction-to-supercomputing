@@ -85,7 +85,7 @@ int main(int argc, char** argv){
 
     printf("%ld random double-precision values written to %s in %s format\n", n, filename, format);
     printf(" Elapsed time [s]: %.6f\n", elapsed_time);
-    printf(" Buffer size [MB]: %ld\n", sizeof(double)*n);
+    printf(" Buffer size [MB]: %.3f\n", data_size);
     printf(" Transfer rate [MB/s]: %.6f\n", transfer_rate);
 
     free(array);
