@@ -36,6 +36,8 @@ HPC applications read and write data with different needs, and HPC systems provi
 | `/project` | NFS on `mgmt1` | Group | Set at build | No | Cluster lifetime |
 | `/localscratch/<user>.<job>.0` | Node disk | No | Node disk | No | End of job |
 
+`$SLURM_TMPDIR` points at that node-local directory. `$TMPDIR` is the job's private `/tmp`.
+
 Software comes from the European Environment for Scientific Software Installation (EESSI) under `/cvmfs/software.eessi.io` (read-only).
 
 # Hands-on

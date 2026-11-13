@@ -22,7 +22,7 @@ The module keeps the original's layout: `README.md` for the hands-on,
 |---|---|
 | `/home/<user>`, 200 GiB quota, nightly incremental backup, kept 3 weeks | `/home/<user>` on a shared NFS volume, no per-user quota, no backup |
 | `/scratch-shared/<user>`, 8 TiB quota shared with scratch-local, files expire after 6 or 14 days | `/scratch/<user>` (link `~/scratch`), shared NFS volume, no expiry, gone when the cluster is destroyed |
-| `/scratch-local` via `$TMPDIR`, GPFS, under `/gpfs/scratch1/nodespecific/<node>/<user>.<jobid>` | `/localscratch/<user>.<jobid>.0` on the node's disk plus a private `/tmp`, both created per job by Slurm and deleted at job end; `$TMPDIR` is not set |
+| `/scratch-local` via `$TMPDIR`, GPFS, under `/gpfs/scratch1/nodespecific/<node>/<user>.<jobid>` | `$SLURM_TMPDIR` is `/localscratch/<user>.<jobid>.<restart>` (`.0` unless the job is requeued) on the node's disk. A private `/tmp` is mounted over `/tmp`, and Slurm sets `$TMPDIR` to that `/tmp`. The `cc-tmpfs_mounts` plugin creates both and the epilog deletes them at job end |
 | `/scratch-node` NVMe via `--constraint=scratch-node`, `$TMPDIR` | Removed: no node features; every job gets node-local space |
 | `/project`, on demand | `/project/def-sponsor00` (link `~/projects/def-sponsor00`), shared by all guest accounts |
 | `/archive`, tape, backed up | Removed: no archive on the cluster |
@@ -32,7 +32,7 @@ The module keeps the original's layout: `README.md` for the hands-on,
 ## Hands-on text (`README.md`)
 
 - The `int6` versus `int5` comparison of `$TMPDIR` now compares the login node's `/tmp` with a job on a compute node, because there is one login node.
-- The `$TMPDIR` job script now uses `LOCAL=/localscratch/$USER.$SLURM_JOB_ID.0`; the sample outputs with Snellius node and job names are replaced by instructions to compare the two job outputs.
+- The `$TMPDIR` job script now uses `LOCAL=${SLURM_TMPDIR:-/localscratch/$USER.$SLURM_JOB_ID.0}`; the sample outputs with Snellius node and job names are replaced by instructions to compare the two job outputs.
 - The scratch-node exercise now writes to node-local scratch and copies the file to `/scratch/$USER`.
 - New sections "Project" and "Software from EESSI".
 - The advanced exercise replaces `/path/to/scratch/` with `/scratch/$USER/`, adds a `pigz` variant from EESSI, and adds a node-local scratch step.
@@ -75,10 +75,20 @@ rewritten for Magic Castle, slides 5, 6, 8 and 9 use `~/scratch`,
 `~/projects/def-sponsor00` and `df -h` instead of Snellius paths and
 `myquota`. Building the PDF needs pandoc with a LaTeX engine.
 
-## Not yet checked on a live cluster
+## Checked on a local stand-in
 
-The Magic Castle facts above come from puppet-magic_castle 16.0.3
+The layout above comes from puppet-magic_castle 16.0.3
 (`site/profile/manifests/slurm.pp`, `templates/slurm/slurm.conf.epp`,
-`files/accounts/account_functions.sh`, `data/common.yaml`) and the
-spank-cc-tmpfs_mounts source. Run the hands-on once on the course cluster
-before teaching it.
+`files/accounts/account_functions.sh`, `data/common.yaml`) and from
+`cc-tmpfs_mounts`. Magic Castle 16.0.3 runs Slurm 26.05 with `auth/slurm`.
+The hands-on was also run on a two-node Slurm 23.11 stand-in with munge,
+cgroup v2 (`ConstrainRAMSpace=yes`), NFSv4 `/home`, `/project` and `/scratch`,
+EESSI 2025.06 and the same SPANK plugin (`tools/mc-local-test/`):
+
+- `ex1/run.sh` finished for 10^6, 10^7 and 10^8 elements. The 800 MB array fits in `--mem=2G`. Touching 400 MB with the default 256 MB per CPU, and with `--mem=128M`, was OOM-killed. Touching 100 MB with `--mem=512M` was not.
+- `srun -t 15 --pty bash` opened a pty on the compute node.
+- The plugin set `$SLURM_TMPDIR` to `/localscratch/<user>.<jobid>.0`. Slurm set `$TMPDIR` to the private `/tmp`. After the job, `/localscratch` was empty.
+- Copying 1000 files of 1 MB from home to scratch took longer than copying one archive of the same bytes, and the archive of `/dev/urandom` was the same size as the directory.
+- `module load EESSI/2023.06` from a 2025.06 shell makes `GCC/13.2.0` available.
+
+Run the hands-on once on the course cluster before teaching it.

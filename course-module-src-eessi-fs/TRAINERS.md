@@ -25,7 +25,7 @@ Nothing is backed up. `terraform destroy` removes the volumes with the cluster.
 
 * Jobs without `-p` go to the default partition, `cpubase_bycore_b1`, which contains all compute nodes.
 * The default time limit is one hour, and the default memory is 256 MB per CPU. The exercise script `ex1/run.sh` asks for `--mem=2G`; keep that line if you raise `iend`.
-* Each job gets node-local space in `/localscratch/$USER.$SLURM_JOB_ID.0` and a private `/tmp`, both removed at the end of the job. Magic Castle does not set `TMPDIR` for jobs.
+* Each job gets node-local space at `$SLURM_TMPDIR`, normally `/localscratch/$USER.$SLURM_JOB_ID.0`, and a private `/tmp`. Slurm sets `$TMPDIR` to that private `/tmp`. The `cc-tmpfs_mounts` plugin creates both and the epilog removes them at the end of the job. The `.0` suffix is the job's restart count, so a requeued job uses `.1` and `$SLURM_TMPDIR` rather than a path with a hard-coded `.0`.
 
 ## Software
 

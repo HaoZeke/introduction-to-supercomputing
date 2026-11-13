@@ -68,7 +68,7 @@ testfile-scratch.foo
 ```
 
 ### Node-local scratch
-Inside a job, Slurm gives you a private directory on the compute node's own disk, `/localscratch/<username>.<jobid>.0`, and also mounts a private `/tmp` for the job. Other jobs, and the login node, cannot see them. When the job ends, Slurm deletes both.
+Inside a job, the `cc-tmpfs_mounts` SPANK plugin gives you a private directory on the compute node's own disk and sets `$SLURM_TMPDIR` to it. The path is `/localscratch/<username>.<jobid>.<restart>`. The restart count stays `0` unless the job is requeued, so the usual path is `/localscratch/<username>.<jobid>.0`. The same plugin mounts a private `/tmp` (and `/var/tmp`) for the job. Slurm sets `$TMPDIR` to that private `/tmp`, which is not the same directory as `$SLURM_TMPDIR`. Other jobs, and the login node, cannot see either one. When the job ends, Slurm deletes both.
 
 First, create a file in `/tmp` on the login node:
 
@@ -91,7 +91,7 @@ Next, use the script below to launch a job that lists its node-local directory, 
 #SBATCH -J files
 #SBATCH -t 5
 
-LOCAL=/localscratch/$USER.$SLURM_JOB_ID.0
+LOCAL=${SLURM_TMPDIR:-/localscratch/$USER.$SLURM_JOB_ID.0}
 ls -l $LOCAL
 hostname -s > "$LOCAL/testfile.foo"
 ls -l $LOCAL
@@ -111,7 +111,7 @@ Modify the script above so the job writes a file to its node-local directory, co
 #SBATCH -J localscratch-test
 #SBATCH -t 5
 
-LOCAL=/localscratch/$USER.$SLURM_JOB_ID.0
+LOCAL=${SLURM_TMPDIR:-/localscratch/$USER.$SLURM_JOB_ID.0}
 echo "This is a file on node-local scratch" > "$LOCAL/testfile-local.foo"
 cp "$LOCAL/testfile-local.foo" /scratch/$USER/
 realpath "$LOCAL/testfile-local.foo" /scratch/$USER/testfile-local.foo
@@ -225,7 +225,7 @@ Now, we'll move these files between different file systems (from **home** to **s
    - Inside an interactive job, copy the archive to node-local disk and unpack it there:
      ```bash
      srun -t 15 --pty bash
-     LOCAL=/localscratch/$USER.$SLURM_JOB_ID.0
+     LOCAL=${SLURM_TMPDIR:-/localscratch/$USER.$SLURM_JOB_ID.0}
      time cp /scratch/$USER/file_transfer_test.tar.gz $LOCAL/
      time tar -xzf $LOCAL/file_transfer_test.tar.gz -C $LOCAL
      exit
