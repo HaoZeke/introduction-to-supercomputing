@@ -205,9 +205,14 @@ Now, we'll move these files between different file systems (from **home** to **s
      module load pigz/2.8-GCCcore-14.3.0
      time tar -I pigz -cf file_transfer_test.tar.gz file_transfer_test
      ```
+   - The same with Zstandard from EESSI (2023.06: `zstd/1.5.5-GCCcore-13.2.0`):
+     ```bash
+     module load zstd/1.5.7-GCCcore-14.3.0
+     time tar -I zstd -cf file_transfer_test.tar.zst file_transfer_test
+     ```
    - Measure the size of the compressed archive:
      ```bash
-     du -sh file_transfer_test.tar.gz
+     du -sh file_transfer_test.tar.gz file_transfer_test.tar.zst
      ```
    - Now, transfer the archive to the **scratch** directory:
      ```bash
@@ -238,7 +243,7 @@ Now, we'll move these files between different file systems (from **home** to **s
    - Discuss how much time it took to transfer the files as individual files versus as a compressed archive.
 
 2. **Compare data size**:
-   - Check the total size of the original directory and the compressed archive. Random data does not compress, so expect the archive to be about as large as the directory; the gain comes from moving one file instead of 1000.
+   - Check the total size of the original directory and the compressed archives. Random data does not compress, so expect each archive to be about as large as the directory; the gain comes from moving one file instead of 1000.
 
 3. **Discuss trade-offs**:
    - **When to use individual file transfers**: If you're working with a small number of files or if they will be used directly without further processing.
@@ -253,7 +258,7 @@ Now, we'll move these files between different file systems (from **home** to **s
 - After the hands-on session, guide the participants to clean up the directories and files to free up space on the shared volumes:
   ```bash
   rm -r ~/file_transfer_test
-  rm ~/file_transfer_test.tar.gz
+  rm ~/file_transfer_test.tar.gz ~/file_transfer_test.tar.zst
   rm -r /scratch/$USER/file_transfer_test
   rm /scratch/$USER/file_transfer_test.tar.gz
   ```
