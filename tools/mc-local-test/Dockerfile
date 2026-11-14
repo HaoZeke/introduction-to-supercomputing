@@ -27,12 +27,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         nfs-ganesha-vfs \
     && rm -rf /var/lib/apt/lists/*
 
-# CernVM-FS client plus the EESSI stratum and public key.
+# CernVM-FS 2.14.1, mounted by hand in entrypoint.sh (no systemd here).
+# cvmfs-config-eessi 0.6.0 is the config package the EESSI client expects.
 RUN wget -O /tmp/cvmfs-release.deb https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb \
     && dpkg -i /tmp/cvmfs-release.deb \
     && apt-get update \
-    && apt-get install -y --no-install-recommends cvmfs \
-    && wget -O /tmp/cvmfs-config-eessi.deb https://github.com/EESSI/filesystem-layer/releases/download/latest/cvmfs-config-eessi_latest_all.deb \
+    && apt-get install -y --no-install-recommends \
+        cvmfs=2.14.1+ubuntu24.04 \
+        cvmfs-fuse3=2.14.1+ubuntu24.04 \
+        cvmfs-libs=2.14.1+ubuntu24.04 \
+    && wget -O /tmp/cvmfs-config-eessi.deb https://github.com/EESSI/filesystem-layer/releases/download/v0.6.0/cvmfs-config-eessi_0.6.0_all.deb \
     && dpkg -i /tmp/cvmfs-config-eessi.deb \
     && rm -rf /var/lib/apt/lists/* /tmp/*.deb
 
