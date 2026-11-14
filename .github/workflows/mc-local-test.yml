@@ -1,0 +1,77 @@
+name: File system exercises
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+# Hosted runners guarantee 14 GB of disk, and 8 GB of memory on a private
+# repository. The full harness is two compute nodes plus a 1000 x 1 MB
+# transfer, which keeps several gigabytes of CernVM-FS cache and of
+# incompressible copies. This workflow syntax-checks the scripts and runs
+# the job scripts on one node. The full two-node run is
+# tools/mc-local-test/scripts/run-checks.sh on a machine with the disk.
+
+jobs:
+  syntax:
+    name: shellcheck
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Check shell scripts
+        run: |
+          set -eu
+          # warning and above: ex1/run.sh keeps the course's arithmetic style.
+          shellcheck -S warning \
+            tools/mc-local-test/entrypoint.sh \
+            tools/mc-local-test/etc/epilog \
+            tools/mc-local-test/etc/z-01-eessi.sh \
+            tools/mc-local-test/scripts/up.sh \
+            tools/mc-local-test/scripts/down.sh \
+            tools/mc-local-test/scripts/run-checks.sh \
+            tools/mc-local-test/scripts/inside-checks.sh \
+            course-module-src-eessi-fs/ex1/run.sh
+          bash -n course-module-src-eessi-fs/ex1/run.sh
+          python3 tools/mc-local-test/scripts/extract-sbatch.py \
+            course-module-src-eessi-fs/README.md --out /tmp/sbatch-scripts
+
+  single-node:
+    name: single-node Slurm
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build the cluster image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: tools/mc-local-test
+          push: false
+          load: true
+          tags: mc-local-test:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run the job scripts on one node
+        working-directory: tools/mc-local-test
+        run: |
+          set -eu
+          MC_SKIP_BUILD=1 MC_NODES=1 ./scripts/up.sh
+          MC_NODES=1 MC_SCOPE=ci ./scripts/run-checks.sh
+
+      - name: Stop the cluster
+        if: always()
+        working-directory: tools/mc-local-test
+        run: MC_NODES=1 ./scripts/down.sh
