@@ -30,6 +30,14 @@ cd tools/mc-local-test
 ./scripts/down.sh
 ```
 
+`MC_NODES=1 ./scripts/up.sh` starts the login node and `node1` only. Slurm
+still lists `node2`, so that name stays down and jobs run on `node1`.
+`./scripts/run-checks.sh` submits every `#SBATCH` script in the course
+README, `ex1/run.sh`, and the hands-on commands. `MC_SCOPE=ci` skips the
+1000-file transfer. The client in the image is CernVM-FS 2.14.1 with
+`cvmfs-config-eessi` 0.6.0. There is no systemd, so `entrypoint.sh` mounts
+`software.eessi.io` itself.
+
 `up.sh` writes `secrets/munge.key` on first use. Give the cluster a minute
 the first time: each node mounts EESSI and fills its own CernVM-FS cache.
 
@@ -56,3 +64,11 @@ cgroup`. The step has already finished; the memory limit above still applies.
 
 The course tree is mounted at `/opt/course`. Copy it into `/home/user01`
 before submitting so the working directory is on NFS.
+
+## GitHub Actions
+
+`.github/workflows/mc-local-test.yml` shellchecks the scripts and runs
+`MC_NODES=1 MC_SCOPE=ci ./scripts/run-checks.sh`. Hosted runners guarantee
+14 GB of disk, and 8 GB of memory on a private repository. The full run
+adds a second compute node and five copies of a 1 GB incompressible tree,
+which does not fit that guarantee. The workflow caches the image build.

@@ -66,7 +66,7 @@ mount_one() {
         fi
         sleep 2
     done
-    log "failed to mount ${share}"
+    log "failed to mount ${share} after ${i} tries"
     return 1
 }
 
@@ -86,7 +86,7 @@ mount_cvmfs() {
         fi
         sleep 2
     done
-    log "EESSI 2025.06 init script did not appear"
+    log "EESSI 2025.06 init script did not appear after ${i} tries"
     ls -la /cvmfs/software.eessi.io || true
     return 1
 }

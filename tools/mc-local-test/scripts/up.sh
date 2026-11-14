@@ -16,5 +16,14 @@ if command -v iptables-legacy >/dev/null 2>&1; then
     fi
 fi
 
-sudo docker compose up -d --build
-sudo docker compose ps
+# MC_NODES=1 leaves node2 out. Slurm still lists it, so it stays down.
+compose=(sudo docker compose)
+if [ "${MC_NODES:-2}" != 1 ]; then
+    compose+=(--profile two-node)
+fi
+up=(up -d)
+if [ "${MC_SKIP_BUILD:-0}" != 1 ]; then
+    up+=(--build)
+fi
+"${compose[@]}" "${up[@]}"
+"${compose[@]}" ps

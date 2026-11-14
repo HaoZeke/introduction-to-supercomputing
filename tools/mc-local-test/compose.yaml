@@ -74,6 +74,7 @@ services:
         ipv4_address: 172.30.13.4
 
   node2:
+    profiles: ["two-node"]
     image: mc-local-test:latest
     hostname: node2
     privileged: true
