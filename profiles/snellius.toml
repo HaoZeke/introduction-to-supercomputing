@@ -62,6 +62,7 @@ staging = "staging"
 archive = "staging"
 
 [slurm]
+account = ""                          # no account directive in course jobs
 default_partition = "rome"            # unverified: scripts always name it
 min_allocation_cpus = 16              # 1/8 rome node
 min_allocation_mem_gib = 28           # per 1/8 rome node, from the QCG slides

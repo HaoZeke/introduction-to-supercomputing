@@ -65,6 +65,7 @@ staging = ""
 archive = ""
 
 [slurm]
+account = ""                          # collaboration wallet; no job directive
 default_partition = "cpubase_bycore_b1"
 select = "cons_tres CR_CORE_MEMORY"
 oversubscribe = "YES:4"

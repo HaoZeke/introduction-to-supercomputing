@@ -43,7 +43,8 @@ the wrong line.
 2. Replace every fact. In particular, verify:
    - login and web-portal hosts in `[system]`;
    - CPU, graphics processing unit and staging partitions in `[partitions]`;
-   - scheduler constraints, mail support and array limits in `[slurm]`;
+   - scheduler account, constraints, mail support and array limits in
+     `[slurm]`;
    - course job sizes in every `[jobs.*]` table;
    - the European Environment for Scientific Software Installations
      initialization path, module path and module names in `[modules]`;
