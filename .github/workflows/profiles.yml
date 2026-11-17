@@ -1,0 +1,23 @@
+name: Cluster profiles
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Check every profile and Snellius parity
+        run: python3 tools/render_profile.py --all --check
+      - name: Run renderer tests
+        run: python3 tools/test_render.py
+      - name: Compile Python sources
+        run: python3 -m compileall -q tools

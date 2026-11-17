@@ -145,6 +145,58 @@ class Profiles(unittest.TestCase):
             text = rp.render_all("src")[rel]
         self.assertEqual(re.findall(r"^#SBATCH --partition=(\S+)", text, re.M), ["cpu_test"] * 6)
 
+    def test_qcg_job_scripts_follow_each_profile(self):
+        jobs = {
+            "course-module-qcg-pilotjob/hands-on/example_03/qcg_job.sh": "example_03",
+            "course-module-qcg-pilotjob/hands-on/example_04/qcg_job.sh": "example_04",
+            "course-module-qcg-pilotjob/hands-on/example_05/qcg_job.sh": "example_05",
+            "course-module-qcg-pilotjob/hands-on/example_05/pipeline.sh": "pipeline",
+            "course-module-qcg-pilotjob/hands-on/alternatives/hyperqueue/average.sh": "hyperqueue_average",
+            "course-module-qcg-pilotjob/hands-on/alternatives/hyperqueue/profile.sh": "hyperqueue_profile",
+            "course-module-qcg-pilotjob/hands-on/alternatives/snakemake/average.sh": "snakemake_average",
+            "course-module-qcg-pilotjob/hands-on/alternatives/snakemake/profile.sh": "snakemake_profile",
+            "course-module-qcg-pilotjob/hands-on/alternatives/fireworks/average.sh": "fireworks_average",
+            "course-module-qcg-pilotjob/hands-on/alternatives/fireworks/profile.sh": "fireworks_profile",
+        }
+        for profile_name, prof in self.profiles.items():
+            rendered = rp.render_all(profile_name)
+            for rel, job_name in jobs.items():
+                with self.subTest(profile=profile_name, path=rel):
+                    text = rendered[rel]
+                    opts = rp.sbatch_blocks(text)[0][1]
+                    job = prof["jobs"]["qcg"][job_name]
+                    for key in ("nodes", "ntasks", "ntasks_per_node"):
+                        self.assertEqual(opts.get(key), job.get(key))
+                    self.assertIn(f"--partition={prof['partitions']['cpu']}", text)
+
+    def test_data_movement_deck_follows_capabilities(self):
+        rel = "course-module-snellius-fs/slides-data-movement/data-movement.org"
+        snellius = rp.render_all("snellius")[rel]
+        src = rp.render_all("src")[rel]
+        self.assertIn("mpiFileUtils", snellius)
+        self.assertNotIn("* mpiFileUtils", src)
+        self.assertIn("daget", snellius)
+        self.assertNotIn("daget", src)
+        self.assertIn("--constraint=scratch-node", snellius)
+        self.assertNotIn("--constraint=", src)
+        for name, prof in self.profiles.items():
+            text = rp.render_all(name)[rel]
+            self.assertIn(prof["paths"]["scratch_shared"], text)
+            if prof["tools"]["mpifileutils"]:
+                self.assertIn(f"#SBATCH --partition={prof['partitions']['cpu']}", text)
+            else:
+                self.assertNotIn("dcp.slurm", text)
+
+    def test_performance_deck_drops_unsupported_site_tools(self):
+        rel = "course-module-performance-analysis/slides/performance-analysis.org"
+        snellius = rp.render_all("snellius")[rel]
+        src = rp.render_all("src")[rel]
+        self.assertIn("AMDuProfPcm", snellius)
+        self.assertIn("eacct -j", snellius)
+        self.assertNotIn("AMDuProfPcm", src)
+        self.assertNotIn("eacct -j", src)
+        self.assertNotIn("#SBATCH --constraint=", src)
+
     def test_fs_commands_use_the_profiles_scratch(self):
         rel = "course-module-snellius-fs/README.md"
         snel, src = rp.render_all("snellius")[rel], rp.render_all("src")[rel]
@@ -303,6 +355,35 @@ class LintCourseFiles(unittest.TestCase):
                 self.assertGreater(len(files) + len(rendered), 50)
                 self.assertEqual(rp.lint(prof, files), [])
 
+    def test_every_course_module_has_profiled_material(self):
+        modules = {p.name for p in rp.ROOT.glob("course-module-*") if p.is_dir()}
+        profiled = {
+            p.relative_to(rp.TEMPLATES).parts[0]
+            for p in rp.TEMPLATES.glob("course-module-*")
+            if p.is_dir()
+        }
+        self.assertEqual(profiled, modules)
+
+    def test_cluster_sensitive_files_have_templates(self):
+        marker = re.compile(
+            r"Snellius|snellius\\.surf\\.nl|#SBATCH.*(?:partition|constraint|nodes|ntasks|cpus-per-task)"
+            r"|module\\s+(?:load|use)|/scratch-(?:shared|local|node)|/archive|/projects|/cvmfs"
+        )
+        roots = [rp.ROOT / "README.md", *rp.ROOT.glob("course-module-*"), rp.ROOT / "teaching"]
+        missing = []
+        for root in roots:
+            paths = [root] if root.is_file() else root.rglob("*")
+            for path in paths:
+                if not path.is_file() or path.suffix not in rp.COURSE_SUFFIXES | {""}:
+                    continue
+                try:
+                    text = path.read_text()
+                except UnicodeDecodeError:
+                    continue
+                if marker.search(text) and not (rp.TEMPLATES / path.relative_to(rp.ROOT)).is_file():
+                    missing.append(str(path.relative_to(rp.ROOT)))
+        self.assertEqual(missing, [])
+
 
 class Check(unittest.TestCase):
     def run_main(self, *argv):
@@ -337,6 +418,12 @@ class Check(unittest.TestCase):
             code, text = self.run_main("src", "--check", "--against", tmp)
             self.assertEqual(code, 1)
             self.assertIn("missing: course-module-snellius-hybrid-jobs/hands-on/ex1/submit-axpy.sh", text)
+
+    def test_all_check_renders_every_profile_and_checks_published_snellius(self):
+        code, text = self.run_main("--all", "--check")
+        self.assertEqual(code, 0, text)
+        for name in rp.load_profiles():
+            self.assertIn(f"{name}: {len(rp.render_all(name))}/{len(rp.render_all(name))} files identical", text)
 
 
 if __name__ == "__main__":
