@@ -1,4 +1,4 @@
-# Snellius hybrid jobs
+# {{system.display_name}} hybrid jobs
 
 ## Introduction
 
@@ -7,7 +7,7 @@
 > [!NOTE]
 > The materials for this course module have been adapted from *Introducción a la Supercomputación* by **José Luis Bosque, Borja Pérez, Ramón Beivide,** and **Carmen Martínez** of the Universidad de Cantabria. This adaptation was carried out by the EuroCC NL team at SURF. For more information about the EuroCC2 project, please visit [EuroCC2](https://www.eurohpc-ju.europa.eu/research-innovation/our-projects/eurocc-2_en). The EuroCC NL team expresses gratitude to the original authors for their contributions to these materials.
 
-In this session, we will dive deeper into the Slurm resource manager, focusing on understanding key parameters for efficient parallel job scheduling, including threads, cores, sockets, nodes, and processes. Our goal is to connect to the Snellius supercomputer and explore hybrid job execution, which leverages both shared-memory (OpenMP) and distributed-memory (MPI) parallelism.
+In this session, we will dive deeper into the Slurm resource manager, focusing on understanding key parameters for efficient parallel job scheduling, including threads, cores, sockets, nodes, and processes. Our goal is to connect to the {{system.display_name}} supercomputer and explore hybrid job execution, which leverages both shared-memory (OpenMP) and distributed-memory (MPI) parallelism.
 
 We will explore three basic linear algebra kernels, each with a different parallel nature:
 
@@ -24,18 +24,18 @@ The main objective is to gain practical experience in running hybrid jobs on sup
 
 You can find the materials and example codes in the linked repository. This document will guide you through the exercises step by step.
 
-### Snellius supercomputer
+### {{system.display_name}} supercomputer
 
-We will work with a small subset of the Snellius supercomputer, a powerful system with a total computational performance of 37.9 petaFLOPS. Snellius consists of over 1,500 compute nodes interconnected via a high-speed InfiniBand network. The system is equipped with a variety of processors and GPUs, including AMD Genoa CPUs and NVIDIA H100 GPUs, optimized for tasks ranging from high-performance scientific computing to AI workloads.
+We will work with a small subset of the {{system.display_name}} supercomputer, a powerful system with a total computational performance of {{system.peak_pflops}} petaFLOPS. {{system.display_name}} consists of {{system.compute_nodes}} compute nodes interconnected via a high-speed {{system.interconnect}} network. The system is equipped with a variety of processors and GPUs, including {{system.processor_summary}}, optimized for tasks ranging from high-performance scientific computing to AI workloads.
 
-Snellius features a range of node types:
+{{system.display_name}} features a range of node types:
 
-- **CPU nodes**: partition `rome` with 520 nodes of 128 AMD Rome cores, and partition `genoa` with 736 nodes of 192 AMD Genoa cores, for a total of 207,872 cores.
-- **Fat nodes**: partitions `fat_rome` and `fat_genoa`, 120 nodes, each with 1 TiB or 1.5 TiB of RAM, intended for memory-intensive jobs.
+- **CPU nodes**: {{hybrid.cpu_nodes}}.
+- **Fat nodes**: {{hybrid.fat_nodes}}.
 - **High-memory nodes**: partitions `himem_4tb` and `himem_8tb`, 4 nodes with 4 TiB or 8 TiB of RAM, intended for extremely memory-intensive jobs.
-- **GPU nodes**: partition `gpu_a100` with 62 nodes of 4 NVIDIA A100 GPUs (and 4 more A100 nodes split into MIG slices in `gpu_mig`), and partition `gpu_h100` with 88 nodes of 4 NVIDIA H100 GPUs, designed for massively parallel computations such as machine learning and molecular dynamics.
+- **GPU nodes**: {{hybrid.gpu_nodes}}.
 
-The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius) or explore the [Snellius virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
+The front-end nodes of the cluster are accessed via `{{system.login_host}}`, and all job submissions and resource management are handled through Slurm. For additional details on the system, you can refer to the [SURF User Knowledge Base](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/{{system.display_name}}) or explore the [{{system.display_name}} virtual tour](https://visualization.surf.nl/snellius-virtual-tour/) for a more interactive overview.
 
 {{#asides}}
 {{hybrid.aside_note}}
@@ -45,20 +45,20 @@ The front-end nodes of the cluster are accessed via `snellius.surf.nl`, and all 
 {{hybrid.self_note}}
 
 {{/asides}}
-### Connecting to Snellius
+### Connecting to {{system.display_name}}
 
 {{#asides}}
 {{hybrid.aside_overrides}}
 
 {{/asides}}
-Since this module is part of the third section in the *Introduction to Supercomputing* course series, we assume that participants already have established connections to Snellius and are familiar with the system, including moving data and interacting with the filesystem. 
+Since this module is part of the third section in the *Introduction to Supercomputing* course series, we assume that participants already have established connections to {{system.display_name}} and are familiar with the system, including moving data and interacting with the filesystem. 
 
 However, if needed, you can refer to the following guides for assistance:
 
 - [Connecting to the system](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system).
 - [Interacting with the filesystem](https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668034/Interacting+with+the+filesystem).
 
-### Snellius environment modules
+### {{system.display_name}} environment modules
 
 In a high-performance computing (HPC) cluster, users require access to a variety of software tools, libraries, compilers, and applications. These resources can include various versions of the same software or distinct installations tailored for different hardware architectures. Consequently, managing these resources effectively becomes essential to ensure that users can select the appropriate version and avoid potential conflicts that might arise from incompatible installations.
 
@@ -187,7 +187,7 @@ Here is a sample solution for the exercise:
 srun hostname                  # Execute the hostname command
 ```
 
-## Hands-on Snellius hybrid jobs
+## Hands-on {{system.display_name}} hybrid jobs
 
 In this section, we will delve into the execution of Slurm hybrid jobs by exploring three basic linear algebra kernels, each with a different parallel nature.
 

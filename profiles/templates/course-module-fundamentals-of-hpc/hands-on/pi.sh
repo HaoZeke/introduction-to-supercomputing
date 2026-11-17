@@ -5,8 +5,8 @@
 #SBATCH --time=00:10:00
 #SBATCH --partition={{partitions.cpu}}
 set -euo pipefail
-module load 2025
-module load GCC/14.2.0
+module load {{modules.stack}}
+module load {{modules.compiler}}
 for ncores in 1 2 4 8 16 32; do
     if (( ncores <= SLURM_CPUS_PER_TASK ))
     then

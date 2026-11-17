@@ -10,14 +10,28 @@ verified = "2026-10-28"
 
 [render]
 asides = []
+course_cluster = "src"
 
 [system]
 name = "the SRC course cluster"
+display_name = "SRC course cluster"
 login_host = "<manager>"              # course manager host, given by the trainer
 login_nodes = ["<manager>"]           # unverified: the manager is the login node
+login_node_first = "<manager>"
+login_node = "<manager>"
+login_node_alt = "<manager>"
+login_node_fqdn = "<manager>"
+archive_host = ""
 ondemand_url = "https://<manager>/"   # unverified path
+ondemand_display = "https://<manager>"
 ondemand_apps = ["shell", "files", "jupyter", "vscode", "bc_desktop"]
 interconnect = "Ethernet"
+peak_pflops = 0.0                     # not benchmarked; only used by generic prose
+compute_nodes = "4"
+processor_summary = "x86-64 CPUs and NVIDIA Blackwell GPUs"
+architecture_summary = "4 Research Cloud workspaces with 66 CPUs and 2 GPUs."
+network_summary = "Ethernet"
+storage_summary = "Shared BeeGFS for home, scratch and project spaces."
 
 [[system.nodes]]
 name = "coursenode1"
@@ -44,7 +58,11 @@ cpu = "rome"
 cpu_alt = "thin_course"
 default = "cpubase_bycore_b1"
 gpu = "gpu"                           # coursenode3 (emulated) + coursenode4r600
+gpu_alt = ""
 real_gpu_node = "coursenode4r600"     # add -w to skip the emulated GPUs
+fat = ""
+staging = ""
+archive = ""
 
 [slurm]
 default_partition = "cpubase_bycore_b1"
@@ -54,6 +72,9 @@ def_mem_per_cpu_mb = 5559
 gpu_request = "--gpus-per-node=1"
 mail = false                          # MailProg=/bin/mail, but no mail service
 constraints = []
+scratch_constraint = ""
+performance_constraint = ""
+max_array_size = 1000
 
 [limits]
 # Course decision: at most 2 tasks or threads per node, more across nodes.
@@ -62,23 +83,42 @@ max_nodes = 4
 
 [modules]
 stack = "2025"                        # EESSI 2025.06; 2023.06 and 2026.06 exist
+legacy_stack = "2023"
+eessi_version = "2025.06"
+eessi_init = "/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash"
 eessi_versions = ["2023.06", "2025.06", "2026.06"]
 toolchain = "foss/2025a"
 compiler = "GCC/14.2.0"
 python = "Python/3.13.1-GCCcore-14.2.0"
 r = ["R/4.5.1-gfbf-2025a", "R/4.5.2-gfbf-2025b"]
 qcg = "QCG-PilotJob/0.14.1-GCCcore-14.2.0"   # site build on top of EESSI
+scipy = "SciPy-bundle/2025.06-gfbf-2025a"
+matplotlib = "matplotlib/3.10.3-gfbf-2025a"
+hyperqueue = "HyperQueue/0.24.0"
+snakemake = "snakemake/9.22.0-foss-2025b"
+fireworks = "FireWorks/2.1.4-gfbf-2025a"
+irods = ""
+uprof = ""
+mpifileutils_source = "EESSI 2023.06, 2025.06 and 2026.06"
 site_modulepath = "/cvmfs/course.surf-src.cvmfs/eessi/versions/2025.06/software/linux/x86_64/amd/zen2/modules/all"
 # `module load 2025 X` on one line fails here; two lines work.
 stack_on_own_line = true
 
 [paths]
 home = "/home/$USER"
+home_example = "/home/<username>"
 home_link = true                      # /home/$USER links to a per-user directory; pwd prints that
 scratch_shared = "/scratch"           # shared BeeGFS, like /home and /project
+scratch_root = "/scratch"
 scratch_link = "~/scratch"            # points to scratch_user
 scratch_user = "/scratch/$USER"       # exists for every user; no mkdir
 projects = "/project"                 # no ~/projects link
+archive = ""
+archive_user = ""
+scratch_local = ""
+scratch_local_real = ""
+scratch_node = ""
+scratch_node_label = ""
 tmpdir = "/localscratch/$USER.$SLURM_JOB_ID.0"
 shared_fs = "BeeGFS"                  # this course; SRC clusters use NFS or BeeGFS
 # Absent: /scratch-shared, /scratch-node, /scratch-local, /archive.
@@ -95,6 +135,14 @@ mpifileutils = false                  # no module; the data-movement deck needs 
 
 [accounting]
 unit = "core-hour"                    # sacct CPUTimeRAW, core-seconds
+
+[commands]
+quota = "myquota"
+accounting = ""
+energy = ""
+
+[course]
+cluster_note = '''The course uses Snellius, but the hands-on sessions also run on a small Slurm cluster built from SURF Research Cloud (SRC) workspaces with the European Environment for Scientific Software Installations (EESSI) 2025.06. Notes like this one in each module list the differences. The cluster accepts the Snellius job scripts as they are: `module load 2025` loads EESSI 2025.06, the partition `rome` exists, `$TMPDIR` points at node-local scratch, and `sacct` and `seff` work. The performance analysis slides use `--constraint=hwperf`, the Energy Aware Runtime and AMD uProf, which exist only on Snellius; on the SRC cluster, PAPI and `perf` read the hardware counters instead. Your trainer gives you the cluster's address and an enrolment link that sets your password and SSH key.'''
 
 # ---------------------------------------------------------------- hybrid jobs
 
@@ -146,6 +194,9 @@ ntasks_per_node = 2
 
 [hybrid]
 threads_example = 2
+cpu_nodes = "four workspaces with 66 CPUs in total"
+fat_nodes = "one 60-core, 333549 MB workspace for larger CPU jobs"
+gpu_nodes = "one workspace with two NVIDIA RTX PRO 6000 Blackwell GPUs and one workspace with emulated GPUs"
 # The example outputs keep the job IDs and timings of a Snellius run.
 example_source = " (the job ID and the time are from a Snellius run)"
 # Shown in this profile's own render, above "Connecting to Snellius".
@@ -181,6 +232,65 @@ first_col = "Vector Size"
 first_col_width = 13
 columns = ["Sequential", "Hyb-2-1", "Hyb-6-1", "Hyb-1-2", "Hyb-3-2"]
 sizes = ["1,000,000", "10,000,000", "100,000,000"]
+
+# ---------------------------------------------------------------- QCG PilotJob
+
+[jobs.qcg.example_01]
+nodes = 1
+array = "0-11%3"
+
+[jobs.qcg.example_02]
+nodes = 1
+array = "0-99%10"
+
+[jobs.qcg.example_03]
+nodes = 3
+ntasks_per_node = 2
+
+[jobs.qcg.example_04]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.example_05]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.pipeline]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.hyperqueue_average]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.hyperqueue_profile]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.snakemake_average]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.snakemake_profile]
+nodes = 1
+ntasks = 2
+
+[jobs.qcg.fireworks_average]
+nodes = 1
+ntasks = 1
+
+[jobs.qcg.fireworks_profile]
+nodes = 1
+ntasks = 1
+
+[qcg]
+task_count = 12
+example_03_nodes_text = "three"
+short_inputs = 100
+short_tasks = 32
+allocation_text = "2 cores and 11 GiB of memory"
+workflow_measurement = "the two-core course allocation was measured"
+examples_note = "On the SRC course cluster, examples 4 and 5 ask for 2 cores (`--ntasks=2`), the full course allocation on one two-core workspace:"
 
 # ---------------------------------------------------------------- fundamentals
 
@@ -221,6 +331,12 @@ mpi_compare_a = "--nodes={{jobs.fundamentals.mpi.nodes}} to --"
 mpi_compare_b = "nodes={{jobs.fundamentals.mpi_compare.nodes}}"
 hello_why = "the most a course job uses on one node"
 gpu_result = "On `{{partitions.real_gpu_node}}`, `nvidia-smi` lists two NVIDIA Blackwell cards. The partition also has a node with emulated GPUs, so submit with `sbatch --nodelist={{partitions.real_gpu_node}} gpu.sh` to reach the real cards. The whole class shares those two cards, so keep GPU test jobs short."
+course_slide_intro = "The hands-on of this course run on a *course cluster* built from SURF Research Cloud workspaces with the same parts as Snellius: Slurm, the EESSI software stack, a shared file system, a web portal. What you type here works on Snellius; the numbers are smaller."
+course_slide_login = "*Login*: =ssh <name>@<manager>= or the web portal; your trainer's setup link makes your password. There is one login node and no SURFcua account."
+course_slide_software = "*Software*: =module load 2025= selects EESSI 2025.06. QCG-PilotJob and HyperQueue are installed in the course CernVM-FS repository. Use the exact module commands at =https://supersurf.rgoswami.me/commands=."
+course_slide_nodes = "*Nodes*: three nodes with 2 CPUs each and one GPU node with 60 CPUs: *66 CPUs in total*. The GPU node has two RTX PRO 6000 Blackwell cards. =rome= and =thin_course= share the CPU nodes, including that GPU node. Use 1 core for VS Code and 1-2 cores for the small exercises."
+course_slide_filesystems = "*File systems*: shared BeeGFS supplies =/home=, =/project= and =/scratch=. =~/scratch= points to =/scratch/$USER=. Each Slurm job has node-local =$TMPDIR=. Omit the Snellius-only =--constraint=scratch-node=. =myquota= reports shared home capacity."
+course_slide_budget = "*Budget*: none. The collaboration's wallet pays; =accinfo= and system billing units do not exist; =sacct= reports core-seconds in =CPUTimeRAW=."
 # Shown in other profiles' renders, after the GPU job.
 gpu_aside = '''
 > [!NOTE]
@@ -236,6 +352,110 @@ self_note = '''
 > [!NOTE]
 > These files are rendered for {{system.name}}. Log in to {{fundamentals.login_body}}'''
 
+[fundamentals.system_table.rome]
+name = "coursenode1"
+nodes = "1"
+memory = "14,713 MB"
+cores = "2"
+cpu = "x86-64 virtual CPU"
+gpus = ""
+gpu = ""
+sbu = "0"
+allocation = "1 core"
+
+[fundamentals.system_table.fat_rome]
+name = "coursenode2"
+nodes = "1"
+memory = "14,713 MB"
+cores = "2"
+cpu = "x86-64 virtual CPU"
+gpus = ""
+gpu = ""
+sbu = "0"
+allocation = "1 core"
+
+[fundamentals.system_table.himem_4tb]
+name = "coursenode3"
+nodes = "1"
+memory = "14,713 MB"
+cores = "2"
+cpu = "x86-64 virtual CPU"
+gpus = "2"
+gpu = "emulated"
+sbu = "0"
+allocation = "1 core"
+
+[fundamentals.system_table.himem_8tb]
+name = "coursenode4r600"
+nodes = "1"
+memory = "333,549 MB"
+cores = "60"
+cpu = "x86-64 virtual CPU"
+gpus = "2"
+gpu = "NVIDIA RTX PRO 6000"
+sbu = "0"
+allocation = "1 core"
+
+[fundamentals.system_table.genoa]
+name = ""
+nodes = ""
+memory = ""
+cores = ""
+cpu = ""
+gpus = ""
+gpu = ""
+sbu = ""
+allocation = ""
+
+[fundamentals.system_table.fat_genoa]
+name = ""
+nodes = ""
+memory = ""
+cores = ""
+cpu = ""
+gpus = ""
+gpu = ""
+sbu = ""
+allocation = ""
+
+[fundamentals.system_table.gpu_a100]
+name = ""
+nodes = ""
+memory = ""
+cores = ""
+cpu = ""
+gpus = ""
+gpu = ""
+sbu = ""
+allocation = ""
+
+[fundamentals.system_table.gpu_h100]
+name = ""
+nodes = ""
+memory = ""
+cores = ""
+cpu = ""
+gpus = ""
+gpu = ""
+sbu = ""
+allocation = ""
+
+[fundamentals.system_table.staging]
+name = ""
+nodes = ""
+memory = ""
+cores = ""
+cpu = ""
+gpus = ""
+gpu = ""
+sbu = ""
+allocation = ""
+
+[fundamentals.system_table.login]
+name = "login"
+nodes = "1"
+note = "Submit jobs from the manager workspace; do not run heavy work there."
+
 # ---------------------------------------------------------------- file systems
 
 [fs]
@@ -250,3 +470,21 @@ aside_note = '''
 self_note = '''
 > [!NOTE]
 > These files are rendered for {{system.name}}. With EESSI 2025.06, {{fs.share}} {{paths.shared_fs}} {{fs.body}}'''
+
+# ---------------------------------------------------------------- data movement
+
+[jobs.data_movement.dcp]
+nodes = 2
+ntasks_per_node = 2
+
+[jobs.data_movement.stage]
+nodes = 1
+ntasks = 1
+
+[data_movement]
+scratch = "/scratch/$USER"
+node_title = "Two course nodes"
+external_text = "This cluster has no tape archive or iRODS service; use ~scp~, ~rsync~, Globus or Research Drive."
+archive_available = false
+mpifileutils_available = false
+scratch_node_available = false

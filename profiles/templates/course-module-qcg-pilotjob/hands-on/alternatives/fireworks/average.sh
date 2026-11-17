@@ -1,0 +1,33 @@
+#!/bin/bash
+#SBATCH --nodes={{jobs.qcg.fireworks_average.nodes}}
+#SBATCH --ntasks={{jobs.qcg.fireworks_average.ntasks}}
+#SBATCH --time=00:20:00
+#SBATCH --partition={{partitions.cpu}}
+#SBATCH --output=fw-average.%j.out
+# Example 4 with FireWorks: the workflow goes into a LaunchPad, then one worker runs whatever
+# is ready until nothing is left. The LaunchPad is a file, which only one process may write:
+# several rlaunch workers on it lose Firework states. Parallel workers need a MongoDB server.
+# One worker takes about 9 s for 100 files and 212 s for 1000 on {{system.display_name}}, so 100 files by
+# default; QCG_MAX_INPUTS=0 runs all of them.
+set -euo pipefail
+_course_restore_nounset=0
+case $- in *u*) _course_restore_nounset=1; set +u ;; esac
+source {{modules.eessi_init}}
+if [ "$_course_restore_nounset" = 1 ]; then set -u; fi
+unset _course_restore_nounset
+module use {{modules.site_modulepath}}
+# SRC course cluster: module. {{system.display_name}} has no FireWorks module: use the venv from the README.
+module load {{modules.fireworks}} 2>/dev/null || { module load {{modules.python}}; source "$HOME/venvs/fireworks/bin/activate"; }
+
+run_dir=$(mktemp -d "$TMPDIR/fw-average.XXXXXXXX")
+export MONGOMOCK_SERVERSTORE_FILE=$run_dir/launchpad.json
+echo "{}" > "$MONGOMOCK_SERVERSTORE_FILE"   # an empty LaunchPad, as in the FireWorks quickstart
+tar -xf ../../example_04/input.tar.gz
+QCG_MAX_INPUTS=${QCG_MAX_INPUTS:-${MAX_INPUTS:-100}} python workflow.py average
+cd "$TMPDIR"   # rlaunch makes a directory per Firework run
+rlaunch rapidfire
+lpad get_fws -d count -s COMPLETED
+cd - >/dev/null
+python workflow.py check
+test -s result.csv
+echo "result.csv: $(wc -l < result.csv) rows"

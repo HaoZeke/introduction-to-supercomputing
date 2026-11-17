@@ -126,7 +126,7 @@ Human behavior
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g05}
 #+attr_latex: :options [x=684.39,y=449.28,s=11,l=13.2,c=cFFFFFF]
 #+begin_tb
-Snellius Supercomputer
+{{system.display_name}} Supercomputer
 #+end_tb
 #+attr_latex: :options [x=56.69,y=140.02,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -231,7 +231,7 @@ And Boolean logic, zeros and ones!
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g10}
 #+attr_latex: :options [x=684.39,y=449.28,s=11,l=13.2,c=cFFFFFF]
 #+begin_tb
-Snellius Supercomputer
+{{system.display_name}} Supercomputer
 #+end_tb
 #+attr_latex: :options [x=56.69,y=140.02,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -912,29 +912,29 @@ Login nodes are shared by all online users in the system and \\
 hence *heavy tasks must be avoided*.
 #+end_tb
 
-* Snellius architecture
+* {{system.display_name}} architecture
 :PROPERTIES:
 :BEAMER_opt: pg=15
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g15}
 #+attr_latex: :options [x=189.58,y=425.07,s=16,l=19.2]
 #+begin_tb
-1,258 thin rome/genoa nodes + fat/high-memory nodes + 604 GPUs.
+{{system.architecture_summary}}
 #+end_tb
 #+attr_latex: :options [x=189.58,y=456.27,s=16,l=19.2]
 #+begin_tb
-Low-latency interconnection network: fat-tree *InfiniBand HDR100, HDR200, and NDR200*.
+Low-latency interconnection network: {{system.network_summary}}.
 #+end_tb
 #+attr_latex: :options [x=189.58,y=487.47,s=16,l=19.2,b]
 #+begin_tb
-720 TB for home @@beamer:\textmd{@@directories and@@beamer:}@@ 12.4 PB for scratch and project @@beamer:\textmd{@@spaces (GPFS).@@beamer:}@@
+{{system.storage_summary}}
 #+end_tb
 #+attr_latex: :options [x=189.58,y=518.67,s=16,l=19.2]
 #+begin_tb
 Specific policy for software installation and maintenance, with three simultaneous available software stacks.
 #+end_tb
 
-* Snellius system details
+* {{system.display_name}} system details
 :PROPERTIES:
 :BEAMER_opt: pg=16
 :END:
@@ -979,288 +979,288 @@ allocation
 #+end_tb
 #+attr_latex: :options [x=79.4,y=160.64,s=12,l=14.4]
 #+begin_tb
-rome
+{{fundamentals.system_table.rome.name}}
 #+end_tb
 #+attr_latex: :options [x=149.96,y=160.64,s=12,l=14.4]
 #+begin_tb
-521
+{{fundamentals.system_table.rome.nodes}}
 #+end_tb
 #+attr_latex: :options [x=226.16,y=160.64,s=12,l=14.4]
 #+begin_tb
-256 GB
+{{fundamentals.system_table.rome.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.19,y=160.64,s=12,l=14.4]
 #+begin_tb
-128
+{{fundamentals.system_table.rome.cores}}
 #+end_tb
 #+attr_latex: :options [x=365.84,y=160.4,s=11,l=13.2]
 #+begin_tb
-AMD Rome 7H12 2.6 GHz
+{{fundamentals.system_table.rome.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=160.64,s=12,l=14.4]
 #+begin_tb
-128
+{{fundamentals.system_table.rome.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.93,y=160.64,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.rome.allocation}}
 #+end_tb
 #+attr_latex: :options [x=70.77,y=187.61,s=12,l=14.4]
 #+begin_tb
-fat_rome
+{{fundamentals.system_table.fat_rome.name}}
 #+end_tb
 #+attr_latex: :options [x=153.21,y=187.61,s=12,l=14.4]
 #+begin_tb
-72
+{{fundamentals.system_table.fat_rome.nodes}}
 #+end_tb
 #+attr_latex: :options [x=221.25,y=187.61,s=12,l=14.4]
 #+begin_tb
-1,024 GB
+{{fundamentals.system_table.fat_rome.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.55,y=187.85,s=12,l=14.4,f=cal]
 #+begin_tb
-128
+{{fundamentals.system_table.fat_rome.cores}}
 #+end_tb
 #+attr_latex: :options [x=365.84,y=187.37,s=11,l=13.2]
 #+begin_tb
-AMD Rome 7H12 2.6 GHz
+{{fundamentals.system_table.fat_rome.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=187.61,s=12,l=14.4]
 #+begin_tb
-192
+{{fundamentals.system_table.fat_rome.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.93,y=187.61,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.fat_rome.allocation}}
 #+end_tb
 #+attr_latex: :options [x=64.27,y=217.88,s=12,l=14.4]
 #+begin_tb
-himem_4tb
+{{fundamentals.system_table.himem_4tb.name}}
 #+end_tb
 #+attr_latex: :options [x=156.31,y=217.88,s=12,l=14.4]
 #+begin_tb
-2
+{{fundamentals.system_table.himem_4tb.nodes}}
 #+end_tb
 #+attr_latex: :options [x=221.23,y=217.88,s=12,l=14.4]
 #+begin_tb
-4,096 GB
+{{fundamentals.system_table.himem_4tb.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.54,y=218.12,s=12,l=14.4,f=cal]
 #+begin_tb
-128
+{{fundamentals.system_table.himem_4tb.cores}}
 #+end_tb
 #+attr_latex: :options [x=365.84,y=211.05,s=11,l=13.2]
 #+begin_tb
-AMD Rome 7H12 2.6 GHz
+{{fundamentals.system_table.himem_4tb.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=217.89,s=12,l=14.4]
 #+begin_tb
-256
+{{fundamentals.system_table.himem_4tb.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.93,y=217.89,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.himem_4tb.allocation}}
 #+end_tb
 #+attr_latex: :options [x=64.27,y=251.49,s=12,l=14.4]
 #+begin_tb
-himem_8tb
+{{fundamentals.system_table.himem_8tb.name}}
 #+end_tb
 #+attr_latex: :options [x=156.31,y=251.49,s=12,l=14.4]
 #+begin_tb
-2
+{{fundamentals.system_table.himem_8tb.nodes}}
 #+end_tb
 #+attr_latex: :options [x=221.23,y=251.49,s=12,l=14.4]
 #+begin_tb
-8,192 GB
+{{fundamentals.system_table.himem_8tb.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.54,y=251.73,s=12,l=14.4,f=cal]
 #+begin_tb
-128
+{{fundamentals.system_table.himem_8tb.cores}}
 #+end_tb
 #+attr_latex: :options [x=365.84,y=244.65,s=11,l=13.2]
 #+begin_tb
-AMD Rome 7H12 2.6 GHz
+{{fundamentals.system_table.himem_8tb.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=251.49,s=12,l=14.4]
 #+begin_tb
-384
+{{fundamentals.system_table.himem_8tb.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.93,y=251.49,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.himem_8tb.allocation}}
 #+end_tb
 #+attr_latex: :options [x=77.13,y=285.1,s=12,l=14.4]
 #+begin_tb
-genoa
+{{fundamentals.system_table.genoa.name}}
 #+end_tb
 #+attr_latex: :options [x=149.97,y=285.1,s=12,l=14.4]
 #+begin_tb
-737
+{{fundamentals.system_table.genoa.nodes}}
 #+end_tb
 #+attr_latex: :options [x=226.17,y=285.1,s=12,l=14.4]
 #+begin_tb
-384 GB
+{{fundamentals.system_table.genoa.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.55,y=285.34,s=12,l=14.4,f=cal]
 #+begin_tb
-192
+{{fundamentals.system_table.genoa.cores}}
 #+end_tb
 #+attr_latex: :options [x=364.88,y=284.85,s=11,l=13.2]
 #+begin_tb
-AMD Genoa 9654 2.4 GHz
+{{fundamentals.system_table.genoa.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=285.09,s=12,l=14.4]
 #+begin_tb
-192
+{{fundamentals.system_table.genoa.sbu}}
 #+end_tb
 #+attr_latex: :options [x=829.71,y=285.09,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.genoa.allocation}}
 #+end_tb
 #+attr_latex: :options [x=68.49,y=318.71,s=12,l=14.4]
 #+begin_tb
-fat_genoa
+{{fundamentals.system_table.fat_genoa.name}}
 #+end_tb
 #+attr_latex: :options [x=153.21,y=318.71,s=12,l=14.4]
 #+begin_tb
-48
+{{fundamentals.system_table.fat_genoa.nodes}}
 #+end_tb
 #+attr_latex: :options [x=221.25,y=318.71,s=12,l=14.4]
 #+begin_tb
-1,536 GB
+{{fundamentals.system_table.fat_genoa.memory}}
 #+end_tb
 #+attr_latex: :options [x=319.55,y=318.95,s=12,l=14.4,f=cal]
 #+begin_tb
-192
+{{fundamentals.system_table.fat_genoa.cores}}
 #+end_tb
 #+attr_latex: :options [x=364.88,y=318.47,s=11,l=13.2]
 #+begin_tb
-AMD Genoa 9654 2.4 GHz
+{{fundamentals.system_table.fat_genoa.cpu}}
 #+end_tb
 #+attr_latex: :options [x=733.92,y=318.71,s=12,l=14.4]
 #+begin_tb
-288
+{{fundamentals.system_table.fat_genoa.sbu}}
 #+end_tb
 #+attr_latex: :options [x=829.71,y=318.71,s=12,l=14.4]
 #+begin_tb
-1/8
+{{fundamentals.system_table.fat_genoa.allocation}}
 #+end_tb
 #+attr_latex: :options [x=68.97,y=352.32,s=12,l=14.4]
 #+begin_tb
-gpu_a100
+{{fundamentals.system_table.gpu_a100.name}}
 #+end_tb
 #+attr_latex: :options [x=153.21,y=352.32,s=12,l=14.4]
 #+begin_tb
-63
+{{fundamentals.system_table.gpu_a100.nodes}}
 #+end_tb
 #+attr_latex: :options [x=226.17,y=352.32,s=12,l=14.4]
 #+begin_tb
-512 GB
+{{fundamentals.system_table.gpu_a100.memory}}
 #+end_tb
 #+attr_latex: :options [x=322.55,y=352.56,s=12,l=14.4,f=cal]
 #+begin_tb
-72
+{{fundamentals.system_table.gpu_a100.cores}}
 #+end_tb
 #+attr_latex: :options [x=366.56,y=352.08,s=11,l=13.2]
 #+begin_tb
-Intel Xeon 8360Y 2.5 GHz
+{{fundamentals.system_table.gpu_a100.cpu}}
 #+end_tb
 #+attr_latex: :options [x=519.12,y=352.32,s=12,l=14.4]
 #+begin_tb
-4
+{{fundamentals.system_table.gpu_a100.gpus}}
 #+end_tb
 #+attr_latex: :options [x=577.68,y=352.32,s=12,l=14.4]
 #+begin_tb
-NVIDIA A100 40 GB
+{{fundamentals.system_table.gpu_a100.gpu}}
 #+end_tb
 #+attr_latex: :options [x=733.93,y=352.32,s=12,l=14.4]
 #+begin_tb
-512
+{{fundamentals.system_table.gpu_a100.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.94,y=352.32,s=12,l=14.4]
 #+begin_tb
-1/4
+{{fundamentals.system_table.gpu_a100.allocation}}
 #+end_tb
 #+attr_latex: :options [x=68.48,y=385.94,s=12,l=14.4]
 #+begin_tb
-gpu_h100
+{{fundamentals.system_table.gpu_h100.name}}
 #+end_tb
 #+attr_latex: :options [x=153.2,y=385.94,s=12,l=14.4]
 #+begin_tb
-88
+{{fundamentals.system_table.gpu_h100.nodes}}
 #+end_tb
 #+attr_latex: :options [x=226.16,y=385.94,s=12,l=14.4]
 #+begin_tb
-768 GB
+{{fundamentals.system_table.gpu_h100.memory}}
 #+end_tb
 #+attr_latex: :options [x=322.54,y=386.18,s=12,l=14.4,f=cal]
 #+begin_tb
-64
+{{fundamentals.system_table.gpu_h100.cores}}
 #+end_tb
 #+attr_latex: :options [x=367.76,y=385.7,s=11,l=13.2]
 #+begin_tb
-AMD EPYC 9334 2.7 GHz
+{{fundamentals.system_table.gpu_h100.cpu}}
 #+end_tb
 #+attr_latex: :options [x=519.12,y=385.94,s=12,l=14.4]
 #+begin_tb
-4
+{{fundamentals.system_table.gpu_h100.gpus}}
 #+end_tb
 #+attr_latex: :options [x=557.76,y=385.94,s=12,l=14.4]
 #+begin_tb
-NVIDIA H100 (SXM5) 94 GB
+{{fundamentals.system_table.gpu_h100.gpu}}
 #+end_tb
 #+attr_latex: :options [x=733.93,y=385.94,s=12,l=14.4]
 #+begin_tb
-768
+{{fundamentals.system_table.gpu_h100.sbu}}
 #+end_tb
 #+attr_latex: :options [x=832.94,y=385.94,s=12,l=14.4]
 #+begin_tb
-1/4
+{{fundamentals.system_table.gpu_h100.allocation}}
 #+end_tb
 #+attr_latex: :options [x=74.37,y=416.23,s=12,l=14.4]
 #+begin_tb
-staging
+{{fundamentals.system_table.staging.name}}
 #+end_tb
 #+attr_latex: :options [x=153.21,y=416.23,s=12,l=14.4]
 #+begin_tb
-10
+{{fundamentals.system_table.staging.nodes}}
 #+end_tb
 #+attr_latex: :options [x=226.17,y=416.23,s=12,l=14.4]
 #+begin_tb
-256 GB
+{{fundamentals.system_table.staging.memory}}
 #+end_tb
 #+attr_latex: :options [x=322.56,y=416.47,s=12,l=14.4,f=cal]
 #+begin_tb
-16
+{{fundamentals.system_table.staging.cores}}
 #+end_tb
 #+attr_latex: :options [x=367.76,y=415.99,s=11,l=13.2]
 #+begin_tb
-AMD EPYC 7F32 3.2 GHz
+{{fundamentals.system_table.staging.cpu}}
 #+end_tb
 #+attr_latex: :options [x=737.04,y=416.23,s=12,l=14.4]
 #+begin_tb
-32
+{{fundamentals.system_table.staging.sbu}}
 #+end_tb
 #+attr_latex: :options [x=829.7,y=416.23,s=12,l=14.4]
 #+begin_tb
-1/32
+{{fundamentals.system_table.staging.allocation}}
 #+end_tb
 #+attr_latex: :options [x=80.48,y=443.19,s=12,l=14.4]
 #+begin_tb
-login
+{{fundamentals.system_table.login.name}}
 #+end_tb
 #+attr_latex: :options [x=156.32,y=443.19,s=12,l=14.4]
 #+begin_tb
-3
+{{fundamentals.system_table.login.nodes}}
 #+end_tb
 #+attr_latex: :options [x=312.44,y=443.19,s=12,l=14.4,b]
 #+begin_tb
-Login nodes must not be used for heavy tasks@@beamer:\textmd{@@. Their hardware configuration may differ.@@beamer:}@@
+{{fundamentals.system_table.login.note}}
 #+end_tb
 #+attr_latex: :options [x=899,y=465.54,s=8,l=9.6,c=c177ABF,a=r]
 #+begin_tb
-@@beamer:\textcolor{c000000}{@@Snellius system details:@@beamer:}@@ [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668136/System+details][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668136/System+details_]] \\
-@@beamer:\textcolor{c000000}{@@Obtaining an account:@@beamer:}@@ [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660190/Obtaining+an+account+on+Snellius][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660190/Obtaining+an+account+on+Snellius_]] \\
+@@beamer:\textcolor{c000000}{@@{{system.display_name}} system details:@@beamer:}@@ [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668136/System+details][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/92668136/System+details_]] \\
+@@beamer:\textcolor{c000000}{@@Obtaining an account:@@beamer:}@@ [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660190/Obtaining+an+account+on+{{system.display_name}}][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660190/Obtaining+an+account+on+{{system.display_name}}_]] \\
 @@beamer:\textcolor{c000000}{@@Software stack and building:@@beamer:}@@ [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660266/Software][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660266/Software_]]
 #+end_tb
 
@@ -1376,7 +1376,7 @@ practice, *resource allocation is determined by the most restrictive resource re
   *unit*. The job then gets every CPU core in that unit.
 #+end_tb
 
-* File systems on Snellius
+* File systems on {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=18
 :END:
@@ -1432,7 +1432,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 - Move large files to project storage or scratch space for performance efficiency.
 #+end_tb
 
-* File systems on Snellius
+* File systems on {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=19
 :END:
@@ -1440,7 +1440,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+attr_latex: :options [x=48.44,y=128.27,s=18,l=21.6,f=mono,b,v]
 #+begin_tb
 #+begin_example
-/scratch-local and /scratch-shared
+{{paths.scratch_local}} and {{paths.scratch_root}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=48.44,y=159.95,s=18,l=21.6,b,ind=22.56,bc=cEE7628,bf=arial]
@@ -1469,7 +1469,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+end_tb
 #+attr_latex: :options [x=76.4,y=344.75,s=16,l=19.2,b,ind=21,bc=c070809,bf=apt,bs=−]
 #+begin_tb
-- @@beamer:\textmd{@@Dedicated to@@beamer:}@@ individual jobs and compute nodes @@beamer:\textmd{@@on Snellius.@@beamer:}@@
+- @@beamer:\textmd{@@Dedicated to@@beamer:}@@ individual jobs and compute nodes @@beamer:\textmd{@@on {{system.display_name}}.@@beamer:}@@
 #+end_tb
 #+attr_latex: :options [x=76.4,y=374.03,s=16,l=19.2,ind=21,bc=c070809,bf=apt,bs=−]
 #+begin_tb
@@ -1484,7 +1484,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 - *Scratch shared*: shared, constant directory visible from both login and compute nodes.
 #+end_tb
 
-* File systems on Snellius
+* File systems on {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=20
 :END:
@@ -1492,7 +1492,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+attr_latex: :options [x=48.44,y=128.15,s=18,l=21.6,f=mono,b,v]
 #+begin_tb
 #+begin_example
-/scratch-node
+{{paths.scratch_node}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=48.44,y=159.95,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
@@ -1513,11 +1513,11 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+end_tb
 #+attr_latex: :options [x=48.44,y=285.47,s=18,l=19.44,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Requested with flag @@beamer:\texttt{--constraint=scratch-node}@@, then accessed via the \\
+- Requested with flag @@beamer:\texttt{--constraint={{slurm.scratch_constraint}}}@@, then accessed via the \\
   environment variable =$TMPDIR= (replaces Scratch local).
 #+end_tb
 
-* File systems on Snellius
+* File systems on {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=21
 :END:
@@ -1525,7 +1525,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+attr_latex: :options [x=48.44,y=128.15,s=18,l=21.6,f=mono,b,v]
 #+begin_tb
 #+begin_example
-/projects
+{{paths.projects}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=48.44,y=159.95,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
@@ -1551,7 +1551,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 #+attr_latex: :options [x=48.44,y=314.63,s=18,l=21.6,f=mono,b,v]
 #+begin_tb
 #+begin_example
-/archive
+{{paths.archive}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=48.44,y=346.43,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
@@ -1575,7 +1575,7 @@ practice, *resource allocation is determined by the most restrictive resource re
 - Slow, especially to retrieve ``old'' data, and not available on compute nodes.
 #+end_tb
 
-* Connecting to Snellius
+* Connecting to {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=22
 :END:
@@ -1594,7 +1594,7 @@ Before first access to the system, login into the SURF user portal, CUA!
   *login <username> created*.''
 #+end_tb
 
-* Connecting to Snellius via terminal
+* Connecting to {{system.display_name}} via terminal
 :PROPERTIES:
 :BEAMER_opt: pg=23
 :END:
@@ -1644,7 +1644,7 @@ Linux
 #+end_tb
 #+attr_latex: :options [x=62.96,y=123.18,s=18,l=21.6]
 #+begin_tb
-The primary way of accessing Snellius is a *terminal-based connection using SSH*. Through it, you \\
+The primary way of accessing {{system.display_name}} is a *terminal-based connection using SSH*. Through it, you \\
 work on the system, manage files, and submit jobs remotely from your local machine.
 #+end_tb
 #+attr_latex: :options [x=69.43,y=184.93,s=16,l=19.2,c=cFFFFFF]
@@ -1652,7 +1652,7 @@ work on the system, manage files, and submit jobs remotely from your local machi
 A *terminal* is a text-based interface that allows users to interact with a system by entering commands.
 #+end_tb
 
-* Connecting to Snellius via terminal
+* Connecting to {{system.display_name}} via terminal
 :PROPERTIES:
 :BEAMER_opt: pg=24
 :END:
@@ -1663,7 +1663,7 @@ When you log in with =ssh=, you access the login nodes.
 #+end_tb
 #+attr_latex: :options [x=64.38,y=150.02,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Type: =ssh <username>@snellius.surf.nl=.
+- Type: =ssh <username>@{{system.login_host}}=.
 #+end_tb
 #+attr_latex: :options [x=64.38,y=181.46,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
@@ -1672,20 +1672,20 @@ When you log in with =ssh=, you access the login nodes.
 #+attr_latex: :options [x=179.2,y=212.05,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
 #+begin_example
-user@local:~$ ssh scur0000@snellius.surf.nl
+user@local:~$ ssh scur0000@{{system.login_host}}
 Password:
-scur0000@int4:~$
+scur0000@{{system.login_node_first}}:~$
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=179.16,y=331.23,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
 #+begin_example
 user@local:~$ printf 'hello\n' > local-file.txt
-user@local:~$ scp ./local-file.txt scur0000@snellius.surf.nl:~/
-user@local:~$ scp scur0000@snellius.surf.nl:~/local-file.txt downloaded.txt
+user@local:~$ scp ./local-file.txt scur0000@{{system.login_host}}:~/
+user@local:~$ scp scur0000@{{system.login_host}}:~/local-file.txt downloaded.txt
 user@local:~$ cat downloaded.txt
 hello
-user@local:~$ ssh scur0000@snellius.surf.nl 'ls local-file.txt'
+user@local:~$ ssh scur0000@{{system.login_host}} 'ls local-file.txt'
 local-file.txt
 #+end_example
 #+end_tb
@@ -1694,18 +1694,18 @@ local-file.txt
 With =scp= you can transfer files to and from your local machine.
 #+end_tb
 
-* Connecting to Snellius in a web browser
+* Connecting to {{system.display_name}} in a web browser
 :PROPERTIES:
 :BEAMER_opt: pg=25
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g25}
 #+attr_latex: :options [x=264.2,y=466.35,s=28,l=33.6,c=cFFFFFF,b]
 #+begin_tb
-[[https://ondemand.snellius.surf.nl/][_https://ondemand.snellius.surf.nl_]]
+[[{{system.ondemand_url}}][_{{system.ondemand_display}}_]]
 #+end_tb
 #+attr_latex: :options [x=516,y=130.19,s=20,l=21.6,c=c172B4D,f=cal,p=8.03,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system][@@beamer:\uline{\textcolor{c177ABF}{@@accessing Snellius via a terminal@@beamer:}}@@]], the system \\
+Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system][@@beamer:\uline{\textcolor{c177ABF}{@@accessing {{system.display_name}} via a terminal@@beamer:}}@@]], the system \\
 [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting+to+the+system][can also be used via a web browser using the]] \\
 *OpenOnDemand* service allowing users to:
 - manage files,
@@ -1717,19 +1717,19 @@ Besides [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660216/Connecting
 - run applications with graphical user interfaces.
 #+end_tb
 
-* This course runs on a course cluster built like Snellius
+* This course runs on a course cluster built like {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: ts=28,tw=820
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g-cluster}
 #+attr_latex: :options [x=78,y=148,s=16,l=19,ind=22,bc=cEE7628,bf=arial,w=800,p=4]
 #+begin_tb
-- The hands-on of this course run on a *course cluster* built from SURF Research Cloud workspaces with the same parts as Snellius: Slurm, the EESSI software stack, a shared file system, a web portal. What you type here works on Snellius; the numbers are smaller.
-- *Login*: =ssh <name>@<manager>= or the web portal; your trainer's setup link makes your password. There is one login node and no SURFcua account.
-- *Software*: =module load 2025= selects EESSI 2025.06. QCG-PilotJob and HyperQueue are installed in the course CernVM-FS repository. Use the exact module commands at =https://supersurf.rgoswami.me/commands=.
-- *Nodes*: three nodes with 2 CPUs each and one GPU node with 60 CPUs: *66 CPUs in total*. The GPU node has two RTX PRO 6000 Blackwell cards. =rome= and =thin_course= share the CPU nodes, including that GPU node. Use 1 core for VS Code and 1-2 cores for the small exercises.
-- *File systems*: shared BeeGFS supplies =/home=, =/project= and =/scratch=. =~/scratch= points to =/scratch/$USER=. Each Slurm job has node-local =$TMPDIR=. Omit the Snellius-only =--constraint=scratch-node=. =myquota= reports shared home capacity.
-- *Budget*: none. The collaboration's wallet pays; =accinfo= and system billing units do not exist; =sacct= reports core-seconds in =CPUTimeRAW=.
+- {{course_cluster.fundamentals.course_slide_intro}}
+- {{course_cluster.fundamentals.course_slide_login}}
+- {{course_cluster.fundamentals.course_slide_software}}
+- {{course_cluster.fundamentals.course_slide_nodes}}
+- {{course_cluster.fundamentals.course_slide_filesystems}}
+- {{course_cluster.fundamentals.course_slide_budget}}
 #+end_tb
 
 * LUMI, a European flagship supercomputer
@@ -1839,7 +1839,7 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=52.03,y=304.1,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Snellius
+- {{system.display_name}}
 #+end_tb
 #+attr_latex: :options [x=66.07,y=333.86,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -1893,7 +1893,7 @@ Dragonfly topology
 #+end_tb
 #+attr_latex: :options [x=62.96,y=391.85,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- For which projects is @@beamer:\textcolor{c036B99}{@@Snellius@@beamer:}@@ the better option?
+- For which projects is @@beamer:\textcolor{c036B99}{@@{{system.display_name}}@@beamer:}@@ the better option?
 #+end_tb
 #+attr_latex: :options [x=77,y=421.61,s=16,l=19.2,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -1951,7 +1951,7 @@ Batch schedulers distribute work to *compute nodes.*
 #+end_tb
 #+attr_latex: :options [x=62.96,y=416.73,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Batch scheduler on Snellius is Slurm:
+- Batch scheduler on {{system.display_name}} is Slurm:
 #+end_tb
 #+attr_latex: :options [x=77,y=446.49,s=16,l=19.2,c=c177ABF,ind=21,bc=c070809,bf=arial]
 #+begin_tb
@@ -2214,7 +2214,7 @@ echo "DONE"
 #+end_tb
 #+attr_latex: :options [x=410.87,y=330.77,s=18,l=21.6,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- Load =2025=, then =foss/2025a=, and try =mpirun hostname=.
+- Load =2025=, then ={{modules.toolchain}}=, and try =mpirun hostname=.
 #+end_tb
 #+attr_latex: :options [x=54.52,y=136.23,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
@@ -2314,7 +2314,7 @@ Don't use =/home= as work dir
 #+begin_tb
 Your home directory has limited \\
 performance for high-throughput \\
-tasks; use ={{#paths.scratch_user?}}{{paths.scratch_user}}{{/paths.scratch_user?}}{{^paths.scratch_user?}}/scratch-shared{{/paths.scratch_user?}}= \\
+tasks; use ={{#paths.scratch_user?}}{{paths.scratch_user}}{{/paths.scratch_user?}}{{^paths.scratch_user?}}{{paths.scratch_root}}{{/paths.scratch_user?}}= \\
 storage for faster I/O.
 #+end_tb
 #+attr_latex: :options [x=55.76,y=176.84,s=18,l=21.6,b]
@@ -2404,8 +2404,8 @@ Job scripts consist of:
 #+attr_latex: :options [x=65.94,y=288.16,s=14,l=16.81,c=cFFFFFF,f=mono,v]
 #+begin_tb
 #+begin_example
-module load 2025
-module load foss/2025a
+module load {{modules.stack}}
+module load {{modules.toolchain}}
 #+end_example
 #+end_tb
 #+attr_latex: :options [x=65.94,y=349.47,s=14,l=16.81,c=cFFFFFF,f=mono,v]
@@ -2667,7 +2667,7 @@ to:
 :END:
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g42}
 
-* Software on Snellius
+* Software on {{system.display_name}}
 :PROPERTIES:
 :BEAMER_opt: pg=43
 :END:
@@ -2943,7 +2943,7 @@ echo "DONE"
 #+beamer: \slidegraphics{figures/fundamentals-of-hpc/g48}
 #+attr_latex: :options [x=48.44,y=164.75,s=24,l=28.8,c=c177ABF,b,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb
-- [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/Snellius_]]
+- [[https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/{{system.display_name}}][_https://servicedesk.surf.nl/wiki/spaces/WIKI/pages/30660184/{{system.display_name}}_]]
 #+end_tb
 #+attr_latex: :options [x=48.44,y=240.59,s=24,l=28.8,ind=22.56,bc=cEE7628,bf=arial]
 #+begin_tb

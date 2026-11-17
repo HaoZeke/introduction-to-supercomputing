@@ -31,6 +31,7 @@ import difflib
 import math
 import re
 import sys
+import tempfile
 import tomllib
 from pathlib import Path
 
@@ -223,6 +224,10 @@ def derive(profile: dict, base: dict | None) -> dict:
 
 def context(name: str, profiles: dict) -> dict:
     ctx = derive(profiles[name], None)
+    course_cluster = ctx.get("render", {}).get("course_cluster", name)
+    if course_cluster not in profiles:
+        raise KeyError(f"{name}: render.course_cluster names unknown profile {course_cluster!r}")
+    ctx["course_cluster"] = derive(profiles[course_cluster], profiles[name])
     # Notes about other clusters: each one's profile, with its jobs written as
     # overrides of this profile's jobs.
     ctx["asides"] = [derive(profiles[o], profiles[name]) for o in ctx.get("render", {}).get("asides", [])]
@@ -433,7 +438,8 @@ def render_all(name: str) -> dict:
 
 def main(argv: list | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("profile")
+    ap.add_argument("profile", nargs="?")
+    ap.add_argument("--all", action="store_true", help="render or check every profile")
     ap.add_argument("--out", type=Path, help="output root (default build/PROFILE)")
     ap.add_argument("--check", action="store_true", help="diff against --against instead of writing")
     ap.add_argument("--against", type=Path, default=ROOT,
@@ -442,6 +448,27 @@ def main(argv: list | None = None) -> int:
     args = ap.parse_args(argv)
 
     profiles = load_profiles()
+    if bool(args.profile) == bool(args.all):
+        ap.error("give one PROFILE or --all")
+    if args.all:
+        if args.against.resolve() != ROOT:
+            ap.error("--against cannot be combined with --all")
+        if args.check:
+            bad = 0
+            with tempfile.TemporaryDirectory(prefix="course-profiles-") as tmp:
+                tmp = Path(tmp)
+                for name in profiles:
+                    out = tmp / name
+                    bad += main([name, "--out", str(out)])
+                    bad += main([name, "--check", "--against", str(out)])
+                bad += main(["snellius", "--check"])
+            return 1 if bad else 0
+        for name in profiles:
+            out = (args.out / name) if args.out else (ROOT / "build" / name)
+            if main([name, "--out", str(out)]):
+                return 1
+        return 0
+
     problems = validate(args.profile, profiles.get(args.profile, {}))
     rendered = render_all(args.profile)
     problems += check_scripts(args.profile, profiles[args.profile], rendered)

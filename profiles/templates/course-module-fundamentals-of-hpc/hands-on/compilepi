@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+module load {{modules.stack}}
+module load {{modules.compiler}}
+gcc -O3 -fopenmp -Wall -Wextra pi.c -o pi

@@ -10,14 +10,27 @@ description = "SURF Snellius, as the published course text describes it"
 # Other profiles whose notes appear in this profile's files. The published
 # files carry SRC asides, so the Snellius render includes the src profile's.
 asides = ["src"]
+course_cluster = "src"
 
 [system]
 name = "Snellius"
+display_name = "Snellius"
 login_host = "snellius.surf.nl"
 login_nodes = ["int4", "int5", "int6"]
+login_node_first = "int4"
+login_node = "int6"
+login_node_alt = "int5"
+login_node_fqdn = "int6.local.snellius.surf.nl"
+archive_host = "archive.surf.nl"
 ondemand_url = "https://ondemand.snellius.surf.nl/"
+ondemand_display = "https://ondemand.snellius.surf.nl"
 interconnect = "InfiniBand"           # fat-tree; generation unverified
 peak_pflops = 37.9
+compute_nodes = "over 1,500"
+processor_summary = "AMD Genoa CPUs and NVIDIA H100 GPUs"
+architecture_summary = "1,258 thin rome/genoa nodes + fat/high-memory nodes + 604 GPUs."
+network_summary = "fat-tree *InfiniBand HDR100, HDR200, and NDR200*"
+storage_summary = "720 TB for home @@beamer:\\textmd{@@directories and@@beamer:}@@ 12.4 PB for scratch and project @@beamer:\\textmd{@@spaces (GPFS).@@beamer:}@@"
 
 [[system.partition_info]]
 name = "rome"
@@ -46,6 +59,7 @@ gpu = "gpu_a100"
 gpu_alt = "gpu_h100"
 fat = "fat_rome"
 staging = "staging"
+archive = "staging"
 
 [slurm]
 default_partition = "rome"            # unverified: scripts always name it
@@ -54,6 +68,9 @@ min_allocation_mem_gib = 28           # per 1/8 rome node, from the QCG slides
 gpu_request = "--gpus-per-node=1"
 mail = true                           # unverified: slides teach --mail-type
 constraints = ["scratch-node", "hwperf"]
+scratch_constraint = "scratch-node"
+performance_constraint = "hwperf"
+max_array_size = 30000
 
 [limits]
 max_cpus_per_node = 128
@@ -61,22 +78,39 @@ max_nodes = 520
 
 [modules]
 stack = "2025"
+legacy_stack = "2023"
+eessi_version = "2025.06"
+eessi_init = "/cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash"
 toolchain = "foss/2025a"
 compiler = "GCC/14.2.0"
 python = "Python/3.13.1-GCCcore-14.2.0"
 qcg = "QCG-PilotJob/0.14.1-GCCcore-14.2.0"   # unverified on Snellius
 uprof = "AMD-uProf/5.1.701"
+scipy = "SciPy-bundle/2025.06-gfbf-2025a"
+matplotlib = "matplotlib/3.10.3-gfbf-2025a"
+hyperqueue = "HyperQueue/0.24.0"
+snakemake = "snakemake/9.22.0-foss-2025b"
+fireworks = "FireWorks/2.1.4-gfbf-2025a"
+irods = "iRODS-iCommands/4.3.0"
+mpifileutils_source = "EESSI 2023.06 and 2025.06"
+# Kept to reproduce the current published scripts byte for byte. It is only
+# needed by the Research Cloud installation.
+site_modulepath = "/cvmfs/course.surf-src.cvmfs/eessi/versions/2025.06/software/linux/x86_64/amd/zen2/modules/all"
 # Course style: the stack goes on its own `module load` line.
 stack_on_own_line = true
 
 [paths]
 home = "/home/$USER"
+home_example = "/home/<username>"
 scratch_shared = "/scratch-shared/$USER"
+scratch_root = "/scratch-shared"
 scratch_local = "/scratch-local"      # $TMPDIR outside scratch-node jobs
 scratch_local_real = "/gpfs/scratch1/nodespecific/<node>/<user>.<jobid>"
 scratch_node = "/scratch-node"
+scratch_node_label = "scratch-node"
 projects = "/projects"
 archive = "/archive"
+archive_user = "/archive/$USER"
 tmpdir = "/scratch-local/$USER.$SLURM_JOB_ID"
 
 [tools]
@@ -87,10 +121,16 @@ uprof = true
 papi = true                           # unverified as a module
 perf = true                           # unverified; needs --constraint=hwperf
 seff = true
+mpifileutils = true                   # site module or an EasyBuild installation
 
 [accounting]
 unit = "SBU"
 sbu_per_core_hour = 1                 # rome; GPU rates differ
+
+[commands]
+quota = "myquota"
+accounting = "accinfo"
+energy = "eacct"
 
 # ---------------------------------------------------------------- hybrid jobs
 # course-module-snellius-hybrid-jobs
@@ -138,6 +178,9 @@ ntasks_per_node = 4
 
 [hybrid]
 threads_example = 16
+cpu_nodes = "partition `rome` with 520 nodes of 128 AMD Rome cores, and partition `genoa` with 736 nodes of 192 AMD Genoa cores, for a total of 207,872 cores"
+fat_nodes = "partitions `fat_rome` and `fat_genoa`, 120 nodes, each with 1 TiB or 1.5 TiB of RAM, intended for memory-intensive jobs"
+gpu_nodes = "partition `gpu_a100` with 62 nodes of 4 NVIDIA A100 GPUs (and 4 more A100 nodes split into MIG slices in `gpu_mig`), and partition `gpu_h100` with 88 nodes of 4 NVIDIA H100 GPUs, designed for massively parallel computations such as machine learning and molecular dynamics"
 # Text under each results table. It renders inside the job's section, so
 # {{script}} is the exercise's job script and {{../x}} reaches the profile.
 table_note = '''
@@ -151,6 +194,65 @@ first_col = "Vector Size"
 first_col_width = 13
 columns = ["Sequential", "Hyb-16-1", "Hyb-128-1", "Hyb-256-1", "Hyb-1-16", "Hyb-1-128", "Hyb-2-128"]
 sizes = ["1,000,000", "10,000,000", "100,000,000", "1,000,000,000", "10,000,000,000"]
+
+# ---------------------------------------------------------------- QCG PilotJob
+
+[jobs.qcg.example_01]
+nodes = 1
+array = "0-11%3"
+
+[jobs.qcg.example_02]
+nodes = 1
+array = "0-999%10"
+
+[jobs.qcg.example_03]
+nodes = 2
+ntasks_per_node = 128
+
+[jobs.qcg.example_04]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.example_05]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.pipeline]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.hyperqueue_average]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.hyperqueue_profile]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.snakemake_average]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.snakemake_profile]
+nodes = 1
+ntasks = 16
+
+[jobs.qcg.fireworks_average]
+nodes = 1
+ntasks = 1
+
+[jobs.qcg.fireworks_profile]
+nodes = 1
+ntasks = 1
+
+[qcg]
+task_count = 512
+example_03_nodes_text = "two"
+short_inputs = 100
+short_tasks = 32
+allocation_text = "16 cores and 28 GiB of memory"
+workflow_measurement = "a 16-core Snellius allocation was not measured"
+examples_note = "On Snellius, examples 4 and 5 ask for 16 cores (`--ntasks=16`), the 1/8-node minimum allocation on a 128-core rome node. On 2-core SRC workspaces, scale them down so a run takes minutes, not an hour:"
 
 # ---------------------------------------------------------------- fundamentals
 # course-module-fundamentals-of-hpc
@@ -197,3 +299,125 @@ mpi_compare_a = "--ntasks={{jobs.fundamentals.mpi.ntasks}} to --"
 mpi_compare_b = "ntasks={{jobs.fundamentals.mpi_compare.ntasks}}"
 hello_why = "the smallest allocation on that partition"
 gpu_result = "The output lists the one A100 GPU the job received. A GPU hour costs more budget than a CPU core hour, so keep GPU test jobs short."
+
+[fundamentals.system_table.rome]
+name = "rome"
+nodes = "521"
+memory = "256 GB"
+cores = "128"
+cpu = "AMD Rome 7H12 2.6 GHz"
+gpus = ""
+gpu = ""
+sbu = "128"
+allocation = "1/8"
+
+[fundamentals.system_table.fat_rome]
+name = "fat_rome"
+nodes = "72"
+memory = "1,024 GB"
+cores = "128"
+cpu = "AMD Rome 7H12 2.6 GHz"
+gpus = ""
+gpu = ""
+sbu = "192"
+allocation = "1/8"
+
+[fundamentals.system_table.himem_4tb]
+name = "himem_4tb"
+nodes = "2"
+memory = "4,096 GB"
+cores = "128"
+cpu = "AMD Rome 7H12 2.6 GHz"
+gpus = ""
+gpu = ""
+sbu = "256"
+allocation = "1/8"
+
+[fundamentals.system_table.himem_8tb]
+name = "himem_8tb"
+nodes = "2"
+memory = "8,192 GB"
+cores = "128"
+cpu = "AMD Rome 7H12 2.6 GHz"
+gpus = ""
+gpu = ""
+sbu = "384"
+allocation = "1/8"
+
+[fundamentals.system_table.genoa]
+name = "genoa"
+nodes = "737"
+memory = "384 GB"
+cores = "192"
+cpu = "AMD Genoa 9654 2.4 GHz"
+gpus = ""
+gpu = ""
+sbu = "192"
+allocation = "1/8"
+
+[fundamentals.system_table.fat_genoa]
+name = "fat_genoa"
+nodes = "48"
+memory = "1,536 GB"
+cores = "192"
+cpu = "AMD Genoa 9654 2.4 GHz"
+gpus = ""
+gpu = ""
+sbu = "288"
+allocation = "1/8"
+
+[fundamentals.system_table.gpu_a100]
+name = "gpu_a100"
+nodes = "63"
+memory = "512 GB"
+cores = "72"
+cpu = "Intel Xeon 8360Y 2.5 GHz"
+gpus = "4"
+gpu = "NVIDIA A100 40 GB"
+sbu = "512"
+allocation = "1/4"
+
+[fundamentals.system_table.gpu_h100]
+name = "gpu_h100"
+nodes = "88"
+memory = "768 GB"
+cores = "64"
+cpu = "AMD EPYC 9334 2.7 GHz"
+gpus = "4"
+gpu = "NVIDIA H100 (SXM5) 94 GB"
+sbu = "768"
+allocation = "1/4"
+
+[fundamentals.system_table.staging]
+name = "staging"
+nodes = "10"
+memory = "256 GB"
+cores = "16"
+cpu = "AMD EPYC 7F32 3.2 GHz"
+gpus = ""
+gpu = ""
+sbu = "32"
+allocation = "1/32"
+
+[fundamentals.system_table.login]
+name = "login"
+nodes = "3"
+note = "Login nodes must not be used for heavy tasks@@beamer:\\textmd{@@. Their hardware configuration may differ.@@beamer:}@@"
+
+# ---------------------------------------------------------------- data movement
+
+[jobs.data_movement.dcp]
+nodes = 2
+ntasks_per_node = 8
+
+[jobs.data_movement.stage]
+nodes = 1
+ntasks = 1
+
+[data_movement]
+scratch = "/scratch-shared/$USER"
+node_title = "Two Rome nodes"
+external_text = "On Snellius, the iRODS iCommands on the next slide are the documented 2023 modules. The Data Archive is ~{{paths.archive_user}}~ on login and staging nodes only. ~daget~ stages tape, and compute nodes do not mount ~{{paths.archive}}~."
+archive_available = true
+mpifileutils_available = true
+scratch_node_available = true
