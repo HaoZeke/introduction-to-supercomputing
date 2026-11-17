@@ -1,7 +1,6 @@
 # Cluster profiles
 
-Design note for the cluster profiles. Branch `feat/cluster-profiles`, on
-the class branch at 389d29a.
+Design note for the cluster profiles.
 
 ## Problem
 
@@ -101,6 +100,7 @@ Derived fields, computed before rendering:
 ```
 python3 tools/render_profile.py snellius --check   # published files unchanged?
 python3 tools/render_profile.py src                # build/src/...
+python3 tools/render_profile.py --all --check      # both profiles + parity
 python3 tools/test_render.py                       # round trip, limits, lint
 ```
 
@@ -138,26 +138,25 @@ take `partitions.cpu`. The compile step reads the rendered `.org`
 (`build/src/.../slides/`) instead of the source. Slide geometry (`#+attr_latex`
 positions) does not change, so text length matters: keep SRC values short.
 
-## Migration plan
+## Coverage
 
-One module per commit, each with `snellius --check` green:
+Templates cover every course module and every source file that contains
+cluster-sensitive scheduler, module, path or access details:
 
-1. `course-module-snellius-hybrid-jobs`: done in this branch.
-2. `course-module-qcg-pilotjob`: job sizes (16 → 2, example 3's 2×128),
-   arrays, the `module use` site path (`modules.site_modulepath`, empty on
-   Snellius) and the SBU text (`accounting`). The scripts now hard-code the
-   SRC course CVMFS path, so they do not run on Snellius as published.
-3. `course-module-fundamentals-of-hpc`: templates cover `hands-on.md`
-   (hello and pi sizes, GPU partition, login note), `hands-on/pi.sh`, the
-   course cluster slide, the slide job scripts and the slide's mail boxes.
-   Still open: `hands-on/README.md`.
-4. `course-module-snellius-fs`: a template covers the cluster note, the
-   scratch-node constraint and the `/scratch-shared` commands, which the
-   SRC render replaces with `paths.scratch_user`. Still open: the other
-   paths. The recorded Snellius output stays.
-5. `course-module-performance-analysis`: `hwperf`, EAR and uProf sections
-   behind `tools.*`.
-6. Top-level README note from `src.toml`.
+1. fundamentals: hands-on scripts and text plus the Org slide source;
+2. QCG PilotJob: arrays, PilotJob examples, workflow alternatives and both
+   Org slide sources;
+3. file systems: hands-on text, job script, and both Org slide sources,
+   including the data-movement deck;
+4. hybrid jobs: hands-on scripts and text;
+5. performance analysis: Org slides, including capability-gated hardware
+   counters, Energy Aware Runtime and AMD uProf sections;
+6. top-level and teaching documentation.
+
+The tests scan cluster-sensitive course files and fail when one has no
+corresponding template. They render every profile, validate each Slurm job
+against the profile limits, and compare the full Snellius render with the
+published files byte for byte.
 
 ## SSH pass findings
 

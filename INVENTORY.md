@@ -45,9 +45,9 @@ on Snellius for this inventory.
 | 18 | FH hello.sh | FH/hands-on.md:185,193,219 | 16 cores on 1 rome node | 2 | `jobs.fundamentals.hello`, `fundamentals.hello_why` |
 | 19 | FH pi.sh | FH/hands-on/pi.sh:4, FH/hands-on/README.md:16 | 32 | 2 (README override) | `jobs.fundamentals.pi` (pi.sh); README not templated yet |
 | 20 | FH slide job scripts | FH .org:2144 (10 tasks), 2216 (4), 2390, 2872 (10) | as written | ≤2 per node | `jobs.fundamentals.first`, `.mpi`, `.firsttest`, `.r` |
-| 21 | QC example 3 | QC/example_03/qcg_job.sh:2-3, README.md:3 | 2 nodes × 128 tasks | 3 × 2 (README override) | not templated yet |
-| 22 | QC examples 4/5, pipeline, alternatives | QC/example_04,05/*.sh:3, alternatives/*/*.sh:3, alternatives/README.md:11-14, hands-on/README.md:43-48 | 16 tasks (FireWorks 1) | 2 | not templated yet |
-| 23 | QC arrays | QC/example_01/array_job.sh:6, example_02/array_job.sh:6, hands-on/README.md:45 | `0-11%3`, `0-999%10` | `0-99%10` for ex2 | not templated yet |
+| 21 | QC example 3 | QC/example_03/qcg_job.sh:2-3, README.md:3 | 2 nodes × 128 tasks | 3 × 2 | `jobs.qcg.example_03` |
+| 22 | QC examples 4/5, pipeline, alternatives | QC/example_04,05/*.sh:3, alternatives/*/*.sh:3, alternatives/README.md:11-14, hands-on/README.md:43-48 | 16 tasks (FireWorks 1) | 2 | `jobs.qcg.*` |
+| 23 | QC arrays | QC/example_01/array_job.sh:6, example_02/array_job.sh:6, hands-on/README.md:45 | `0-11%3`, `0-999%10` | `0-99%10` for ex2 | `jobs.qcg.example_01.array`, `.example_02.array` |
 
 ## Modules and software
 
@@ -61,9 +61,9 @@ on Snellius for this inventory.
 | 29 | QCG-PilotJob | QC/example_03..05/qcg_job.sh:14-16, QC/hands-on/README.md:37-40, QC .org:749,841 | `QCG-PilotJob/0.14.1-GCCcore-14.2.0` *unverified* | site build, same name | `modules.qcg` |
 | 30 | QCG names on the SRC slide | FH .org:1729 | n/a | since 9e7a90f the slide points to the course commands page; scripts use the GCCcore-14.2.0 name | `modules.qcg` |
 | 31 | Site module path | QC/example_03:13, example_04:13, example_05:15, alternatives/hyperqueue/*.sh:15-16, fireworks/*.sh:16-18 | does not exist | `/cvmfs/course.surf-src.cvmfs/…/amd/zen2/modules/all` | `modules.site_modulepath` |
-| 32 | EESSI init path | same 7 scripts, `source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash` | EESSI on Snellius *unverified* | works | not templated yet |
-| 33 | Workflow tools | QC/alternatives/README.md:25,42,67, alternatives/*/*.sh | no Snakemake, no FireWorks | HyperQueue/0.24.0, snakemake/9.22.0-foss-2025b, FireWorks/2.1.4-gfbf-2025a (site) | not templated yet |
-| 34 | SciPy/matplotlib | QC/example_05/README.md:38-39, plot_profile.py:9-10, alternatives/README.md:101 | `SciPy-bundle/2025.06-gfbf-2025a`, `matplotlib/3.10.3-gfbf-2025a` | same | not templated yet |
+| 32 | EESSI init path | same 7 scripts, `source /cvmfs/software.eessi.io/versions/2025.06/init/lmod/bash` | EESSI on Snellius *unverified* | works | `modules.eessi_init` |
+| 33 | Workflow tools | QC/alternatives/README.md:25,42,67, alternatives/*/*.sh | no Snakemake, no FireWorks | HyperQueue/0.24.0, snakemake/9.22.0-foss-2025b, FireWorks/2.1.4-gfbf-2025a (site) | `modules.hyperqueue`, `.snakemake`, `.fireworks` |
+| 34 | SciPy/matplotlib | QC/example_05/README.md:38-39, plot_profile.py:9-10, alternatives/README.md:101 | `SciPy-bundle/2025.06-gfbf-2025a`, `matplotlib/3.10.3-gfbf-2025a` | same | `modules.scipy`, `.matplotlib` |
 | 35 | R | (answer key only) | *unverified* | `R/4.5.1-gfbf-2025a`, `R/4.5.2-gfbf-2025b` | `modules.r` |
 | 36 | Other EESSI versions | (not in text) | n/a | 2023.06, 2026.06 | `modules.eessi_versions` |
 

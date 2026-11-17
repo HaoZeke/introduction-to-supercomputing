@@ -42,3 +42,14 @@ git clone --branch course/maastricht-20261028 --single-branch \
 Open the course Open OnDemand portal from the welcome note and use Clusters
 for a terminal. The [browser setup guide](https://supersurf.rgoswami.me/setup)
 explains sign-in, Files, the shell and optional interactive applications.
+
+## Cluster profiles
+
+Render all supported clusters with:
+
+```bash
+python3 tools/render_profile.py --all
+```
+
+The output is written under `build/<profile>/`. Trainers can follow
+[`profiles/README.md`](profiles/README.md) to add and verify another cluster.
